@@ -270,13 +270,11 @@ services:
       - .env
     entrypoint: >
       /bin/sh -c "
-      /tmp/wait-for-it.sh minio:9000 &&
-      /usr/bin/mc alias set minio http://minio:9000 ${AWS_ACCESS_KEY_ID} ${AWS_SECRET_ACCESS_KEY} &&
-      /usr/bin/mc mb minio/mlflow;
+      echo 'Waiting for MinIO to become ready...';
+      i=0; until /usr/bin/mc alias set minio http://minio:9000 ${AWS_ACCESS_KEY_ID} ${AWS_SECRET_ACCESS_KEY}; do i=$$((i+1)); echo "retry $$i"; sleep 2; done;
+      /usr/bin/mc mb --ignore-existing minio/mlflow;
       exit 0;
       "
-    volumes:
-      - ./wait-for-it.sh:/tmp/wait-for-it.sh
     networks:
       - fraud-detection
 
@@ -334,7 +332,7 @@ services:
     volumes:
       - ./models:/app/models
       - ./config.yaml:/app/config.yaml
-      - ./env:/app/.env
+      - ./.env:/app/.env
     networks:
       - fraud-detection
 
