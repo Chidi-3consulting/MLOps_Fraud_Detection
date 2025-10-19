@@ -385,3 +385,33 @@ sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate
 [2025-10-19T11:09:54.296+0000] {manager.py:485} INFO - Checking for new files in /opt/airflow/dags every 300 seconds
 [2025-10-19T11:09:54.313+0000] {manager.py:821} INFO - Searching for files in /opt/airflow/dags
 [2025-10-19T11:09:54.937+0000] {manager.py:824} INFO - There are 0 files in /opt/airflow/dags
+[2025-10-19T11:50:55.726+0000] {manager.py:483} INFO - Processing files using up to 2 processes at a time 
+[2025-10-19T11:50:55.740+0000] {manager.py:484} INFO - Process each file at most once every 30 seconds
+[2025-10-19T11:50:55.743+0000] {manager.py:485} INFO - Checking for new files in /opt/airflow/dags every 300 seconds
+[2025-10-19T11:50:55.745+0000] {manager.py:821} INFO - Searching for files in /opt/airflow/dags
+[2025-10-19T11:50:55.881+0000] {manager.py:824} INFO - There are 0 files in /opt/airflow/dags
+[2025-10-19T12:15:09.427+0000] {manager.py:483} INFO - Processing files using up to 2 processes at a time 
+[2025-10-19T12:15:09.488+0000] {manager.py:484} INFO - Process each file at most once every 30 seconds
+[2025-10-19T12:15:09.534+0000] {manager.py:485} INFO - Checking for new files in /opt/airflow/dags every 300 seconds
+[2025-10-19T12:15:09.552+0000] {manager.py:821} INFO - Searching for files in /opt/airflow/dags
+[2025-10-19T12:15:09.708+0000] {manager.py:824} INFO - There are 0 files in /opt/airflow/dags
+[2025-10-19T13:07:35.184+0000] {manager.py:483} INFO - Processing files using up to 2 processes at a time 
+[2025-10-19T13:07:35.187+0000] {manager.py:484} INFO - Process each file at most once every 30 seconds
+[2025-10-19T13:07:35.200+0000] {manager.py:485} INFO - Checking for new files in /opt/airflow/dags every 300 seconds
+[2025-10-19T13:07:35.205+0000] {manager.py:821} INFO - Searching for files in /opt/airflow/dags
+[2025-10-19T13:07:35.232+0000] {manager.py:824} INFO - There are 0 files in /opt/airflow/dags
+[2025-10-19T13:13:15.858+0000] {manager.py:821} INFO - Searching for files in /opt/airflow/dags
+[2025-10-19T13:13:37.718+0000] {manager.py:824} INFO - There are 0 files in /opt/airflow/dags
+[2025-10-19T13:13:41.390+0000] {manager.py:465} INFO - Exiting gracefully upon receiving signal 15
+[2025-10-19T13:15:33.085+0000] {manager.py:483} INFO - Processing files using up to 2 processes at a time 
+[2025-10-19T13:15:33.102+0000] {manager.py:484} INFO - Process each file at most once every 30 seconds
+[2025-10-19T13:15:33.111+0000] {manager.py:485} INFO - Checking for new files in /opt/airflow/dags every 300 seconds
+[2025-10-19T13:15:33.119+0000] {manager.py:821} INFO - Searching for files in /opt/airflow/dags
+[2025-10-19T13:15:33.157+0000] {manager.py:824} INFO - There are 0 files in /opt/airflow/dags
+[2025-10-19T13:15:43.626+0000] {manager.py:465} INFO - Exiting gracefully upon receiving signal 15
+[2025-10-19T13:16:18.467+0000] {manager.py:483} INFO - Processing files using up to 2 processes at a time 
+[2025-10-19T13:16:18.475+0000] {manager.py:484} INFO - Process each file at most once every 30 seconds
+[2025-10-19T13:16:18.479+0000] {manager.py:485} INFO - Checking for new files in /opt/airflow/dags every 300 seconds
+[2025-10-19T13:16:18.491+0000] {manager.py:821} INFO - Searching for files in /opt/airflow/dags
+[2025-10-19T13:16:18.526+0000] {manager.py:824} INFO - There are 0 files in /opt/airflow/dags
+[2025-10-19T13:16:32.959+0000] {manager.py:465} INFO - Exiting gracefully upon receiving signal 15
