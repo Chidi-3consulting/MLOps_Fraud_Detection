@@ -1,7 +1,6 @@
 ---
 x-airflow-common:
   &airflow-common
-  build: ./airflow
   image: airflow-training:latest
   environment:
     &airflow-common-env
@@ -160,6 +159,7 @@ services:
 
   airflow-init:
     <<: *airflow-common
+    build: ./airflow
     entrypoint: /bin/bash
     # yamllint disable rule:line-length
     command:
