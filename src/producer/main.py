@@ -93,6 +93,12 @@ class EcommerceTransactionProducer:
         self.topic = os.getenv("KAFKA_TOPIC", "ecommerce_transactions")
         self.running = False
 
+        # Debug print to confirm credentials and topic
+        print("Kafka Username:", self.kafka_username)
+        print("Kafka Password:", self.kafka_password)
+        print("Bootstrap Servers:", self.bootstrap_servers)
+        print("Kafka Topic:", self.topic)
+
         # Producer configuration
         self.producer_config = {
             "bootstrap.servers": self.bootstrap_servers,

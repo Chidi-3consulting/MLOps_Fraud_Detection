@@ -415,3 +415,22 @@ sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate
 [2025-10-19T13:16:18.491+0000] {manager.py:821} INFO - Searching for files in /opt/airflow/dags
 [2025-10-19T13:16:18.526+0000] {manager.py:824} INFO - There are 0 files in /opt/airflow/dags
 [2025-10-19T13:16:32.959+0000] {manager.py:465} INFO - Exiting gracefully upon receiving signal 15
+[2025-10-19T14:15:30.730+0000] {manager.py:483} INFO - Processing files using up to 2 processes at a time 
+[2025-10-19T14:15:30.755+0000] {manager.py:484} INFO - Process each file at most once every 30 seconds
+[2025-10-19T14:15:30.787+0000] {manager.py:485} INFO - Checking for new files in /opt/airflow/dags every 300 seconds
+[2025-10-19T14:15:30.843+0000] {manager.py:821} INFO - Searching for files in /opt/airflow/dags
+[2025-10-19T14:15:30.927+0000] {manager.py:824} INFO - There are 0 files in /opt/airflow/dags
+[2025-10-19T14:27:45.981+0000] {manager.py:483} INFO - Processing files using up to 2 processes at a time 
+[2025-10-19T14:27:45.989+0000] {manager.py:484} INFO - Process each file at most once every 30 seconds
+[2025-10-19T14:27:45.995+0000] {manager.py:485} INFO - Checking for new files in /opt/airflow/dags every 300 seconds
+[2025-10-19T14:27:46.001+0000] {manager.py:821} INFO - Searching for files in /opt/airflow/dags
+[2025-10-19T14:27:46.019+0000] {manager.py:824} INFO - There are 0 files in /opt/airflow/dags
+[2025-10-19T14:32:58.232+0000] {manager.py:821} INFO - Searching for files in /opt/airflow/dags
+[2025-10-19T14:33:00.118+0000] {manager.py:824} INFO - There are 0 files in /opt/airflow/dags
+[2025-10-19T14:58:37.130+0000] {manager.py:483} INFO - Processing files using up to 2 processes at a time 
+[2025-10-19T14:58:37.136+0000] {manager.py:484} INFO - Process each file at most once every 30 seconds
+[2025-10-19T14:58:37.150+0000] {manager.py:485} INFO - Checking for new files in /opt/airflow/dags every 300 seconds
+[2025-10-19T14:58:37.178+0000] {manager.py:821} INFO - Searching for files in /opt/airflow/dags
+[2025-10-19T14:58:37.234+0000] {manager.py:824} INFO - There are 0 files in /opt/airflow/dags
+[2025-10-19T15:04:32.418+0000] {manager.py:821} INFO - Searching for files in /opt/airflow/dags
+[2025-10-19T15:04:33.929+0000] {manager.py:824} INFO - There are 0 files in /opt/airflow/dags

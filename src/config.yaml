@@ -7,9 +7,9 @@ mlflow:
   bucket: "mlflow"
 
 kafka:
-  bootstrap_servers: "pkc-619z3.us-east1.gcp.confluent.cloud:9092"
-  username: "CIOGA25M5VWUOTKP"
-  password: "cflt1k5eOFSrKtxvHjG2o8/8u34C/XZlVmCTNF26BT7A6CW+Hh0w9YnlluVvwK2w"
+  bootstrap_servers: "pkc-921jm.us-east-2.aws.confluent.cloud:9092"
+  username: "6O6ERBVTLQDXJPKO"
+  password: "cfltjRt1N2S26dnrtsq/xYUiCdZhbndNDJ9nO/tqPX5biWmKFuI+DPxUV6T4JGsg"
   topic: "transactions"
   output_topic: "fraud_predictions"
   security_protocol: 'SASL_SSL'
