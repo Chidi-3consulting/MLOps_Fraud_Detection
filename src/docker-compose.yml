@@ -1,13 +1,13 @@
 ---
-x-airflow-common:
-  &airflow-common
+x-airflow-common: &airflow-common
   image: airflow-training:latest
-  environment:
-    &airflow-common-env
+  environment: &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
-    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
-    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow
-    AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
+    # Use repository-level DB_* variables (from src/.env) so services can point at a remote Postgres
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: "postgresql+psycopg2://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSLMODE}"
+    # Celery result backend (using same DB); adjust if you have a dedicated results DB
+    AIRFLOW__CELERY__RESULT_BACKEND: "db+postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
+    AIRFLOW__CELERY__BROKER_URL: "redis://:@redis:6379/0"
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
@@ -310,7 +310,9 @@ services:
       - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-    command: mlflow server --port 5500 --host 0.0.0.0 --backend-store-uri postgresql+psycopg2://mlflow:mlflow@postgres/mlflow --default-artifact-root s3://mlflow
+      # Make the mlflow backend-store configurable and default to using the repository DB_* vars
+      - 'MLFLOW_BACKEND_STORE_URI=postgresql+psycopg2://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSLMODE}'
+    command: mlflow server --port 5500 --host 0.0.0.0 --backend-store-uri ${MLFLOW_BACKEND_STORE_URI} --default-artifact-root s3://mlflow
     networks:
       - fraud-detection
 

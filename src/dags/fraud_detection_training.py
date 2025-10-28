@@ -31,26 +31,8 @@ the following architectural considerations:
 import json
 import logging
 import os
-
-import boto3
-import matplotlib.pyplot as plt
-import mlflow
-import numpy as np
-import pandas as pd
 import yaml
 from dotenv import load_dotenv
-from imblearn.over_sampling import SMOTE
-from kafka import KafkaConsumer
-from mlflow.models import infer_signature
-from numpy.array_api import astype
-from sklearn.compose import ColumnTransformer
-from sklearn.metrics import make_scorer, fbeta_score, precision_recall_curve, average_precision_score, precision_score, \
-    recall_score, f1_score, confusion_matrix
-from sklearn.model_selection import train_test_split, RandomizedSearchCV, StratifiedKFold
-from sklearn.preprocessing import OrdinalEncoder
-from xgboost import XGBClassifier
-from imblearn.pipeline import Pipeline as ImbPipeline
-import joblib
 
 # Configure dual logging to file and stdout with structured format
 logging.basicConfig(
@@ -151,6 +133,9 @@ class FraudDetectionTraining:
         Maintains separation of concerns between configuration and infrastructure setup.
         """
         try:
+            # Local import to avoid heavy dependency during DAG parsing
+            import boto3
+
             s3 = boto3.client(
                 's3',
                 endpoint_url=self.config['mlflow']['s3_endpoint_url'],
@@ -184,6 +169,10 @@ class FraudDetectionTraining:
         Implements graceful shutdown on timeout/error conditions.
         """
         try:
+            # Local imports to avoid heavy dependencies during DAG parsing
+            import pandas as pd
+            from kafka import KafkaConsumer
+
             topic = self.config['kafka']['topic']
             logger.info('Connecting to kafka topic %s', topic)
 
@@ -240,7 +229,11 @@ class FraudDetectionTraining:
 
         Maintains immutability via DataFrame.copy() and validates feature set integrity.
         """
-        df = df.sort_values(['user_id', 'timestamp']).copy()
+    # Local import for numpy/pandas to reduce DAG parse time
+    import numpy as np
+    import pandas as pd
+
+    df = df.sort_values(['user_id', 'timestamp']).copy()
 
         # ---- Temporal Feature Engineering ----
         # Captures time-based fraud patterns (e.g., nighttime transactions)
@@ -275,7 +268,7 @@ class FraudDetectionTraining:
         if 'is_fraud' not in df.columns:
             raise ValueError('Missing target column "is_fraud"')
 
-        return df[feature_cols + ['is_fraud']]
+    return df[feature_cols + ['is_fraud']]
 
     def train_model(self):
         """
@@ -292,7 +285,23 @@ class FraudDetectionTraining:
 
         Implements MLflow experiment tracking for full reproducibility.
         """
+        # Local import for heavy ML libraries is done inside this method to
+        # avoid importing them at module import time when Airflow parses DAGs.
         try:
+            import numpy as np
+            import pandas as pd
+            import mlflow
+            from mlflow.models import infer_signature
+            import joblib
+            import matplotlib.pyplot as plt
+            from sklearn.compose import ColumnTransformer
+            from sklearn.metrics import make_scorer, fbeta_score, precision_recall_curve, average_precision_score, precision_score, recall_score, f1_score, confusion_matrix
+            from sklearn.model_selection import train_test_split, RandomizedSearchCV, StratifiedKFold
+            from sklearn.preprocessing import OrdinalEncoder
+            from xgboost import XGBClassifier
+            from imblearn.over_sampling import SMOTE
+            from imblearn.pipeline import Pipeline as ImbPipeline
+
             logger.info('Starting model training process')
 
             # Data ingestion and feature engineering
