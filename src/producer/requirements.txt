@@ -2,3 +2,5 @@ python-dotenv
 faker
 jsonschema
 confluent_kafka
+sqlalchemy
+psycopg2-binary
