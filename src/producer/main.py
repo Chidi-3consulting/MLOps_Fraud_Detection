@@ -38,7 +38,13 @@ except Exception:
 from dotenv import load_dotenv
 from faker import Faker
 from jsonschema import validate, ValidationError, FormatChecker
-from producer.file_sink import FileSink
+# Robust import: when running inside the producer container the files are copied
+# into /app (same directory) so `producer.file_sink` may not be a package.
+try:
+    from producer.file_sink import FileSink
+except Exception:
+    # fallback to local module import
+    from file_sink import FileSink
 
 # Configure logging
 logging.basicConfig(

@@ -1,12 +1,11 @@
----
 x-airflow-common: &airflow-common
   image: airflow-training:latest
   environment: &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
-    # Use repository-level DB_* variables (from src/.env) so services can point at a remote Postgres
-    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: "postgresql+psycopg2://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSLMODE}"
-    # Celery result backend (using same DB); adjust if you have a dedicated results DB
-    AIRFLOW__CELERY__RESULT_BACKEND: "db+postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
+    # Use local Postgres for Airflow
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: "postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
+    # Celery result backend
+    AIRFLOW__CELERY__RESULT_BACKEND: "db+postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
     AIRFLOW__CELERY__BROKER_URL: "redis://:@redis:6379/0"
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
@@ -45,9 +44,9 @@ services:
   postgres:
     image: postgres:13
     environment:
-      POSTGRES_USER: airflow
-      POSTGRES_PASSWORD: airflow
-      POSTGRES_DB: airflow
+      POSTGRES_USER: ${POSTGRES_USER:-airflow}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-airflow}
+      POSTGRES_DB: ${POSTGRES_DB:-airflow}
     volumes:
       - postgres-db-volume:/var/lib/postgresql/data
       - ./init-multiple-dbs.sh:/docker-entrypoint-initdb.d/init-multiple-dbs.sh
@@ -269,12 +268,12 @@ services:
     env_file:
       - .env
     entrypoint: >
-      /bin/sh -c "
-      echo 'Waiting for MinIO to become ready...';
-      i=0; until /usr/bin/mc alias set minio http://minio:9000 ${AWS_ACCESS_KEY_ID} ${AWS_SECRET_ACCESS_KEY}; do i=$$((i+1)); echo "retry $$i"; sleep 2; done;
+      /bin/sh -c '
+      echo "Waiting for MinIO to become ready...";
+      i=0; until /usr/bin/mc alias set minio http://minio:9000 ${AWS_ACCESS_KEY_ID} ${AWS_SECRET_ACCESS_KEY}; do i=$$((i+1)); echo retry $$i; sleep 2; done;
       /usr/bin/mc mb --ignore-existing minio/mlflow;
       exit 0;
-      "
+      '
     networks:
       - fraud-detection
 
@@ -312,13 +311,27 @@ services:
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       # Make the mlflow backend-store configurable and default to using the repository DB_* vars
       - 'MLFLOW_BACKEND_STORE_URI=postgresql+psycopg2://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSLMODE}'
-    command: mlflow server --port 5500 --host 0.0.0.0 --backend-store-uri ${MLFLOW_BACKEND_STORE_URI} --default-artifact-root s3://mlflow
+    # NOTE: some mlflow/cli versions may treat the artifact root argument as a positional
+    # unexpected token which results in the container repeatedly exiting. To avoid that
+    # failure during local compose runs we omit the explicit --default-artifact-root here.
+    # If you require S3-backed artifacts, set the default artifact root inside your
+    # MLflow configuration or adjust this command for your mlflow version.
+    # Use a shell inside the container so the environment variable set in the
+    # service's `environment:` block is expanded at container runtime rather
+    # than at docker-compose interpolation time on the host.
+    # Use double dollar to defer variable expansion to the container shell
+    # (a single $ would be interpolated by docker-compose at parse time).
+    command: ["sh", "-c", "mlflow server --port 5500 --host 0.0.0.0 --backend-store-uri \"$$MLFLOW_BACKEND_STORE_URI\""]
     networks:
       - fraud-detection
 
   producer:
-    build: ./producer
+    build:
+      context: .
+      dockerfile: producer/Dockerfile
     env_file: .env
+    profiles:
+      - producer
     deploy:
       replicas: 2
       resources:

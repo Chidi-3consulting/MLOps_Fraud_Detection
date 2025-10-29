@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 WORKDIR /app
 
-# Install system dependencies (ADD libsasl2-dev HERE)
+# Install system dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       curl \
@@ -32,12 +32,14 @@ RUN curl -fsSL https://github.com/confluentinc/librdkafka/archive/refs/tags/v2.8
     cd .. && \
     rm -rf librdkafka-2.8.0 librdkafka.tar.gz
 
-# Copy requirements and install Python dependencies
-COPY ./requirements.txt /app/requirements.txt
+# Copy requirements and install Python dependencies (paths relative to build context)
+COPY producer/requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
 
-# Copy application code
-COPY . .
+# Copy producer application code and shared utils into the image
+# Build context is the repository src/ (set in docker-compose), so copy producer/ and utils/
+COPY producer/ /app/
+COPY utils/ /app/utils/
 
 # Entrypoint
 ENTRYPOINT ["python3", "main.py"]
