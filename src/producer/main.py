@@ -40,11 +40,7 @@ from faker import Faker
 from jsonschema import validate, ValidationError, FormatChecker
 # Robust import: when running inside the producer container the files are copied
 # into /app (same directory) so `producer.file_sink` may not be a package.
-try:
-    from producer.file_sink import FileSink
-except Exception:
-    # fallback to local module import
-    from file_sink import FileSink
+
 
 # Configure logging
 logging.basicConfig(
@@ -301,18 +297,7 @@ class EcommerceTransactionProducer:
         self.user_profiles = self._generate_user_profiles(1000)
 
         # Optional local file sink configuration (for debugging / offline ingestion)
-        local_sink_path = os.getenv("LOCAL_SINK_PATH")  # e.g. logs/transactions.jsonl
-        local_sink_fmt = os.getenv("LOCAL_SINK_FORMAT", "jsonl")
-        local_sink_max_mb = int(os.getenv("LOCAL_SINK_MAX_MB", "10"))
-        if local_sink_path:
-            try:
-                self.file_sink = FileSink(path=local_sink_path, fmt=local_sink_fmt, max_bytes=local_sink_max_mb * 1024 * 1024)
-                logger.info("Local file sink enabled: %s", local_sink_path)
-            except Exception as e:
-                logger.warning("Failed to initialize local file sink: %s", e)
-                self.file_sink = None
-        else:
-            self.file_sink = None
+        # Local file sink removed
 
     def _generate_user_profiles(self, count: int) -> Dict[str, Dict]:
         """Generate realistic user profiles for Nigerian users"""
@@ -637,13 +622,7 @@ class EcommerceTransactionProducer:
                     except Exception:
                         logger.exception("Failed to write transaction to Postgres")
 
-            # Also persist locally if configured
-            fs = getattr(self, "file_sink", None)
-            if fs is not None:
-                try:
-                    fs.write(transaction)
-                except Exception:
-                    logger.exception("Failed to write transaction to local sink")
+
 
             return True
 
@@ -671,16 +650,10 @@ class EcommerceTransactionProducer:
             if self.producer:
                 self.producer.flush(timeout=30)  # <-- Ensure flush() is called
                 self.producer.close()
-            # close local sink if present
-            fs = getattr(self, "file_sink", None)
-            if fs is not None:
-                try:
-                    fs.close()
-                except Exception:
-                    logger.exception("Error while closing local file sink")
+            # Local file sink removed
             logger.info("Producer stopped")
 
 
 if __name__ == "__main__":
     producer = EcommerceTransactionProducer()
-    producer.run_continuous_production(interval=0.05)  # ~20 transactions per second
+    producer.run_continuous_production(interval=0.23)  # 23 transactions per second
