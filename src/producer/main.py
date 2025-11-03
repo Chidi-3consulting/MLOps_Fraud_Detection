@@ -40,11 +40,7 @@ from faker import Faker
 from jsonschema import validate, ValidationError, FormatChecker
 # Robust import: when running inside the producer container the files are copied
 # into /app (same directory) so `producer.file_sink` may not be a package.
-try:
-    from producer.file_sink import FileSink
-except Exception:
-    # fallback to local module import
-    from file_sink import FileSink
+
 
 # Configure logging
 logging.basicConfig(
@@ -219,7 +215,7 @@ ECOMMERCE_TRANSACTION_SCHEMA = {
 
 
 class EcommerceTransactionProducer:
-    def __init__(self):
+    def __init__(self, additional_config=None):
         self.bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
         self.kafka_username = os.getenv("KAFKA_USERNAME")
         self.kafka_password = os.getenv("KAFKA_PASSWORD")
@@ -231,13 +227,16 @@ class EcommerceTransactionProducer:
         logger.debug("Bootstrap Servers: %s", self.bootstrap_servers)
         logger.debug("Kafka Topic: %s", self.topic)
 
-        # Producer configuration
+        # Producer configuration with performance optimizations
         self.producer_config = {
             "bootstrap.servers": self.bootstrap_servers,
             "client.id": "ecommerce-transaction-producer",
-            "compression.type": "gzip",
+            "compression.type": "snappy",  # Changed from gzip for better performance
             "linger.ms": 5,
-            "batch.size": 16384,
+            "batch.size": 32768,  # Increased batch size
+            "queue.buffering.max.messages": 100000,  # Large buffer for messages
+            "queue.buffering.max.ms": 5,  # Maximum time to buffer
+            "acks": "1",  # Only wait for leader acknowledgment
         }
 
         if self.kafka_username and self.kafka_password:
@@ -301,18 +300,7 @@ class EcommerceTransactionProducer:
         self.user_profiles = self._generate_user_profiles(1000)
 
         # Optional local file sink configuration (for debugging / offline ingestion)
-        local_sink_path = os.getenv("LOCAL_SINK_PATH")  # e.g. logs/transactions.jsonl
-        local_sink_fmt = os.getenv("LOCAL_SINK_FORMAT", "jsonl")
-        local_sink_max_mb = int(os.getenv("LOCAL_SINK_MAX_MB", "10"))
-        if local_sink_path:
-            try:
-                self.file_sink = FileSink(path=local_sink_path, fmt=local_sink_fmt, max_bytes=local_sink_max_mb * 1024 * 1024)
-                logger.info("Local file sink enabled: %s", local_sink_path)
-            except Exception as e:
-                logger.warning("Failed to initialize local file sink: %s", e)
-                self.file_sink = None
-        else:
-            self.file_sink = None
+        # Local file sink removed
 
     def _generate_user_profiles(self, count: int) -> Dict[str, Dict]:
         """Generate realistic user profiles for Nigerian users"""
@@ -637,13 +625,7 @@ class EcommerceTransactionProducer:
                     except Exception:
                         logger.exception("Failed to write transaction to Postgres")
 
-            # Also persist locally if configured
-            fs = getattr(self, "file_sink", None)
-            if fs is not None:
-                try:
-                    fs.write(transaction)
-                except Exception:
-                    logger.exception("Failed to write transaction to local sink")
+
 
             return True
 
@@ -651,15 +633,32 @@ class EcommerceTransactionProducer:
             logger.error(f"Error producing message: {str(e)}")
             return False
 
-    def run_continuous_production(self, interval: float = 0.0):
-        """Run continuous message production with graceful shutdown"""
+    def run_continuous_production(self, interval: float = 0.0, batch_size: int = 50):
+        """Run continuous message production with graceful shutdown and batching"""
         self.running = True
-        logger.info("Starting producer for topic %s...", self.topic)
+        logger.info("Starting producer for topic %s with batch size %d...", self.topic, batch_size)
 
         try:
             while self.running:
-                if self.send_transaction():
-                    time.sleep(interval)
+                # Generate and send multiple transactions in a batch
+                batch = []
+                for _ in range(batch_size):
+                    transaction = self.generate_transaction()
+                    if transaction:
+                        batch.append(transaction)
+                
+                # Send entire batch at once
+                for transaction in batch:
+                    self.producer.produce(
+                        self.topic,
+                        key=transaction["transaction_id"],
+                        value=json.dumps(transaction),
+                        callback=self.delivery_report
+                    )
+                
+                self.producer.poll(0)  # Trigger any available callbacks
+                if interval > 0:
+                    time.sleep(interval)  # Optional sleep between batches
         finally:
             self.shutdown()
 
@@ -671,16 +670,21 @@ class EcommerceTransactionProducer:
             if self.producer:
                 self.producer.flush(timeout=30)  # <-- Ensure flush() is called
                 self.producer.close()
-            # close local sink if present
-            fs = getattr(self, "file_sink", None)
-            if fs is not None:
-                try:
-                    fs.close()
-                except Exception:
-                    logger.exception("Error while closing local file sink")
+            # Local file sink removed
             logger.info("Producer stopped")
 
 
 if __name__ == "__main__":
-    producer = EcommerceTransactionProducer()
-    producer.run_continuous_production(interval=0.05)  # ~20 transactions per second
+    # Kafka configuration for higher throughput
+    kafka_config = {
+        'queue.buffering.max.messages': 500000,  # Increase message buffer further
+        'batch.num.messages': 1000,  # Larger batch size
+        'linger.ms': 10,  # Slightly longer linger time for better batching
+        'compression.type': 'snappy',  # Enable compression
+        'acks': '1',  # Only wait for leader acknowledgment
+        'socket.max.fails': 1000,  # More resilient to temporary network issues
+        'message.max.bytes': 5000000,  # Increase max message size
+        'request.timeout.ms': 30000  # Longer timeout for larger batches
+    }
+    producer = EcommerceTransactionProducer(additional_config=kafka_config)
+    producer.run_continuous_production(interval=0.01, batch_size=100)  # Increased batch size for higher throughput
