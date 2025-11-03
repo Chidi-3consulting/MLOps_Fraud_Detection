@@ -1,0 +1,1019 @@
+[2025-10-31T07:24:54.465+0000] {processor.py:186} INFO - Started process (PID=86) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:24:54.471+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T07:24:54.481+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:24:54.480+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:24:54.655+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:24:54.628+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T07:24:54.660+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:24:55.121+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.733 seconds
+[2025-10-31T07:25:25.743+0000] {processor.py:186} INFO - Started process (PID=94) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:25:25.746+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T07:25:25.753+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:25:25.752+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:25:25.804+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:25:25.801+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T07:25:25.811+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:25:25.950+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.221 seconds
+[2025-10-31T07:25:58.498+0000] {processor.py:186} INFO - Started process (PID=103) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:25:58.519+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T07:25:58.658+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:25:58.625+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:25:59.384+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:25:59.361+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T07:25:59.415+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:25:59.577+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.213 seconds
+[2025-10-31T07:26:31.755+0000] {processor.py:186} INFO - Started process (PID=112) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:26:31.804+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T07:26:32.003+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:26:31.911+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:26:37.245+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:26:37.116+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T07:26:37.255+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:26:49.192+0000] {processor.py:211} ERROR - Got an exception! Propagating...
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+           ^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 145, in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 143, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 690, in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: could not translate host name "postgres" to address: Temporary failure in name resolution
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 207, in _run_file_processor
+    _handle_dag_file_processing()
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 188, in _handle_dag_file_processing
+    result: tuple[int, int, int] = dag_file_processor.process_file(
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 928, in process_file
+    DagFileProcessor.update_import_errors(
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/api_internal/internal_api_call.py", line 166, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 648, in update_import_errors
+    existing_import_error_files = [x.filename for x in session.query(ParseImportError.filename).all()]
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/query.py", line 2773, in all
+    return self._iter().all()
+           ^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/query.py", line 2916, in _iter
+    result = self.session.execute(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1716, in execute
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1555, in _connection_for_bind
+    return self._transaction._connection_for_bind(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 750, in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/future/engine.py", line 412, in connect
+    return super(Engine, self).connect()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3325, in connect
+    return self._connection_cls(self, close_with_result=close_with_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 96, in __init__
+    else engine.raw_connection()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3404, in raw_connection
+    return self._wrap_pool_connect(self.pool.connect, _connection)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3374, in _wrap_pool_connect
+    Connection._handle_dbapi_exception_noconnection(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2208, in _handle_dbapi_exception_noconnection
+    util.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+           ^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 145, in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 143, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 690, in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate host name "postgres" to address: Temporary failure in name resolution
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+[2025-10-31T07:27:21.286+0000] {processor.py:186} INFO - Started process (PID=121) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:27:21.316+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T07:27:21.403+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:27:21.402+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:27:21.749+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:27:21.730+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T07:27:21.751+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:27:21.956+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.731 seconds
+[2025-10-31T07:27:53.102+0000] {processor.py:186} INFO - Started process (PID=129) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:27:53.119+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T07:27:53.179+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:27:53.167+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:27:53.739+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:27:53.724+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T07:27:53.770+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:27:54.295+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.376 seconds
+[2025-10-31T07:28:26.387+0000] {processor.py:186} INFO - Started process (PID=137) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:28:26.434+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T07:28:26.509+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:28:26.494+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:28:26.990+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:28:26.976+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T07:28:27.004+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:28:27.280+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.197 seconds
+[2025-10-31T07:28:58.831+0000] {processor.py:186} INFO - Started process (PID=146) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:28:58.847+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T07:28:58.864+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:28:58.863+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:28:59.055+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:28:59.041+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T07:28:59.057+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:28:59.202+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.446 seconds
+[2025-10-31T07:29:30.209+0000] {processor.py:186} INFO - Started process (PID=154) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:29:30.215+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T07:29:30.223+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:29:30.221+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:29:34.525+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:29:34.432+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T07:29:34.528+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:29:34.775+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 4.588 seconds
+[2025-10-31T07:30:54.335+0000] {processor.py:186} INFO - Started process (PID=156) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:30:54.337+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T07:30:54.367+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:30:54.347+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:30:54.626+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:30:54.560+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T07:30:54.630+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:30:56.105+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.820 seconds
+[2025-10-31T07:31:48.312+0000] {processor.py:186} INFO - Started process (PID=166) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:31:48.433+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T07:31:48.457+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:31:48.454+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:31:54.948+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:31:53.706+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T07:31:55.803+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:32:07.867+0000] {processor.py:211} ERROR - Got an exception! Propagating...
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+           ^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 145, in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 143, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 690, in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: could not translate host name "postgres" to address: Temporary failure in name resolution
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 207, in _run_file_processor
+    _handle_dag_file_processing()
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 188, in _handle_dag_file_processing
+    result: tuple[int, int, int] = dag_file_processor.process_file(
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 928, in process_file
+    DagFileProcessor.update_import_errors(
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/api_internal/internal_api_call.py", line 166, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 648, in update_import_errors
+    existing_import_error_files = [x.filename for x in session.query(ParseImportError.filename).all()]
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/query.py", line 2773, in all
+    return self._iter().all()
+           ^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/query.py", line 2916, in _iter
+    result = self.session.execute(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1716, in execute
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1555, in _connection_for_bind
+    return self._transaction._connection_for_bind(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 750, in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/future/engine.py", line 412, in connect
+    return super(Engine, self).connect()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3325, in connect
+    return self._connection_cls(self, close_with_result=close_with_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 96, in __init__
+    else engine.raw_connection()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3404, in raw_connection
+    return self._wrap_pool_connect(self.pool.connect, _connection)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3374, in _wrap_pool_connect
+    Connection._handle_dbapi_exception_noconnection(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2208, in _handle_dbapi_exception_noconnection
+    util.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+           ^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 145, in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 143, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 690, in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate host name "postgres" to address: Temporary failure in name resolution
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+[2025-10-31T07:32:43.732+0000] {processor.py:186} INFO - Started process (PID=168) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:32:43.749+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T07:32:43.785+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:32:43.758+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:32:44.028+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:32:43.993+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T07:32:44.037+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:32:45.167+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.545 seconds
+[2025-10-31T07:33:36.938+0000] {processor.py:186} INFO - Started process (PID=177) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:33:37.791+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T07:33:53.253+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:33:46.275+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:35:51.990+0000] {processor.py:186} INFO - Started process (PID=179) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:35:52.256+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T07:35:52.407+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:35:52.309+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:35:57.217+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:35:56.195+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T07:35:57.650+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:36:08.643+0000] {processor.py:211} ERROR - Got an exception! Propagating...
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+           ^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 145, in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 143, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 690, in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: could not translate host name "postgres" to address: Temporary failure in name resolution
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 207, in _run_file_processor
+    _handle_dag_file_processing()
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 188, in _handle_dag_file_processing
+    result: tuple[int, int, int] = dag_file_processor.process_file(
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 928, in process_file
+    DagFileProcessor.update_import_errors(
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/api_internal/internal_api_call.py", line 166, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 648, in update_import_errors
+    existing_import_error_files = [x.filename for x in session.query(ParseImportError.filename).all()]
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/query.py", line 2773, in all
+    return self._iter().all()
+           ^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/query.py", line 2916, in _iter
+    result = self.session.execute(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1716, in execute
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1555, in _connection_for_bind
+    return self._transaction._connection_for_bind(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 750, in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/future/engine.py", line 412, in connect
+    return super(Engine, self).connect()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3325, in connect
+    return self._connection_cls(self, close_with_result=close_with_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 96, in __init__
+    else engine.raw_connection()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3404, in raw_connection
+    return self._wrap_pool_connect(self.pool.connect, _connection)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3374, in _wrap_pool_connect
+    Connection._handle_dbapi_exception_noconnection(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2208, in _handle_dbapi_exception_noconnection
+    util.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+           ^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 145, in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 143, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 690, in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate host name "postgres" to address: Temporary failure in name resolution
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+[2025-10-31T07:44:35.018+0000] {processor.py:186} INFO - Started process (PID=86) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:44:35.032+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T07:44:35.080+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:44:35.079+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:44:35.244+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:44:35.241+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T07:44:35.254+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:44:38.424+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.809 seconds
+[2025-10-31T07:45:13.116+0000] {processor.py:186} INFO - Started process (PID=93) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:45:13.150+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T07:45:13.243+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:45:13.226+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:45:13.707+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:45:13.701+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T07:45:13.715+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:45:14.138+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.315 seconds
+[2025-10-31T07:45:45.608+0000] {processor.py:186} INFO - Started process (PID=102) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:45:45.716+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T07:45:45.858+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:45:45.824+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:45:46.077+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:45:46.061+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T07:45:46.090+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:45:46.497+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.128 seconds
+[2025-10-31T07:46:17.720+0000] {processor.py:186} INFO - Started process (PID=105) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:46:17.727+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T07:46:17.784+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:46:17.783+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:46:17.975+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:46:17.955+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T07:46:17.987+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:46:18.425+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.734 seconds
+[2025-10-31T07:46:49.993+0000] {processor.py:186} INFO - Started process (PID=114) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:46:49.998+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T07:46:50.082+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:46:50.071+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:46:50.696+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:46:50.620+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T07:46:50.716+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:46:53.299+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 3.387 seconds
+[2025-10-31T07:47:32.391+0000] {processor.py:186} INFO - Started process (PID=125) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:47:32.416+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T07:47:32.539+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:47:32.465+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:47:33.694+0000] {logging_mixin.py:190} INFO - [2025-10-31T07:47:33.404+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T07:47:33.767+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T07:47:55.387+0000] {processor.py:211} ERROR - Got an exception! Propagating...
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+           ^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 145, in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 143, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 690, in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: could not translate host name "postgres" to address: Temporary failure in name resolution
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 207, in _run_file_processor
+    _handle_dag_file_processing()
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 188, in _handle_dag_file_processing
+    result: tuple[int, int, int] = dag_file_processor.process_file(
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 928, in process_file
+    DagFileProcessor.update_import_errors(
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/api_internal/internal_api_call.py", line 166, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 648, in update_import_errors
+    existing_import_error_files = [x.filename for x in session.query(ParseImportError.filename).all()]
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/query.py", line 2773, in all
+    return self._iter().all()
+           ^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/query.py", line 2916, in _iter
+    result = self.session.execute(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1716, in execute
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1555, in _connection_for_bind
+    return self._transaction._connection_for_bind(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 750, in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/future/engine.py", line 412, in connect
+    return super(Engine, self).connect()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3325, in connect
+    return self._connection_cls(self, close_with_result=close_with_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 96, in __init__
+    else engine.raw_connection()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3404, in raw_connection
+    return self._wrap_pool_connect(self.pool.connect, _connection)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3374, in _wrap_pool_connect
+    Connection._handle_dbapi_exception_noconnection(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2208, in _handle_dbapi_exception_noconnection
+    util.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+           ^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 145, in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 143, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 690, in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate host name "postgres" to address: Temporary failure in name resolution
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+[2025-10-31T08:44:04.181+0000] {processor.py:186} INFO - Started process (PID=95) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T08:44:04.295+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T08:44:04.552+0000] {logging_mixin.py:190} INFO - [2025-10-31T08:44:04.499+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T08:44:06.923+0000] {logging_mixin.py:190} INFO - [2025-10-31T08:44:06.878+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T08:44:06.943+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T08:44:07.917+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 3.959 seconds
+[2025-10-31T08:44:38.853+0000] {processor.py:186} INFO - Started process (PID=103) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T08:44:38.888+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T08:44:39.057+0000] {logging_mixin.py:190} INFO - [2025-10-31T08:44:39.055+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T08:44:39.419+0000] {logging_mixin.py:190} INFO - [2025-10-31T08:44:39.344+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T08:44:39.441+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T08:44:39.811+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.120 seconds
+[2025-10-31T08:45:10.342+0000] {processor.py:186} INFO - Started process (PID=111) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T08:45:10.346+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T08:45:10.361+0000] {logging_mixin.py:190} INFO - [2025-10-31T08:45:10.360+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T08:45:10.467+0000] {logging_mixin.py:190} INFO - [2025-10-31T08:45:10.454+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T08:45:10.475+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T08:45:10.780+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.484 seconds
+[2025-10-31T08:45:42.451+0000] {processor.py:186} INFO - Started process (PID=120) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T08:45:42.677+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T08:45:42.814+0000] {logging_mixin.py:190} INFO - [2025-10-31T08:45:42.813+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T08:45:43.059+0000] {logging_mixin.py:190} INFO - [2025-10-31T08:45:43.054+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T08:45:43.078+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T08:45:43.752+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.523 seconds
+[2025-10-31T08:46:14.635+0000] {processor.py:186} INFO - Started process (PID=129) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T08:46:14.638+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T08:46:14.658+0000] {logging_mixin.py:190} INFO - [2025-10-31T08:46:14.653+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T08:46:14.740+0000] {logging_mixin.py:190} INFO - [2025-10-31T08:46:14.737+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T08:46:14.746+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T08:46:15.007+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.404 seconds
+[2025-10-31T08:46:45.586+0000] {processor.py:186} INFO - Started process (PID=139) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T08:46:45.588+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-10-31T08:46:45.600+0000] {logging_mixin.py:190} INFO - [2025-10-31T08:46:45.600+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T08:46:45.681+0000] {logging_mixin.py:190} INFO - [2025-10-31T08:46:45.679+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-10-31T08:46:45.692+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-10-31T08:46:45.991+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.439 seconds
