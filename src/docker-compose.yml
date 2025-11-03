@@ -336,8 +336,15 @@ services:
       replicas: 2
       resources:
         limits:
-          cpus: '1'
-          memory: 1G
+          cpus: '2'
+          memory: 2G
+    environment:
+      - KAFKA_BATCH_SIZE=32768
+      - KAFKA_LINGER_MS=50
+      - KAFKA_COMPRESSION_TYPE=snappy
+      - KAFKA_QUEUE_BUFFERING_MAX_MS=100
+      - KAFKA_QUEUE_BUFFERING_MAX_MESSAGES=100000
+      - KAFKA_MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION=5
     networks:
       - fraud-detection
 
