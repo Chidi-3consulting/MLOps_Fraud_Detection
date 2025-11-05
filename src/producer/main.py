@@ -675,16 +675,5 @@ class EcommerceTransactionProducer:
 
 
 if __name__ == "__main__":
-    # Kafka configuration for higher throughput
-    kafka_config = {
-        'queue.buffering.max.messages': 500000,  # Increase message buffer further
-        'batch.num.messages': 1000,  # Larger batch size
-        'linger.ms': 10,  # Slightly longer linger time for better batching
-        'compression.type': 'snappy',  # Enable compression
-        'acks': '1',  # Only wait for leader acknowledgment
-        'socket.max.fails': 1000,  # More resilient to temporary network issues
-        'message.max.bytes': 5000000,  # Increase max message size
-        'request.timeout.ms': 30000  # Longer timeout for larger batches
-    }
-    producer = EcommerceTransactionProducer(additional_config=kafka_config)
-    producer.run_continuous_production(interval=0.01, batch_size=100)  # Increased batch size for higher throughput
+    producer = EcommerceTransactionProducer()
+    producer.run_continuous_production()
