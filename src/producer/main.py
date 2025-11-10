@@ -11,6 +11,7 @@ import requests
 from typing import Dict, Any, Optional
 from datetime import datetime
 import signal
+import hashlib
 
 try:
     from confluent_kafka import Producer
@@ -48,15 +49,22 @@ load_dotenv()
 
 class PureAPItoKafkaProducer:
     def __init__(self):
+        # Optional Redis import (lazy to keep runtime flexible)
+        try:
+            import redis as _redis
+            self._redis_lib = _redis
+        except Exception:
+            self._redis_lib = None
+
         self.api_url = os.getenv("FRAUD_API_URL", "https://3consult-ng.com/fraud_api.php")
         self.bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
         self.kafka_username = os.getenv("KAFKA_USERNAME")
         self.kafka_password = os.getenv("KAFKA_PASSWORD")
         # Force the topic to 'fraud_data' regardless of environment to avoid misconfiguration
         env_topic = os.getenv("KAFKA_TOPIC")
-        if env_topic and env_topic != "fraud_data":
-            logger.warning(f"Ignoring KAFKA_TOPIC='{env_topic}' and forcing topic to 'fraud_data'")
-        self.topic = "fraud_data"
+        if env_topic and env_topic != "Ecommerce_transactions":
+            logger.warning(f"Ignoring KAFKA_TOPIC='{env_topic}' and forcing topic to 'Ecommerce_transactions'")
+        self.topic = "Ecommerce_transactions"
         self.batch_size = int(os.getenv("BATCH_SIZE", "5000"))
         
         # Offset tracking - THIS PREVENTS DUPLICATES ACROSS RUNS
@@ -65,6 +73,14 @@ class PureAPItoKafkaProducer:
         
         self.running = False
         self.total_sent = 0
+        self._batch_delivered = 0
+        self.dedup_skipped = 0
+
+        # Optional Redis-based cross-run deduplication
+        self.redis = self._init_redis_client()
+        self.redis_set_key = os.getenv("REDIS_DEDUP_SET_KEY", "fraud:seen_transaction_ids")
+        # Optional Redis-backed offset key
+        self.offset_redis_key = os.getenv("REDIS_OFFSET_KEY", "fraud:producer_offset")
         
         # Ensure topic exists before producing (best-effort; works if credentials permit)
         self._ensure_topic_exists()
@@ -77,6 +93,15 @@ class PureAPItoKafkaProducer:
 
     def _load_last_offset(self) -> int:
         """Load where we left off to avoid re-reading the same data"""
+        # Prefer Redis if available
+        if hasattr(self, "redis") and self.redis:
+            try:
+                val = self.redis.get(self.offset_redis_key)
+                if val is not None:
+                    return int(val)
+            except Exception as e:
+                logger.warning(f"Failed to load offset from Redis, falling back to file: {e}")
+        # Fallback to local file
         try:
             if os.path.exists(self.offset_file):
                 with open(self.offset_file, 'r') as f:
@@ -87,11 +112,18 @@ class PureAPItoKafkaProducer:
 
     def _save_last_offset(self, offset: int):
         """Save progress so next run continues from here"""
+        # Write to Redis if available
+        if hasattr(self, "redis") and self.redis:
+            try:
+                self.redis.set(self.offset_redis_key, str(offset))
+            except Exception as e:
+                logger.warning(f"Failed to save offset to Redis: {e}")
+        # Always persist to file as a backup
         try:
             with open(self.offset_file, 'w') as f:
                 f.write(str(offset))
         except Exception as e:
-            logger.error(f"Failed to save offset: {e}")
+            logger.error(f"Failed to save offset file: {e}")
 
     def _create_kafka_producer(self):
         producer_config = {
@@ -167,11 +199,7 @@ class PureAPItoKafkaProducer:
                 if data.get('success') and data.get('data'):
                     transactions = data['data']
                     logger.info(f"✅ Received {len(transactions)} transactions from API")
-                    
-                    # Update offset for next batch
-                    if transactions:
-                        self._save_last_offset(self.current_offset + len(transactions))
-                    
+
                     return transactions
                 else:
                     logger.warning("API returned no data or error")
@@ -187,21 +215,72 @@ class PureAPItoKafkaProducer:
     def delivery_report(self, err, msg):
         if err:
             logger.error(f"Delivery failed: {err}")
+        else:
+            self._batch_delivered += 1
+            # On successful delivery, remember the key as seen
+            try:
+                if self.redis:
+                    key_bytes = msg.key()
+                    if key_bytes is None:
+                        return
+                    key_str = key_bytes.decode("utf-8") if isinstance(key_bytes, (bytes, bytearray)) else str(key_bytes)
+                    self.redis.sadd(self.redis_set_key, key_str)
+            except Exception as e:
+                logger.warning(f"Failed to mark key as seen in Redis: {e}")
 
     def send_to_kafka(self, transaction: Dict[str, Any]) -> bool:
         try:
+            # Deterministic key for deduplication downstream (log compaction/upserts)
+            tx_id = transaction.get('transaction_id')
+            if tx_id:
+                key_str = str(tx_id)
+            else:
+                payload = json.dumps(transaction, sort_keys=True, separators=(',', ':'))
+                key_str = hashlib.sha256(payload.encode('utf-8')).hexdigest()
+
+            # Pre-produce dedup check in Redis
+            if self.redis and key_str:
+                try:
+                    if self.redis.sismember(self.redis_set_key, key_str):
+                        self.dedup_skipped += 1
+                        return False
+                except Exception as e:
+                    logger.warning(f"Redis dedup check failed, proceeding without dedup: {e}")
+
             self.producer.produce(
                 self.topic,
-                key=transaction.get('transaction_id', 'unknown'),
+                key=key_str,
                 value=json.dumps(transaction),
                 callback=self.delivery_report
             )
             self.producer.poll(0)
-            self.total_sent += 1
             return True
         except Exception as e:
             logger.error(f"Send failed: {e}")
             return False
+
+    def _init_redis_client(self):
+        """Initialize Redis client if configured via environment."""
+        if self._redis_lib is None:
+            return None
+        redis_url = os.getenv("REDIS_URL")
+        host = os.getenv("REDIS_HOST")
+        if not redis_url and not host:
+            return None
+        try:
+            if redis_url:
+                client = self._redis_lib.Redis.from_url(redis_url, decode_responses=True)
+            else:
+                port = int(os.getenv("REDIS_PORT", "6379"))
+                password = os.getenv("REDIS_PASSWORD")
+                db = int(os.getenv("REDIS_DB", "0"))
+                client = self._redis_lib.Redis(host=host, port=port, password=password, db=db, decode_responses=True)
+            client.ping()
+            logger.info("Connected to Redis for deduplication.")
+            return client
+        except Exception as e:
+            logger.warning(f"Redis not available for deduplication: {e}")
+            return None
 
     def stream_continuously(self):
         """Stream data continuously - each run continues from last offset"""
@@ -218,11 +297,19 @@ class PureAPItoKafkaProducer:
                     continue
                 
                 # Send all transactions
+                self._batch_delivered = 0
                 for transaction in transactions:
                     self.send_to_kafka(transaction)
-                    self.current_offset += 1
+
+                # Wait for delivery callbacks and advance offset only by successes
+                self.producer.flush(30)
+                delivered_now = self._batch_delivered
+                self.total_sent += delivered_now
+                self.current_offset += delivered_now
+                if delivered_now:
+                    self._save_last_offset(self.current_offset)
                 
-                logger.info(f"📦 Sent batch - Total: {self.total_sent}, Next offset: {self.current_offset}")
+                logger.info(f"📦 Sent batch - Delivered: {delivered_now}, Total: {self.total_sent}, Next offset: {self.current_offset}")
                 time.sleep(2)  # Be nice to the API
                 
         except KeyboardInterrupt:
@@ -243,13 +330,20 @@ class PureAPItoKafkaProducer:
                     logger.info("No more data available")
                     break
                 
+                self._batch_delivered = 0
                 for transaction in transactions:
                     if self.total_sent >= count:
                         break
                     self.send_to_kafka(transaction)
-                    self.current_offset += 1
+
+                self.producer.flush(30)
+                delivered_now = self._batch_delivered
+                self.total_sent += delivered_now
+                self.current_offset += delivered_now
+                if delivered_now:
+                    self._save_last_offset(self.current_offset)
                 
-                logger.info(f"Progress: {self.total_sent}/{count}")
+                logger.info(f"Progress: {self.total_sent}/{count}, Next offset: {self.current_offset}")
             
             logger.info(f"✅ Streamed {self.total_sent} records")
             

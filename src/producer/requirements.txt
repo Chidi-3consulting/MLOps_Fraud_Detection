@@ -5,3 +5,4 @@ confluent_kafka
 sqlalchemy
 psycopg2-binary
 requests
+redis
