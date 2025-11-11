@@ -330,6 +330,14 @@ services:
       context: .
       dockerfile: producer/Dockerfile
     env_file: .env
+    environment:
+      - KAFKA_TOPIC=topic_fraud_1
+      - KAFKA_BATCH_SIZE=32768
+      - KAFKA_LINGER_MS=50
+      - KAFKA_COMPRESSION_TYPE=snappy
+      - KAFKA_QUEUE_BUFFERING_MAX_MS=100
+      - KAFKA_QUEUE_BUFFERING_MAX_MESSAGES=100000
+      - KAFKA_MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION=5
     volumes:
       - ./state:/app/state
     profiles:
@@ -340,13 +348,6 @@ services:
         limits:
           cpus: '2'
           memory: 2G
-    environment:
-      - KAFKA_BATCH_SIZE=32768
-      - KAFKA_LINGER_MS=50
-      - KAFKA_COMPRESSION_TYPE=snappy
-      - KAFKA_QUEUE_BUFFERING_MAX_MS=100
-      - KAFKA_QUEUE_BUFFERING_MAX_MESSAGES=100000
-      - KAFKA_MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION=5
     networks:
       - fraud-detection
 

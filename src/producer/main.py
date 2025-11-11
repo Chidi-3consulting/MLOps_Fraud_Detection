@@ -62,11 +62,9 @@ class PureAPItoKafkaProducer:
         self.bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
         self.kafka_username = os.getenv("KAFKA_USERNAME")
         self.kafka_password = os.getenv("KAFKA_PASSWORD")
-        # Use the new canonical topic
+        # Resolve topic from env with sensible default
         env_topic = os.getenv("KAFKA_TOPIC")
-        if env_topic and env_topic != "topic_fraud":
-            logger.warning(f"Ignoring KAFKA_TOPIC='{env_topic}' and forcing topic to 'topic_fraud'")
-        self.topic = "topic_fraud"
+        self.topic = env_topic if env_topic else "topic_fraud_1"
         self.batch_size = int(os.getenv("BATCH_SIZE", "10000"))
         
         # Offset tracking - THIS PREVENTS DUPLICATES ACROSS RUNS
@@ -217,7 +215,36 @@ class PureAPItoKafkaProducer:
             # Ensure idempotent, exactly-once-in-producer semantics where possible
             "acks": "all",
             "enable.idempotence": True,
+            # Improve reliability on Confluent Cloud
+            "message.timeout.ms": 1200000,  # 20 minutes
+            "socket.keepalive.enable": True,
+            "max.in.flight.requests.per.connection": 5,
+            "reconnect.backoff.ms": 100,
+            "reconnect.backoff.max.ms": 10000,
+            "retry.backoff.ms": 100,
+            "message.send.max.retries": 2147483647,  # effectively unlimited
         }
+
+        # Optional tunables via env (match docker-compose KAFKA_* vars if present)
+        optional_mappings = {
+            "KAFKA_BATCH_SIZE": "batch.size",
+            "KAFKA_LINGER_MS": "linger.ms",
+            "KAFKA_COMPRESSION_TYPE": "compression.type",
+            "KAFKA_QUEUE_BUFFERING_MAX_MS": "queue.buffering.max.ms",
+            "KAFKA_QUEUE_BUFFERING_MAX_MESSAGES": "queue.buffering.max.messages",
+            "KAFKA_MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION": "max.in.flight.requests.per.connection",
+        }
+        for env_key, conf_key in optional_mappings.items():
+            val = os.getenv(env_key)
+            if val:
+                # Cast numeric fields where applicable
+                try:
+                    if conf_key.endswith(".ms") or conf_key in {"batch.size", "queue.buffering.max.messages", "max.in.flight.requests.per.connection"}:
+                        producer_config[conf_key] = int(val)
+                    else:
+                        producer_config[conf_key] = val
+                except Exception:
+                    producer_config[conf_key] = val
 
         if self.kafka_username and self.kafka_password:
             producer_config.update({
@@ -301,6 +328,14 @@ class PureAPItoKafkaProducer:
     def delivery_report(self, err, msg):
         if err:
             logger.error(f"Delivery failed: {err}")
+            # Release inflight reservation so we can retry later
+            try:
+                key_bytes = msg.key()
+                if key_bytes is not None:
+                    key_str = key_bytes.decode("utf-8") if isinstance(key_bytes, (bytes, bytearray)) else str(key_bytes)
+                    self._release_reservation(key_str)
+            except Exception as e:
+                logger.warning(f"Failed to release reservation on error: {e}")
         else:
             self._batch_delivered += 1
             # On successful delivery, remember the key as seen
@@ -338,6 +373,11 @@ class PureAPItoKafkaProducer:
             return True
         except Exception as e:
             logger.error(f"Send failed: {e}")
+            # On immediate send failure, release reservation so future attempts can retry
+            try:
+                self._release_reservation(key_str)
+            except Exception:
+                pass
             return False
 
     def _reserve_key(self, key_str: str) -> bool:
@@ -419,6 +459,33 @@ class PureAPItoKafkaProducer:
             self.local_seen_keys.add(key_str)
         except Exception as e:
             logger.warning(f"Finalize key failed: {e}")
+
+    def _release_reservation(self, key_str: str) -> None:
+        """Release inflight reservation without marking as seen (e.g., on delivery failure)."""
+        try:
+            if self.redis:
+                inflight_key = f"{self.redis_set_key}:inflight:{key_str}"
+                try:
+                    self.redis.delete(inflight_key)
+                except Exception:
+                    pass
+            if self._sqlite_conn is not None:
+                try:
+                    self._sqlite_conn.execute("DELETE FROM inflight_keys WHERE key = ?", (key_str,))
+                    self._sqlite_conn.commit()
+                except Exception:
+                    pass
+            # Local guard: allow retry by removing from set if present
+            try:
+                if key_str in self.local_seen_keys:
+                    # Do not remove from seen set here; only inflight would be in a separate structure.
+                    # Since local fallback uses seen set for both, we cannot distinguish reliably.
+                    # Intentionally not removing from seen to avoid duplicates in local-only mode.
+                    pass
+            except Exception:
+                pass
+        except Exception:
+            pass
 
     def _init_sqlite_state(self) -> None:
         """Initialize durable local SQLite state for offsets and dedup when Redis is unavailable."""
@@ -557,6 +624,7 @@ class PureAPItoKafkaProducer:
 
 if __name__ == "__main__":
     import argparse
+    import os
     
     parser = argparse.ArgumentParser()
     parser.add_argument('--mode', choices=['continuous', 'batch'], default='continuous')
@@ -567,19 +635,34 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     
+    # Allow environment overrides for containerized runs
+    def _env_truthy(name: str) -> bool:
+        val = os.getenv(name)
+        return str(val).lower() in {"1", "true", "yes", "on"} if val is not None else False
+    env_reset_offsets = _env_truthy("RESET_OFFSETS")
+    env_reset_dedup = _env_truthy("RESET_DEDUP")
+    env_start_offset = os.getenv("START_OFFSET")
+    env_mode = os.getenv("STREAM_MODE")
+    env_count = os.getenv("STREAM_COUNT")
+
     producer = PureAPItoKafkaProducer()
 
     # Apply optional resets before streaming
-    if args.reset_offsets or args.reset_dedup or args.start_offset is not None:
+    reset_offsets = args.reset_offsets or env_reset_offsets
+    reset_dedup = args.reset_dedup or env_reset_dedup
+    start_offset = args.start_offset if args.start_offset is not None else (int(env_start_offset) if env_start_offset is not None else None)
+    if reset_offsets or reset_dedup or start_offset is not None:
         producer.reset_state(
-            reset_offsets=args.reset_offsets,
-            reset_dedup=args.reset_dedup,
-            start_offset=args.start_offset
+            reset_offsets=reset_offsets,
+            reset_dedup=reset_dedup,
+            start_offset=start_offset
         )
     
     try:
-        if args.mode == 'batch':
-            producer.stream_count(args.count)
+        run_mode = env_mode if env_mode in {'continuous', 'batch'} else args.mode
+        run_count = int(env_count) if env_count is not None else args.count
+        if run_mode == 'batch':
+            producer.stream_count(run_count)
         else:
             producer.stream_continuously()
     except Exception as e:
