@@ -64,8 +64,8 @@ class PureAPItoKafkaProducer:
         self.kafka_password = os.getenv("KAFKA_PASSWORD")
         # Resolve topic from env with sensible default
         env_topic = os.getenv("KAFKA_TOPIC")
-        self.topic = env_topic if env_topic else "topic_fraud_1"
-        self.batch_size = int(os.getenv("BATCH_SIZE", "10000"))
+        self.topic = env_topic if env_topic else "topic_fraud_2"
+        self.batch_size = int(os.getenv("BATCH_SIZE", "50000"))
         
         # Offset tracking - THIS PREVENTS DUPLICATES ACROSS RUNS
         self.offset_file = "api_offset.txt"
