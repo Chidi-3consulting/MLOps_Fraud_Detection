@@ -65,7 +65,7 @@ class PureAPItoKafkaProducer:
         if env_topic and env_topic != "Ecommerce_transactions":
             logger.warning(f"Ignoring KAFKA_TOPIC='{env_topic}' and forcing topic to 'Ecommerce_transactions'")
         self.topic = "Ecommerce_transactions"
-        self.batch_size = int(os.getenv("BATCH_SIZE", "5000"))
+        self.batch_size = int(os.getenv("BATCH_SIZE", "10000"))
         
         # Offset tracking - THIS PREVENTS DUPLICATES ACROSS RUNS
         self.offset_file = "api_offset.txt"
