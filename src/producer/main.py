@@ -80,6 +80,9 @@ class PureAPItoKafkaProducer:
         self.redis_set_key = os.getenv("REDIS_DEDUP_SET_KEY", "fraud:seen_transaction_ids")
         # Optional Redis-backed offset key
         self.offset_redis_key = os.getenv("REDIS_OFFSET_KEY", "fraud:producer_offset")
+        # Optional Redis-backed distributed offset allocator for multi-replica
+        self.distributed_offsets = str(os.getenv("DISTRIBUTED_OFFSET", "false")).lower() in {"1", "true", "yes", "on"}
+        self.offset_alloc_key = os.getenv("REDIS_OFFSET_ALLOC_KEY", "fraud:producer_offset_alloc")
         # TTL (seconds) for inflight reservations; prevents duplicates across short restarts
         self.redis_inflight_ttl = int(os.getenv("REDIS_INFLIGHT_TTL", "900"))
         # Local fallback guard within process in case Redis is unavailable
@@ -92,6 +95,15 @@ class PureAPItoKafkaProducer:
 
         # Now that SQLite state is initialized, load the last offset
         self.current_offset = self._load_last_offset()
+        # Initialize distributed allocator to current_offset if enabled and not set yet
+        if self.distributed_offsets and self.redis:
+            try:
+                exists = self.redis.exists(self.offset_alloc_key)
+                if not exists:
+                    # allocator represents next start offset to allocate; set to current_offset
+                    self.redis.set(self.offset_alloc_key, int(self.current_offset))
+            except Exception as e:
+                logger.warning(f"Failed to init distributed offset allocator: {e}")
         
         # Ensure topic exists before producing (best-effort; works if credentials permit)
         self._ensure_topic_exists()
@@ -101,6 +113,12 @@ class PureAPItoKafkaProducer:
         
         logger.info(f"Kafka bootstrap: {self.bootstrap_servers}, topic: {self.topic}")
         logger.info(f"Pure API to Kafka Producer - Starting from offset: {self.current_offset}")
+        if self.distributed_offsets:
+            if not self.redis:
+                logger.warning("DISTRIBUTED_OFFSET is enabled but Redis is unavailable; falling back to single-instance offset handling.")
+                self.distributed_offsets = False
+            else:
+                logger.info("Distributed offset allocation enabled (Redis backed).")
 
     def reset_state(self, *, reset_offsets: bool = False, reset_dedup: bool = False, start_offset: int | None = None) -> None:
         """Reset offsets and/or dedup state on demand; optionally force a starting offset."""
@@ -161,6 +179,11 @@ class PureAPItoKafkaProducer:
                 logger.warning(f"Failed resetting file offset: {e}")
             self.current_offset = new_offset
             logger.info(f"Offset reset. New starting offset: {self.current_offset}")
+            if self.distributed_offsets and self.redis:
+                try:
+                    self.redis.set(self.offset_alloc_key, int(new_offset))
+                except Exception as e:
+                    logger.warning(f"Failed resetting distributed allocator offset: {e}")
 
     def _load_last_offset(self) -> int:
         """Load where we left off to avoid re-reading the same data"""
@@ -301,10 +324,20 @@ class PureAPItoKafkaProducer:
 
     def download_batch(self) -> Optional[list]:
         """Download batch from API using current offset"""
-        logger.info(f"Downloading from API - Offset: {self.current_offset}, Limit: {self.batch_size}")
+        # Determine offset source (distributed allocator or local current_offset)
+        api_offset = self.current_offset
+        if self.distributed_offsets and self.redis:
+            try:
+                claimed = int(self.redis.incrby(self.offset_alloc_key, self.batch_size))
+                api_offset = claimed - self.batch_size
+            except Exception as e:
+                logger.warning(f"Distributed offset allocation failed, using local offset: {e}")
+        # Track the offset used for this batch
+        self.current_offset = api_offset
+        logger.info(f"Downloading from API - Offset: {api_offset}, Limit: {self.batch_size}")
         
         try:
-            params = {'limit': self.batch_size, 'offset': self.current_offset}
+            params = {'limit': self.batch_size, 'offset': api_offset}
             response = requests.get(self.api_url, params=params, timeout=30)
             
             if response.status_code == 200:
@@ -569,9 +602,14 @@ class PureAPItoKafkaProducer:
                 self.producer.flush(30)
                 delivered_now = self._batch_delivered
                 self.total_sent += delivered_now
-                self.current_offset += delivered_now
-                if delivered_now:
-                    self._save_last_offset(self.current_offset)
+                # Only advance and persist local offsets when not using distributed allocator
+                if self.distributed_offsets and self.redis:
+                    if delivered_now:
+                        self.current_offset += delivered_now
+                else:
+                    self.current_offset += delivered_now
+                    if delivered_now:
+                        self._save_last_offset(self.current_offset)
                 
                 logger.info(f"📦 Sent batch - Delivered: {delivered_now}, Total: {self.total_sent}, Next offset: {self.current_offset}")
                 time.sleep(2)  # Be nice to the API
@@ -603,9 +641,13 @@ class PureAPItoKafkaProducer:
                 self.producer.flush(30)
                 delivered_now = self._batch_delivered
                 self.total_sent += delivered_now
-                self.current_offset += delivered_now
-                if delivered_now:
-                    self._save_last_offset(self.current_offset)
+                if self.distributed_offsets and self.redis:
+                    if delivered_now:
+                        self.current_offset += delivered_now
+                else:
+                    self.current_offset += delivered_now
+                    if delivered_now:
+                        self._save_last_offset(self.current_offset)
                 
                 logger.info(f"Progress: {self.total_sent}/{count}, Next offset: {self.current_offset}")
             
