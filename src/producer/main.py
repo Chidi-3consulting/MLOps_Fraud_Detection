@@ -12,6 +12,8 @@ from typing import Dict, Any, Optional
 from datetime import datetime
 import signal
 import hashlib
+import sqlite3
+import time as _time
 
 try:
     from confluent_kafka import Producer
@@ -60,11 +62,11 @@ class PureAPItoKafkaProducer:
         self.bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
         self.kafka_username = os.getenv("KAFKA_USERNAME")
         self.kafka_password = os.getenv("KAFKA_PASSWORD")
-        # Force the topic to 'fraud_data' regardless of environment to avoid misconfiguration
+        # Force the topic to 'Fraud_transactions' regardless of environment to avoid misconfiguration
         env_topic = os.getenv("KAFKA_TOPIC")
-        if env_topic and env_topic != "Ecommerce_transactions":
-            logger.warning(f"Ignoring KAFKA_TOPIC='{env_topic}' and forcing topic to 'Ecommerce_transactions'")
-        self.topic = "Ecommerce_transactions"
+        if env_topic and env_topic != "Fraud_transactions":
+            logger.warning(f"Ignoring KAFKA_TOPIC='{env_topic}' and forcing topic to 'Fraud_transactions'")
+        self.topic = "Fraud_transactions"
         self.batch_size = int(os.getenv("BATCH_SIZE", "10000"))
         
         # Offset tracking - THIS PREVENTS DUPLICATES ACROSS RUNS
@@ -81,6 +83,14 @@ class PureAPItoKafkaProducer:
         self.redis_set_key = os.getenv("REDIS_DEDUP_SET_KEY", "fraud:seen_transaction_ids")
         # Optional Redis-backed offset key
         self.offset_redis_key = os.getenv("REDIS_OFFSET_KEY", "fraud:producer_offset")
+        # TTL (seconds) for inflight reservations; prevents duplicates across short restarts
+        self.redis_inflight_ttl = int(os.getenv("REDIS_INFLIGHT_TTL", "900"))
+        # Local fallback guard within process in case Redis is unavailable
+        self.local_seen_keys = set()
+
+        # Durable local fallback (works even if Redis is down): SQLite-backed state
+        self.state_db_path = os.getenv("DEDUP_DB_PATH", os.path.join("state", "producer_state.sqlite"))
+        self._init_sqlite_state()
         
         # Ensure topic exists before producing (best-effort; works if credentials permit)
         self._ensure_topic_exists()
@@ -101,6 +111,13 @@ class PureAPItoKafkaProducer:
                     return int(val)
             except Exception as e:
                 logger.warning(f"Failed to load offset from Redis, falling back to file: {e}")
+        # Next, try SQLite durable store
+        try:
+            sqlite_offset = self._sqlite_get_offset()
+            if sqlite_offset is not None:
+                return sqlite_offset
+        except Exception as e:
+            logger.warning(f"Failed to load offset from SQLite, falling back to file: {e}")
         # Fallback to local file
         try:
             if os.path.exists(self.offset_file):
@@ -118,6 +135,11 @@ class PureAPItoKafkaProducer:
                 self.redis.set(self.offset_redis_key, str(offset))
             except Exception as e:
                 logger.warning(f"Failed to save offset to Redis: {e}")
+        # Also persist to SQLite
+        try:
+            self._sqlite_set_offset(offset)
+        except Exception as e:
+            logger.warning(f"Failed to save offset to SQLite: {e}")
         # Always persist to file as a backup
         try:
             with open(self.offset_file, 'w') as f:
@@ -219,12 +241,11 @@ class PureAPItoKafkaProducer:
             self._batch_delivered += 1
             # On successful delivery, remember the key as seen
             try:
-                if self.redis:
-                    key_bytes = msg.key()
-                    if key_bytes is None:
-                        return
-                    key_str = key_bytes.decode("utf-8") if isinstance(key_bytes, (bytes, bytearray)) else str(key_bytes)
-                    self.redis.sadd(self.redis_set_key, key_str)
+                key_bytes = msg.key()
+                if key_bytes is None:
+                    return
+                key_str = key_bytes.decode("utf-8") if isinstance(key_bytes, (bytes, bytearray)) else str(key_bytes)
+                self._finalize_key(key_str)
             except Exception as e:
                 logger.warning(f"Failed to mark key as seen in Redis: {e}")
 
@@ -238,14 +259,10 @@ class PureAPItoKafkaProducer:
                 payload = json.dumps(transaction, sort_keys=True, separators=(',', ':'))
                 key_str = hashlib.sha256(payload.encode('utf-8')).hexdigest()
 
-            # Pre-produce dedup check in Redis
-            if self.redis and key_str:
-                try:
-                    if self.redis.sismember(self.redis_set_key, key_str):
-                        self.dedup_skipped += 1
-                        return False
-                except Exception as e:
-                    logger.warning(f"Redis dedup check failed, proceeding without dedup: {e}")
+            # Strong dedup: reserve key before producing to prevent duplicates across restarts
+            if not self._reserve_key(key_str):
+                self.dedup_skipped += 1
+                return False
 
             self.producer.produce(
                 self.topic,
@@ -258,6 +275,122 @@ class PureAPItoKafkaProducer:
         except Exception as e:
             logger.error(f"Send failed: {e}")
             return False
+
+    def _reserve_key(self, key_str: str) -> bool:
+        """Reserve a key before producing to avoid duplicates across restarts.
+        Strategy:
+          - If Redis available:
+              - If key already in 'seen' set -> skip
+              - Use SETNX on 'fraud:inflight:{key}' with TTL -> if exists, skip; else proceed
+          - Else if SQLite available:
+               - If key in seen_keys -> skip
+               - Insert into inflight_keys with expires_at -> if conflict, skip
+          - If neither available: fall back to in-memory set for current process
+        """
+        try:
+            if self.redis:
+                if self.redis.sismember(self.redis_set_key, key_str):
+                    return False
+                inflight_key = f"{self.redis_set_key}:inflight:{key_str}"
+                # Reserve if not exists
+                reserved = self.redis.setnx(inflight_key, "1")
+                if not reserved:
+                    return False
+                # Ensure it expires to avoid permanent lock if process dies
+                self.redis.expire(inflight_key, self.redis_inflight_ttl)
+                return True
+
+            if self._sqlite_conn is not None:
+                # Clean expired inflight
+                now = int(_time.time())
+                try:
+                    self._sqlite_conn.execute("DELETE FROM inflight_keys WHERE expires_at IS NOT NULL AND expires_at < ?", (now,))
+                    self._sqlite_conn.commit()
+                except Exception:
+                    pass
+                # Check seen
+                cur = self._sqlite_conn.execute("SELECT 1 FROM seen_keys WHERE key = ? LIMIT 1", (key_str,))
+                if cur.fetchone():
+                    return False
+                # Try reserve inflight
+                expires_at = now + self.redis_inflight_ttl
+                try:
+                    self._sqlite_conn.execute("INSERT INTO inflight_keys(key, expires_at) VALUES(?, ?)", (key_str, expires_at))
+                    self._sqlite_conn.commit()
+                    return True
+                except sqlite3.IntegrityError:
+                    return False
+                except Exception as e:
+                    logger.warning(f"SQLite reserve failed, falling back to local memory: {e}")
+                    # Fallthrough to local
+
+            # Fallback local-only guard
+            if key_str in self.local_seen_keys:
+                return False
+            self.local_seen_keys.add(key_str)
+            return True
+        except Exception as e:
+            logger.warning(f"Reserve key failed, proceeding without Redis reservation: {e}")
+            # Last resort: allow, relying on idempotence and downstream compaction
+            return True
+
+    def _finalize_key(self, key_str: str) -> None:
+        """Mark key as seen and release inflight reservation on successful delivery."""
+        try:
+            if self.redis:
+                self.redis.sadd(self.redis_set_key, key_str)
+                inflight_key = f"{self.redis_set_key}:inflight:{key_str}"
+                try:
+                    self.redis.delete(inflight_key)
+                except Exception:
+                    pass
+            if self._sqlite_conn is not None:
+                try:
+                    self._sqlite_conn.execute("INSERT OR IGNORE INTO seen_keys(key) VALUES(?)", (key_str,))
+                    self._sqlite_conn.execute("DELETE FROM inflight_keys WHERE key = ?", (key_str,))
+                    self._sqlite_conn.commit()
+                except Exception as e:
+                    logger.warning(f"SQLite finalize failed: {e}")
+            # Always add to local guard too
+            self.local_seen_keys.add(key_str)
+        except Exception as e:
+            logger.warning(f"Finalize key failed: {e}")
+
+    def _init_sqlite_state(self) -> None:
+        """Initialize durable local SQLite state for offsets and dedup when Redis is unavailable."""
+        try:
+            state_dir = os.path.dirname(self.state_db_path)
+            if state_dir and not os.path.exists(state_dir):
+                os.makedirs(state_dir, exist_ok=True)
+            self._sqlite_conn = sqlite3.connect(self.state_db_path, check_same_thread=False)
+            self._sqlite_conn.execute("PRAGMA journal_mode=WAL;")
+            self._sqlite_conn.execute("PRAGMA synchronous=NORMAL;")
+            # Create tables
+            self._sqlite_conn.execute("CREATE TABLE IF NOT EXISTS offsets (id INTEGER PRIMARY KEY CHECK (id = 1), value INTEGER NOT NULL)")
+            self._sqlite_conn.execute("CREATE TABLE IF NOT EXISTS seen_keys (key TEXT PRIMARY KEY)")
+            self._sqlite_conn.execute("CREATE TABLE IF NOT EXISTS inflight_keys (key TEXT PRIMARY KEY, expires_at INTEGER)")
+            # Ensure single row for offsets
+            cur = self._sqlite_conn.execute("SELECT value FROM offsets WHERE id = 1")
+            if cur.fetchone() is None:
+                self._sqlite_conn.execute("INSERT INTO offsets(id, value) VALUES(1, 0)")
+            self._sqlite_conn.commit()
+            logger.info(f"SQLite state initialized at {self.state_db_path}")
+        except Exception as e:
+            self._sqlite_conn = None
+            logger.warning(f"SQLite state not available: {e}")
+
+    def _sqlite_get_offset(self) -> Optional[int]:
+        if self._sqlite_conn is None:
+            return None
+        cur = self._sqlite_conn.execute("SELECT value FROM offsets WHERE id = 1")
+        row = cur.fetchone()
+        return int(row[0]) if row else None
+
+    def _sqlite_set_offset(self, offset: int) -> None:
+        if self._sqlite_conn is None:
+            return
+        self._sqlite_conn.execute("UPDATE offsets SET value = ? WHERE id = 1", (int(offset),))
+        self._sqlite_conn.commit()
 
     def _init_redis_client(self):
         """Initialize Redis client if configured via environment."""

@@ -11206,3 +11206,374 @@ File Path                                            PID  Runtime      # DAGs   
 ================================================================================
 [2025-11-11T10:35:00.285+0000] {manager.py:821} INFO - Searching for files in /opt/airflow/dags
 [2025-11-11T10:36:53.972+0000] {manager.py:824} INFO - There are 3 files in /opt/airflow/dags
+[2025-11-11T11:35:40.929+0000] {manager.py:483} INFO - Processing files using up to 2 processes at a time 
+[2025-11-11T11:35:40.939+0000] {manager.py:484} INFO - Process each file at most once every 30 seconds
+[2025-11-11T11:35:40.946+0000] {manager.py:485} INFO - Checking for new files in /opt/airflow/dags every 300 seconds
+[2025-11-11T11:35:40.953+0000] {manager.py:821} INFO - Searching for files in /opt/airflow/dags
+[2025-11-11T11:35:41.376+0000] {manager.py:824} INFO - There are 3 files in /opt/airflow/dags
+[2025-11-11T11:36:11.171+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                            PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run      Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  ----------  ----------------------
+/opt/airflow/dags/fraud_detection_training.py        142  12.67s            0           0                                                   0
+/opt/airflow/dags/fraud_detection_training_dag.py    134  22.63s            0           0                                                   0
+/opt/airflow/dags/__init__.py                                               0           0                                                   0
+================================================================================
+[2025-11-11T11:36:35.415+0000] {manager.py:1366} ERROR - Processor for /opt/airflow/dags/fraud_detection_training_dag.py with PID 134 started at 2025-11-11T11:35:45.026508+00:00 has timed out, killing it.
+[2025-11-11T11:36:42.316+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                          PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py                           0           1  50.39s          2025-11-11T11:36:35                       0
+/opt/airflow/dags/fraud_detection_training.py                               0           1  23.20s          2025-11-11T11:36:18                       5
+/opt/airflow/dags/__init__.py                                               0           0  12.01s          2025-11-11T11:36:30                       3
+================================================================================
+[2025-11-11T11:37:13.657+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                            PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py    152  7.88s             0           1  50.39s          2025-11-11T11:36:35                       0
+/opt/airflow/dags/fraud_detection_training.py                               0           1  4.71s           2025-11-11T11:36:53                       5
+/opt/airflow/dags/__init__.py                                               0           0  0.85s           2025-11-11T11:37:01                       3
+================================================================================
+[2025-11-11T11:37:45.752+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                            PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py    161  0.25s             1           0  8.53s           2025-11-11T11:37:14                      13
+/opt/airflow/dags/fraud_detection_training.py                               0           1  3.56s           2025-11-11T11:37:27                       5
+/opt/airflow/dags/__init__.py                                               0           0  3.52s           2025-11-11T11:37:35                       3
+================================================================================
+[2025-11-11T11:38:16.838+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                          PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py                           1           0  11.54s          2025-11-11T11:37:56                      13
+/opt/airflow/dags/__init__.py                                               0           0  4.84s           2025-11-11T11:38:11                       3
+/opt/airflow/dags/fraud_detection_training.py                               0           1  1.52s           2025-11-11T11:37:59                       5
+================================================================================
+[2025-11-11T11:38:47.745+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                          PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py                           1           0  13.48s          2025-11-11T11:38:41                      13
+/opt/airflow/dags/fraud_detection_training.py                               0           1  6.95s           2025-11-11T11:38:36                       5
+/opt/airflow/dags/__init__.py                                               0           0  2.49s           2025-11-11T11:38:44                       3
+================================================================================
+[2025-11-11T11:39:18.699+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                          PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py                           1           0  5.76s           2025-11-11T11:39:17                      13
+/opt/airflow/dags/fraud_detection_training.py                               0           1  4.09s           2025-11-11T11:39:11                       5
+/opt/airflow/dags/__init__.py                                               0           0  1.77s           2025-11-11T11:39:17                       3
+================================================================================
+[2025-11-11T11:39:49.678+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                            PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py    194  2.17s             1           0  5.76s           2025-11-11T11:39:17                      13
+/opt/airflow/dags/fraud_detection_training.py                               0           1  5.42s           2025-11-11T11:39:47                       5
+/opt/airflow/dags/__init__.py                        195  1.56s             0           0  1.77s           2025-11-11T11:39:17                       3
+================================================================================
+[2025-11-11T11:40:21.120+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                            PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py                           1           0  4.61s           2025-11-11T11:39:52                      13
+/opt/airflow/dags/__init__.py                        203  0.17s             0           0  2.01s           2025-11-11T11:39:50                       3
+/opt/airflow/dags/fraud_detection_training.py                               0           1  0.62s           2025-11-11T11:40:18                       5
+================================================================================
+[2025-11-11T11:40:41.152+0000] {manager.py:821} INFO - Searching for files in /opt/airflow/dags
+[2025-11-11T11:40:41.653+0000] {manager.py:824} INFO - There are 3 files in /opt/airflow/dags
+[2025-11-11T11:40:52.133+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                            PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py                           1           0  1.53s           2025-11-11T11:40:23                      13
+/opt/airflow/dags/__init__.py                                               0           0  1.17s           2025-11-11T11:40:22                       3
+/opt/airflow/dags/fraud_detection_training.py        211  2.36s             0           1  0.62s           2025-11-11T11:40:18                       5
+================================================================================
+[2025-11-11T11:41:23.140+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                          PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py                           1           0  15.65s          2025-11-11T11:41:13                      13
+/opt/airflow/dags/fraud_detection_training.py                               0           1  7.99s           2025-11-11T11:40:57                       5
+/opt/airflow/dags/__init__.py                                               0           0  3.99s           2025-11-11T11:40:57                       3
+================================================================================
+[2025-11-11T11:41:54.011+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                            PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py    222  10.00s            1           0  15.65s          2025-11-11T11:41:13                      13
+/opt/airflow/dags/fraud_detection_training.py                               0           1  3.19s           2025-11-11T11:41:31                       5
+/opt/airflow/dags/__init__.py                                               0           0  1.60s           2025-11-11T11:41:29                       3
+================================================================================
+[2025-11-11T11:42:25.251+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                            PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py    222  41.20s            1           0  15.65s          2025-11-11T11:41:13                      13
+/opt/airflow/dags/fraud_detection_training.py                               0           1  3.19s           2025-11-11T11:41:31                       5
+/opt/airflow/dags/__init__.py                        229  24.76s            0           0  1.60s           2025-11-11T11:41:29                       3
+================================================================================
+[2025-11-11T11:42:58.166+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                          PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py                           1           0  41.34s          2025-11-11T11:42:25                      13
+/opt/airflow/dags/__init__.py                                               0           0  24.90s          2025-11-11T11:42:25                       3
+/opt/airflow/dags/fraud_detection_training.py                               0           1  12.54s          2025-11-11T11:42:38                       5
+================================================================================
+[2025-11-11T11:43:29.636+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                          PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py                           1           0  21.13s          2025-11-11T11:43:20                      13
+/opt/airflow/dags/fraud_detection_training.py                               0           1  11.55s          2025-11-11T11:43:20                       5
+/opt/airflow/dags/__init__.py                                               0           0  8.13s           2025-11-11T11:43:08                       3
+================================================================================
+[2025-11-11T11:44:01.643+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                            PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py    253  1.91s             1           0  21.13s          2025-11-11T11:43:20                      13
+/opt/airflow/dags/fraud_detection_training.py        254  0.13s             0           1  11.55s          2025-11-11T11:43:20                       5
+/opt/airflow/dags/__init__.py                                               0           0  0.53s           2025-11-11T11:43:39                       3
+================================================================================
+[2025-11-11T11:44:32.615+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                          PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py                           1           0  13.36s          2025-11-11T11:44:13                      13
+/opt/airflow/dags/__init__.py                                               0           0  4.07s           2025-11-11T11:44:13                       3
+/opt/airflow/dags/fraud_detection_training.py                               0           1  2.59s           2025-11-11T11:44:04                       5
+================================================================================
+[2025-11-11T11:45:03.844+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                          PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training.py                               0           1  14.17s          2025-11-11T11:44:48                       5
+/opt/airflow/dags/fraud_detection_training_dag.py                           1           0  7.69s           2025-11-11T11:44:52                      13
+/opt/airflow/dags/__init__.py                                               0           0  2.69s           2025-11-11T11:44:51                       3
+================================================================================
+[2025-11-11T11:45:37.869+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                            PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training.py        278  17.08s            0           1  14.17s          2025-11-11T11:44:48                       5
+/opt/airflow/dags/fraud_detection_training_dag.py                           1           0  7.69s           2025-11-11T11:44:52                      13
+/opt/airflow/dags/__init__.py                        279  14.43s            0           0  2.69s           2025-11-11T11:44:51                       3
+================================================================================
+[2025-11-11T11:45:41.453+0000] {manager.py:821} INFO - Searching for files in /opt/airflow/dags
+[2025-11-11T11:45:41.969+0000] {manager.py:824} INFO - There are 3 files in /opt/airflow/dags
+[2025-11-11T11:46:09.140+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                            PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/__init__.py                                               0           0  16.28s          2025-11-11T11:45:38                       3
+/opt/airflow/dags/fraud_detection_training.py        278  49.20s            0           1  14.17s          2025-11-11T11:44:48                       5
+/opt/airflow/dags/fraud_detection_training_dag.py    280  30.10s            1           0  7.69s           2025-11-11T11:44:52                      13
+================================================================================
+[2025-11-11T11:46:10.158+0000] {manager.py:1366} ERROR - Processor for /opt/airflow/dags/fraud_detection_training.py with PID 278 started at 2025-11-11T11:45:19.919824+00:00 has timed out, killing it.
+[2025-11-11T11:46:30.112+0000] {manager.py:1366} ERROR - Processor for /opt/airflow/dags/fraud_detection_training_dag.py with PID 280 started at 2025-11-11T11:45:39.023845+00:00 has timed out, killing it.
+[2025-11-11T11:46:40.388+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                          PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py                           0           1  51.09s          2025-11-11T11:46:30                       0
+/opt/airflow/dags/fraud_detection_training.py                               0           1  50.24s          2025-11-11T11:46:10                       0
+/opt/airflow/dags/__init__.py                                               0           0  3.90s           2025-11-11T11:46:14                       3
+================================================================================
+[2025-11-11T11:47:11.734+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                            PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py    295  7.76s             0           1  51.09s          2025-11-11T11:46:30                       0
+/opt/airflow/dags/fraud_detection_training.py                               0           1  8.17s           2025-11-11T11:47:03                       5
+/opt/airflow/dags/__init__.py                                               0           0  6.73s           2025-11-11T11:47:03                       3
+================================================================================
+[2025-11-11T11:47:43.465+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                            PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py    295  39.44s            0           1  51.09s          2025-11-11T11:46:30                       0
+/opt/airflow/dags/fraud_detection_training.py        301  8.81s             0           1  8.17s           2025-11-11T11:47:03                       5
+/opt/airflow/dags/__init__.py                                               0           0  6.73s           2025-11-11T11:47:03                       3
+================================================================================
+[2025-11-11T11:48:14.746+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                            PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py                           1           0  43.69s          2025-11-11T11:47:47                      35
+/opt/airflow/dags/fraud_detection_training.py        308  0.03s             0           1  9.04s           2025-11-11T11:47:43                       5
+/opt/airflow/dags/__init__.py                                               0           0  0.99s           2025-11-11T11:47:44                       3
+================================================================================
+[2025-11-11T11:48:46.001+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                          PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py                           1           0  17.57s          2025-11-11T11:48:38                      13
+/opt/airflow/dags/fraud_detection_training.py                               0           1  6.14s           2025-11-11T11:48:20                       5
+/opt/airflow/dags/__init__.py                                               0           0  4.64s           2025-11-11T11:48:20                       3
+================================================================================
+[2025-11-11T11:49:18.348+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                            PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/__init__.py                                               0           0  25.60s          2025-11-11T11:49:16                       3
+/opt/airflow/dags/fraud_detection_training.py                               0           1  25.45s          2025-11-11T11:49:16                       5
+/opt/airflow/dags/fraud_detection_training_dag.py    319  1.57s             1           0  17.57s          2025-11-11T11:48:38                      13
+================================================================================
+[2025-11-11T11:49:50.365+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                            PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/__init__.py                                               0           0  25.60s          2025-11-11T11:49:16                       3
+/opt/airflow/dags/fraud_detection_training.py        325  2.65s             0           1  25.45s          2025-11-11T11:49:16                       5
+/opt/airflow/dags/fraud_detection_training_dag.py    319  33.38s            1           0  17.57s          2025-11-11T11:48:38                      13
+================================================================================
+[2025-11-11T11:50:22.374+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                          PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py                           1           0  40.13s          2025-11-11T11:49:56                      13
+/opt/airflow/dags/fraud_detection_training.py                               0           1  23.42s          2025-11-11T11:50:10                       5
+/opt/airflow/dags/__init__.py                                               0           0  13.75s          2025-11-11T11:50:10                       3
+================================================================================
+[2025-11-11T11:50:41.884+0000] {manager.py:821} INFO - Searching for files in /opt/airflow/dags
+[2025-11-11T11:50:42.304+0000] {manager.py:824} INFO - There are 3 files in /opt/airflow/dags
+[2025-11-11T11:50:52.518+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                          PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py                           1           0  6.74s           2025-11-11T11:50:34                      13
+/opt/airflow/dags/fraud_detection_training.py                               0           1  5.05s           2025-11-11T11:50:46                       5
+/opt/airflow/dags/__init__.py                                               0           0  4.45s           2025-11-11T11:50:46                       3
+================================================================================
+[2025-11-11T11:51:24.968+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                            PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py    343  19.05s            1           0  6.74s           2025-11-11T11:50:34                      13
+/opt/airflow/dags/fraud_detection_training.py        351  6.78s             0           1  5.05s           2025-11-11T11:50:46                       5
+/opt/airflow/dags/__init__.py                                               0           0  4.45s           2025-11-11T11:50:46                       3
+================================================================================
+[2025-11-11T11:51:47.710+0000] {manager.py:1146} ERROR - Processor for /opt/airflow/dags/__init__.py exited with return code 1.
+[2025-11-11T11:51:55.351+0000] {manager.py:1366} ERROR - Processor for /opt/airflow/dags/fraud_detection_training_dag.py with PID 343 started at 2025-11-11T11:51:05.063704+00:00 has timed out, killing it.
+[2025-11-11T11:51:57.889+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                            PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py                           0           1  50.25s          2025-11-11T11:51:55                       0
+/opt/airflow/dags/__init__.py                                               0          -1  20.08s          2025-11-11T11:51:47                       0
+/opt/airflow/dags/fraud_detection_training.py        353  0.11s             0           1  8.92s           2025-11-11T11:51:26                       5
+================================================================================
+[2025-11-11T11:57:41.572+0000] {manager.py:821} INFO - Searching for files in /opt/airflow/dags
+[2025-11-11T11:57:42.720+0000] {manager.py:824} INFO - There are 3 files in /opt/airflow/dags
+[2025-11-11T11:57:45.969+0000] {manager.py:1366} ERROR - Processor for /opt/airflow/dags/fraud_detection_training.py with PID 353 started at 2025-11-11T11:51:57.663617+00:00 has timed out, killing it.
+[2025-11-11T11:57:50.170+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                            PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training.py                               0           1  348.31s         2025-11-11T11:57:45                       0
+/opt/airflow/dags/fraud_detection_training_dag.py    354  0.19s             0           1  50.25s          2025-11-11T11:51:55                       0
+/opt/airflow/dags/__init__.py                        355  0.07s             0          -1  20.08s          2025-11-11T11:51:47                       0
+================================================================================
+[2025-11-11T11:58:25.565+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                            PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training.py        356  0.32s             0           1  348.31s         2025-11-11T11:57:45                       0
+/opt/airflow/dags/fraud_detection_training_dag.py    354  34.90s            0           1  50.25s          2025-11-11T11:51:55                       0
+/opt/airflow/dags/__init__.py                                               0           0  15.65s          2025-11-11T11:58:05                       3
+================================================================================
+[2025-11-11T12:00:00.421+0000] {manager.py:1366} ERROR - Processor for /opt/airflow/dags/fraud_detection_training_dag.py with PID 354 started at 2025-11-11T11:57:49.927154+00:00 has timed out, killing it.
+[2025-11-11T12:00:00.912+0000] {manager.py:1366} ERROR - Processor for /opt/airflow/dags/fraud_detection_training.py with PID 356 started at 2025-11-11T11:58:24.509913+00:00 has timed out, killing it.
+[2025-11-11T12:00:05.628+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                            PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py                           0           1  130.49s         2025-11-11T12:00:00                       0
+/opt/airflow/dags/fraud_detection_training.py                               0           1  95.91s          2025-11-11T12:00:00                       0
+/opt/airflow/dags/__init__.py                        357  1.82s             0           0  15.65s          2025-11-11T11:58:05                       3
+================================================================================
+[2025-11-11T12:00:35.779+0000] {manager.py:997} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                            PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run               Last # of DB Queries
+-------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------  ----------------------
+/opt/airflow/dags/fraud_detection_training_dag.py    358  4.12s             0           1  130.49s         2025-11-11T12:00:00                       0
+/opt/airflow/dags/fraud_detection_training.py        359  3.66s             0           1  95.91s          2025-11-11T12:00:00                       0
+/opt/airflow/dags/__init__.py                                               0           0  25.46s          2025-11-11T12:00:29                       3
+================================================================================
