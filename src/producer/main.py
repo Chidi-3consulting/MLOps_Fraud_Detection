@@ -71,7 +71,6 @@ class PureAPItoKafkaProducer:
         
         # Offset tracking - THIS PREVENTS DUPLICATES ACROSS RUNS
         self.offset_file = "api_offset.txt"
-        self.current_offset = self._load_last_offset()
         
         self.running = False
         self.total_sent = 0
@@ -90,7 +89,11 @@ class PureAPItoKafkaProducer:
 
         # Durable local fallback (works even if Redis is down): SQLite-backed state
         self.state_db_path = os.getenv("DEDUP_DB_PATH", os.path.join("state", "producer_state.sqlite"))
+        self._sqlite_conn = None
         self._init_sqlite_state()
+
+        # Now that SQLite state is initialized, load the last offset
+        self.current_offset = self._load_last_offset()
         
         # Ensure topic exists before producing (best-effort; works if credentials permit)
         self._ensure_topic_exists()
