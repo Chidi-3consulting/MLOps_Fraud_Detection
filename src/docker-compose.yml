@@ -330,6 +330,8 @@ services:
       context: .
       dockerfile: producer/Dockerfile
     env_file: .env
+    volumes:
+      - ./state:/app/state
     profiles:
       - producer
     deploy:

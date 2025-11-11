@@ -62,11 +62,11 @@ class PureAPItoKafkaProducer:
         self.bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
         self.kafka_username = os.getenv("KAFKA_USERNAME")
         self.kafka_password = os.getenv("KAFKA_PASSWORD")
-        # Force the topic to 'Fraud_transactions' regardless of environment to avoid misconfiguration
+        # Use the new canonical topic
         env_topic = os.getenv("KAFKA_TOPIC")
-        if env_topic and env_topic != "Fraud_transactions":
-            logger.warning(f"Ignoring KAFKA_TOPIC='{env_topic}' and forcing topic to 'Fraud_transactions'")
-        self.topic = "Fraud_transactions"
+        if env_topic and env_topic != "topic_fraud":
+            logger.warning(f"Ignoring KAFKA_TOPIC='{env_topic}' and forcing topic to 'topic_fraud'")
+        self.topic = "topic_fraud"
         self.batch_size = int(os.getenv("BATCH_SIZE", "10000"))
         
         # Offset tracking - THIS PREVENTS DUPLICATES ACROSS RUNS
@@ -103,6 +103,66 @@ class PureAPItoKafkaProducer:
         
         logger.info(f"Kafka bootstrap: {self.bootstrap_servers}, topic: {self.topic}")
         logger.info(f"Pure API to Kafka Producer - Starting from offset: {self.current_offset}")
+
+    def reset_state(self, *, reset_offsets: bool = False, reset_dedup: bool = False, start_offset: int | None = None) -> None:
+        """Reset offsets and/or dedup state on demand; optionally force a starting offset."""
+        if reset_dedup:
+            # Clear Redis seen and inflight
+            try:
+                if self.redis:
+                    # Best-effort scan deletion for inflight keys
+                    try:
+                        cursor = 0
+                        pattern = f"{self.redis_set_key}:inflight:*"
+                        while True:
+                            cursor, keys = self.redis.scan(cursor=cursor, match=pattern, count=500)
+                            if keys:
+                                self.redis.delete(*keys)
+                            if cursor == 0:
+                                break
+                    except Exception:
+                        pass
+                    try:
+                        self.redis.delete(self.redis_set_key)
+                    except Exception:
+                        pass
+            except Exception as e:
+                logger.warning(f"Failed clearing Redis dedup: {e}")
+
+            # Clear SQLite seen and inflight
+            try:
+                if self._sqlite_conn is not None:
+                    self._sqlite_conn.execute("DELETE FROM seen_keys")
+                    self._sqlite_conn.execute("DELETE FROM inflight_keys")
+                    self._sqlite_conn.commit()
+            except Exception as e:
+                logger.warning(f"Failed clearing SQLite dedup: {e}")
+
+            # Local in-memory
+            self.local_seen_keys.clear()
+
+        if reset_offsets or start_offset is not None:
+            new_offset = 0 if start_offset is None else int(start_offset)
+            # Redis offset
+            try:
+                if self.redis:
+                    self.redis.set(self.offset_redis_key, str(new_offset))
+            except Exception as e:
+                logger.warning(f"Failed resetting Redis offset: {e}")
+            # SQLite offset
+            try:
+                if self._sqlite_conn is not None:
+                    self._sqlite_set_offset(new_offset)
+            except Exception as e:
+                logger.warning(f"Failed resetting SQLite offset: {e}")
+            # File offset
+            try:
+                with open(self.offset_file, 'w') as f:
+                    f.write(str(new_offset))
+            except Exception as e:
+                logger.warning(f"Failed resetting file offset: {e}")
+            self.current_offset = new_offset
+            logger.info(f"Offset reset. New starting offset: {self.current_offset}")
 
     def _load_last_offset(self) -> int:
         """Load where we left off to avoid re-reading the same data"""
@@ -153,7 +213,10 @@ class PureAPItoKafkaProducer:
     def _create_kafka_producer(self):
         producer_config = {
             "bootstrap.servers": self.bootstrap_servers,
-            "client.id": "api-producer"
+            "client.id": "api-producer",
+            # Ensure idempotent, exactly-once-in-producer semantics where possible
+            "acks": "all",
+            "enable.idempotence": True,
         }
 
         if self.kafka_username and self.kafka_password:
@@ -165,8 +228,6 @@ class PureAPItoKafkaProducer:
                 "ssl.endpoint.identification.algorithm": "https",
                 "broker.address.family": "v4",
                 "request.timeout.ms": 20000,
-                "acks": "all",
-                "enable.idempotence": True,
             })
 
         return Producer(producer_config)
@@ -500,10 +561,21 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--mode', choices=['continuous', 'batch'], default='continuous')
     parser.add_argument('--count', type=int, default=1000)
+    parser.add_argument('--reset-offsets', action='store_true', help='Reset stored offsets to 0 before starting')
+    parser.add_argument('--reset-dedup', action='store_true', help='Clear dedup state (seen/inflight) before starting')
+    parser.add_argument('--start-offset', type=int, default=None, help='Force a specific starting offset (overrides stored offset)')
     
     args = parser.parse_args()
     
     producer = PureAPItoKafkaProducer()
+
+    # Apply optional resets before streaming
+    if args.reset_offsets or args.reset_dedup or args.start_offset is not None:
+        producer.reset_state(
+            reset_offsets=args.reset_offsets,
+            reset_dedup=args.reset_dedup,
+            start_offset=args.start_offset
+        )
     
     try:
         if args.mode == 'batch':
