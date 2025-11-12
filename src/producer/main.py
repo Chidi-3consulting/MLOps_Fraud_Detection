@@ -64,7 +64,7 @@ class PureAPItoKafkaProducer:
         self.kafka_password = os.getenv("KAFKA_PASSWORD")
         # Resolve topic from env with sensible default
         env_topic = os.getenv("KAFKA_TOPIC")
-        self.topic = env_topic if env_topic else "topic_fraud_2"
+        self.topic = env_topic if env_topic else "ecommerce_fraud"
         
         # Adaptive batch sizing configuration
         self.adaptive_batching = str(os.getenv("ADAPTIVE_BATCHING", "true")).lower() in {"1", "true", "yes", "on"}
@@ -104,9 +104,20 @@ class PureAPItoKafkaProducer:
         self.local_seen_keys = set()
 
         # Durable local fallback (works even if Redis is down): SQLite-backed state
-        self.state_db_path = os.getenv("DEDUP_DB_PATH", os.path.join("state", "producer_state.sqlite"))
+        # Make SQLite path unique per replica to avoid locking issues
+        import socket
+        hostname = socket.gethostname()
+        default_db_name = f"producer_state_{hostname}.sqlite"
+        default_db_path = os.path.join("state", default_db_name)
+        self.state_db_path = os.getenv("DEDUP_DB_PATH", default_db_path)
         self._sqlite_conn = None
-        self._init_sqlite_state()
+        # Only initialize SQLite if not using distributed offsets (to avoid conflicts)
+        # Or if explicitly enabled via env var
+        use_sqlite_fallback = str(os.getenv("USE_SQLITE_FALLBACK", "true")).lower() in {"1", "true", "yes", "on"}
+        if not (self.distributed_offsets and self.redis) or use_sqlite_fallback:
+            self._init_sqlite_state()
+        else:
+            logger.info("SQLite fallback disabled - using Redis-only for distributed offsets")
 
         # Now that SQLite state is initialized, load the last offset
         self.current_offset = self._load_last_offset()
@@ -567,12 +578,19 @@ class PureAPItoKafkaProducer:
                 try:
                     self._sqlite_conn.execute("DELETE FROM inflight_keys WHERE expires_at IS NOT NULL AND expires_at < ?", (now,))
                     self._sqlite_conn.commit()
+                except sqlite3.OperationalError:
+                    # Database locked - skip SQLite check, rely on Redis
+                    pass
                 except Exception:
                     pass
                 # Check seen
-                cur = self._sqlite_conn.execute("SELECT 1 FROM seen_keys WHERE key = ? LIMIT 1", (key_str,))
-                if cur.fetchone():
-                    return False
+                try:
+                    cur = self._sqlite_conn.execute("SELECT 1 FROM seen_keys WHERE key = ? LIMIT 1", (key_str,))
+                    if cur.fetchone():
+                        return False
+                except sqlite3.OperationalError:
+                    # Database locked - skip SQLite check, rely on Redis
+                    pass
                 # Try reserve inflight
                 expires_at = now + self.redis_inflight_ttl
                 try:
@@ -581,6 +599,9 @@ class PureAPItoKafkaProducer:
                     return True
                 except sqlite3.IntegrityError:
                     return False
+                except sqlite3.OperationalError:
+                    # Database locked - skip SQLite, rely on Redis or local memory
+                    pass
                 except Exception as e:
                     logger.warning(f"SQLite reserve failed, falling back to local memory: {e}")
                     # Fallthrough to local
@@ -610,6 +631,12 @@ class PureAPItoKafkaProducer:
                     self._sqlite_conn.execute("INSERT OR IGNORE INTO seen_keys(key) VALUES(?)", (key_str,))
                     self._sqlite_conn.execute("DELETE FROM inflight_keys WHERE key = ?", (key_str,))
                     self._sqlite_conn.commit()
+                except sqlite3.OperationalError as e:
+                    if "database is locked" in str(e).lower():
+                        # Silently ignore lock errors - Redis is handling deduplication anyway
+                        pass
+                    else:
+                        logger.warning(f"SQLite finalize failed: {e}")
                 except Exception as e:
                     logger.warning(f"SQLite finalize failed: {e}")
             # Always add to local guard too
@@ -650,9 +677,16 @@ class PureAPItoKafkaProducer:
             state_dir = os.path.dirname(self.state_db_path)
             if state_dir and not os.path.exists(state_dir):
                 os.makedirs(state_dir, exist_ok=True)
-            self._sqlite_conn = sqlite3.connect(self.state_db_path, check_same_thread=False)
+            # Use WAL mode and set timeout for better concurrency handling
+            # timeout=5.0 means wait up to 5 seconds for locks
+            self._sqlite_conn = sqlite3.connect(
+                self.state_db_path, 
+                check_same_thread=False,
+                timeout=5.0  # Wait up to 5 seconds for locks
+            )
             self._sqlite_conn.execute("PRAGMA journal_mode=WAL;")
             self._sqlite_conn.execute("PRAGMA synchronous=NORMAL;")
+            self._sqlite_conn.execute("PRAGMA busy_timeout=5000;")  # 5 second busy timeout
             # Create tables
             self._sqlite_conn.execute("CREATE TABLE IF NOT EXISTS offsets (id INTEGER PRIMARY KEY CHECK (id = 1), value INTEGER NOT NULL)")
             self._sqlite_conn.execute("CREATE TABLE IF NOT EXISTS seen_keys (key TEXT PRIMARY KEY)")
@@ -663,6 +697,12 @@ class PureAPItoKafkaProducer:
                 self._sqlite_conn.execute("INSERT INTO offsets(id, value) VALUES(1, 0)")
             self._sqlite_conn.commit()
             logger.info(f"SQLite state initialized at {self.state_db_path}")
+        except sqlite3.OperationalError as e:
+            if "database is locked" in str(e).lower():
+                logger.warning(f"SQLite database is locked (another replica may be using it). This is normal with multiple replicas. Using Redis-only mode.")
+            else:
+                logger.warning(f"SQLite operational error: {e}")
+            self._sqlite_conn = None
         except Exception as e:
             self._sqlite_conn = None
             logger.warning(f"SQLite state not available: {e}")

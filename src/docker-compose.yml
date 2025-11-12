@@ -331,7 +331,7 @@ services:
       dockerfile: producer/Dockerfile
     env_file: .env
     environment:
-      - KAFKA_TOPIC=topic_fraud_2
+      - KAFKA_TOPIC=ecommerce_fraud
       - KAFKA_BATCH_SIZE=32768
       - KAFKA_LINGER_MS=50
       - KAFKA_COMPRESSION_TYPE=snappy
@@ -349,6 +349,7 @@ services:
       - TARGET_RESPONSE_TIME=5.0
       - MAX_RESPONSE_TIME=30.0
       - ADAPTIVE_WINDOW_SIZE=10
+      - RESET_OFFSETS=true
     volumes:
       - ./state:/app/state
     profiles:
