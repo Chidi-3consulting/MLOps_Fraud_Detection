@@ -1542,3 +1542,83 @@ Traceback (most recent call last):
 IndentationError: unexpected indent
 [2025-11-12T13:15:00.780+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
 [2025-11-12T13:15:01.010+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.886 seconds
+[2025-11-12T13:15:31.741+0000] {processor.py:186} INFO - Started process (PID=105) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-12T13:15:31.764+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-12T13:15:31.873+0000] {logging_mixin.py:190} INFO - [2025-11-12T13:15:31.871+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-12T13:15:32.108+0000] {logging_mixin.py:190} INFO - [2025-11-12T13:15:32.093+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-11-12T13:15:32.117+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-12T13:15:32.592+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.056 seconds
+[2025-11-12T13:16:06.432+0000] {processor.py:186} INFO - Started process (PID=113) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-12T13:16:06.458+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-12T13:16:06.502+0000] {logging_mixin.py:190} INFO - [2025-11-12T13:16:06.489+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-12T13:16:06.778+0000] {logging_mixin.py:190} INFO - [2025-11-12T13:16:06.759+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-11-12T13:16:06.811+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-12T13:16:07.577+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.194 seconds
+[2025-11-12T13:16:38.486+0000] {processor.py:186} INFO - Started process (PID=123) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-12T13:16:38.495+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-12T13:16:38.532+0000] {logging_mixin.py:190} INFO - [2025-11-12T13:16:38.531+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-12T13:16:38.628+0000] {logging_mixin.py:190} INFO - [2025-11-12T13:16:38.625+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-11-12T13:16:38.632+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-12T13:16:39.046+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.586 seconds
+[2025-11-12T13:17:10.296+0000] {processor.py:186} INFO - Started process (PID=132) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-12T13:17:10.397+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-12T13:17:10.524+0000] {logging_mixin.py:190} INFO - [2025-11-12T13:17:10.523+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-12T13:17:11.605+0000] {logging_mixin.py:190} INFO - [2025-11-12T13:17:11.469+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-11-12T13:17:11.704+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-12T13:17:12.846+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 2.858 seconds
+[2025-11-12T13:17:46.143+0000] {processor.py:186} INFO - Started process (PID=139) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-12T13:17:46.152+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-12T13:17:46.191+0000] {logging_mixin.py:190} INFO - [2025-11-12T13:17:46.179+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-12T13:17:46.786+0000] {logging_mixin.py:190} INFO - [2025-11-12T13:17:46.779+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training.py", line 240
+    df['transaction_hour'] = df['timestamp'].dt.hour
+IndentationError: unexpected indent
+[2025-11-12T13:17:46.795+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-12T13:17:48.037+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 2.384 seconds
