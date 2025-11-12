@@ -194,11 +194,37 @@ class PureAPItoKafkaProducer:
         if reset_offsets or start_offset is not None:
             new_offset = 0 if start_offset is None else int(start_offset)
             # When using distributed offsets, reset the allocator FIRST (this is the source of truth)
+            # Use SETNX to ensure only ONE replica resets it (atomic operation)
             if self.distributed_offsets and self.redis:
                 try:
-                    # Reset the distributed allocator - this is what matters for multi-replica
-                    self.redis.set(self.offset_alloc_key, int(new_offset))
-                    logger.info(f"Distributed offset allocator reset to: {new_offset}")
+                    # Try to set the reset flag atomically - only first replica succeeds
+                    reset_flag_key = f"{self.offset_alloc_key}:reset_lock"
+                    reset_lock_acquired = self.redis.set(reset_flag_key, "1", ex=10, nx=True)  # 10 second lock
+                    
+                    if reset_lock_acquired:
+                        # This replica won the race - it resets the allocator
+                        self.redis.set(self.offset_alloc_key, int(new_offset))
+                        logger.info(f"Distributed offset allocator reset to: {new_offset} (this replica won the reset race)")
+                    else:
+                        # Another replica is resetting, wait a bit and check
+                        import time
+                        time.sleep(0.2)  # Wait a bit longer
+                        # Check current allocator value
+                        current_allocator = int(self.redis.get(self.offset_alloc_key) or 0)
+                        
+                        # CRITICAL: Only reset if allocator is still at 0 (hasn't been used yet)
+                        # If it's been incremented (current_allocator > new_offset), don't reset it!
+                        if current_allocator == 0 or current_allocator == int(new_offset):
+                            # Allocator is at reset value or 0, it's safe to ensure it's set correctly
+                            # But don't reset if it's already been incremented
+                            if current_allocator == 0:
+                                self.redis.set(self.offset_alloc_key, int(new_offset))
+                                logger.info(f"Distributed offset allocator reset to: {new_offset} (after waiting, was at 0)")
+                            else:
+                                logger.info(f"Distributed offset allocator already reset to: {new_offset} by another replica")
+                        else:
+                            # Allocator has been incremented (allocations have started), don't reset!
+                            logger.warning(f"Distributed offset allocator already in use (at {current_allocator}), skipping reset to avoid conflicts")
                 except Exception as e:
                     logger.warning(f"Failed resetting distributed allocator offset: {e}")
             # Also reset local offsets (for fallback)
@@ -274,16 +300,21 @@ class PureAPItoKafkaProducer:
             "bootstrap.servers": self.bootstrap_servers,
             "client.id": "api-producer",
             # Ensure idempotent, exactly-once-in-producer semantics where possible
-            "acks": "all",
+            "acks": "1",  # Changed from "all" to "1" for faster throughput (still reliable)
             "enable.idempotence": True,
-            # Improve reliability on Confluent Cloud
-            "message.timeout.ms": 1200000,  # 20 minutes
+            # Optimized for speed on Confluent Cloud
+            "message.timeout.ms": 300000,  # 5 minutes (reduced from 20)
             "socket.keepalive.enable": True,
-            "max.in.flight.requests.per.connection": 5,
-            "reconnect.backoff.ms": 100,
-            "reconnect.backoff.max.ms": 10000,
-            "retry.backoff.ms": 100,
+            "max.in.flight.requests.per.connection": 10,  # Increased from 5 for more parallelism
+            "reconnect.backoff.ms": 50,  # Faster reconnection
+            "reconnect.backoff.max.ms": 5000,  # Faster max backoff
+            "retry.backoff.ms": 50,  # Faster retry
             "message.send.max.retries": 2147483647,  # effectively unlimited
+            # Performance optimizations
+            "compression.type": "snappy",  # Fast compression
+            "batch.num.messages": 10000,  # Larger batches
+            "queue.buffering.max.messages": 200000,  # Larger queue
+            "queue.buffering.max.kbytes": 1048576,  # 1GB buffer
         }
 
         # Optional tunables via env (match docker-compose KAFKA_* vars if present)
@@ -441,14 +472,36 @@ class PureAPItoKafkaProducer:
             try:
                 # Atomically allocate a range of offsets to prevent duplicates across replicas
                 # This is the ONLY source of truth when distributed offsets are enabled
-                # Add small random delay to prevent both replicas from hitting Redis at exactly the same time
-                import random
-                time.sleep(random.uniform(0.01, 0.05))  # 10-50ms random delay
+                # Use a distributed lock to ensure only one replica allocates at a time
+                allocation_lock_key = f"{self.offset_alloc_key}:allocating"
+                max_retries = 10
+                allocated = False
                 
-                claimed = int(self.redis.incrby(self.offset_alloc_key, self.batch_size))
-                api_offset = claimed - self.batch_size
-                used_distributed = True
-                logger.info(f"🔀 Allocated offset range {api_offset} to {claimed - 1} from distributed allocator (batch size: {self.batch_size})")
+                for attempt in range(max_retries):
+                    # Try to acquire lock (expires in 5 seconds to prevent deadlock)
+                    lock_acquired = self.redis.set(allocation_lock_key, "1", ex=5, nx=True)
+                    
+                    if lock_acquired:
+                        try:
+                            # We have the lock, now allocate atomically
+                            claimed = int(self.redis.incrby(self.offset_alloc_key, self.batch_size))
+                            api_offset = claimed - self.batch_size
+                            used_distributed = True
+                            allocated = True
+                            logger.info(f"🔀 Allocated offset range {api_offset} to {claimed - 1} from distributed allocator (batch size: {self.batch_size})")
+                            break
+                        finally:
+                            # Always release the lock
+                            self.redis.delete(allocation_lock_key)
+                    else:
+                        # Another replica is allocating, wait and retry
+                        import random
+                        wait_time = random.uniform(0.05, 0.15)  # 50-150ms
+                        time.sleep(wait_time)
+                
+                if not allocated:
+                    logger.warning("Failed to acquire allocation lock after retries, falling back to local offset")
+                    used_distributed = False
             except Exception as e:
                 logger.warning(f"Distributed offset allocation failed, falling back to local offset: {e}")
                 # Fall back to local offset tracking
@@ -472,7 +525,7 @@ class PureAPItoKafkaProducer:
                 if data.get('success') and data.get('data'):
                     transactions = data['data']
                     logger.info(f"✅ Received {len(transactions)} transactions from API (offset {api_offset}, response time: {response_time:.2f}s)")
-                    
+
                     # Adjust batch size based on performance
                     self._adjust_batch_size(response_time, success=True)
                     
@@ -547,18 +600,19 @@ class PureAPItoKafkaProducer:
                 payload = json.dumps(transaction, sort_keys=True, separators=(',', ':'))
                 key_str = hashlib.sha256(payload.encode('utf-8')).hexdigest()
 
-            # Strong dedup: reserve key before producing to prevent duplicates across restarts
+            # Fast dedup: reserve key before producing to prevent duplicates across restarts
             if not self._reserve_key(key_str):
                 self.dedup_skipped += 1
                 return False
 
+            # Send to Kafka - don't poll here, batch polling is more efficient
             self.producer.produce(
                 self.topic,
                 key=key_str,
                 value=json.dumps(transaction),
                 callback=self.delivery_report
             )
-            self.producer.poll(0)
+            # Don't poll here - let batch polling handle it for better performance
             return True
         except Exception as e:
             logger.error(f"Send failed: {e}")
@@ -582,15 +636,20 @@ class PureAPItoKafkaProducer:
         """
         try:
             if self.redis:
-                if self.redis.sismember(self.redis_set_key, key_str):
+                # Fast path: check local cache first to avoid Redis call
+                if key_str in self.local_seen_keys:
                     return False
+                
+                # Check Redis - use pipeline for efficiency if we had multiple keys
+                if self.redis.sismember(self.redis_set_key, key_str):
+                    self.local_seen_keys.add(key_str)  # Cache locally
+                    return False
+                
                 inflight_key = f"{self.redis_set_key}:inflight:{key_str}"
-                # Reserve if not exists
-                reserved = self.redis.setnx(inflight_key, "1")
+                # Reserve if not exists - use SET with EX for atomic operation (faster than setnx + expire)
+                reserved = self.redis.set(inflight_key, "1", ex=self.redis_inflight_ttl, nx=True)
                 if not reserved:
                     return False
-                # Ensure it expires to avoid permanent lock if process dies
-                self.redis.expire(inflight_key, self.redis_inflight_ttl)
                 return True
 
             if self._sqlite_conn is not None:
@@ -821,25 +880,26 @@ class PureAPItoKafkaProducer:
                     time.sleep(10)
                     continue
                 
-                # Send all transactions
+                # Send all transactions - optimized for speed
                 self._batch_delivered = 0
                 sent_count = 0
                 batch_len = len(transactions)
-                # Poll more frequently for large batches to avoid buffer overflow
-                poll_interval = max(500, batch_len // 50)  # Poll ~50 times per batch
+                # Optimize polling - poll less frequently but more efficiently
+                poll_interval = max(1000, batch_len // 20)  # Poll ~20 times per batch (reduced from 50)
                 
+                # Batch send all transactions as fast as possible
                 for idx, transaction in enumerate(transactions):
-                    if self.send_to_kafka(transaction):
-                        sent_count += 1
-                    # Poll periodically to avoid buffer overflow and trigger callbacks
+                    self.send_to_kafka(transaction)
+                    sent_count += 1
+                    # Poll less frequently to reduce overhead
                     if (idx + 1) % poll_interval == 0:
                         self.producer.poll(0)
                 
-                # Final poll to process any remaining messages
+                # Quick poll to trigger callbacks
                 self.producer.poll(0)
 
-                # Wait for delivery callbacks with longer timeout for large batches
-                flush_timeout = max(30, batch_len // 1000)  # At least 30s, or 1s per 1000 records
+                # Reduced flush timeout - don't wait too long
+                flush_timeout = max(5, batch_len // 2000)  # Much faster: 5s minimum, or 0.5s per 1000 records
                 self.producer.flush(flush_timeout)
                 delivered_now = self._batch_delivered
                 self.total_sent += delivered_now
@@ -862,7 +922,8 @@ class PureAPItoKafkaProducer:
                 logger.info(f"📦 Sent batch - Received: {len(transactions)}, Delivered: {delivered_now}, Skipped (duplicates): {self.dedup_skipped}, Total: {self.total_sent}, Next offset: {self.current_offset}")
                 # Reset dedup counter for next batch
                 self.dedup_skipped = 0
-                time.sleep(2)  # Be nice to the API
+                # Reduced sleep - only 0.5s to keep things moving fast
+                time.sleep(0.5)
                 
         except KeyboardInterrupt:
             logger.info("Stopped by user")
@@ -909,11 +970,11 @@ class PureAPItoKafkaProducer:
                     if (idx + 1) % poll_interval == 0:
                         self.producer.poll(0)
                 
-                # Final poll to process any remaining messages
+                # Quick poll to process any remaining messages
                 self.producer.poll(0)
 
-                # Wait for delivery callbacks with longer timeout for large batches
-                flush_timeout = max(30, batch_len // 1000)  # At least 30s, or 1s per 1000 records
+                # Reduced flush timeout for faster processing
+                flush_timeout = max(5, batch_len // 2000)  # Much faster: 5s minimum, or 0.5s per 1000 records
                 self.producer.flush(flush_timeout)
                 delivered_now = self._batch_delivered
                 self.total_sent += delivered_now
