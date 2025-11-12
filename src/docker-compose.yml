@@ -342,14 +342,15 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_DB=0
-      - BATCH_SIZE=20000
+      - BATCH_SIZE=5000
       - ADAPTIVE_BATCHING=true
       - MIN_BATCH_SIZE=1000
       - MAX_BATCH_SIZE=50000
-      - TARGET_RESPONSE_TIME=5.0
-      - MAX_RESPONSE_TIME=30.0
+      - TARGET_RESPONSE_TIME=3.0
+      - MAX_RESPONSE_TIME=10.0
       - ADAPTIVE_WINDOW_SIZE=10
       - RESET_OFFSETS=true
+      - RESET_DEDUP=true
     volumes:
       - ./state:/app/state
     profiles:

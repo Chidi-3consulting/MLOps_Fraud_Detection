@@ -122,12 +122,15 @@ class PureAPItoKafkaProducer:
         # Now that SQLite state is initialized, load the last offset
         self.current_offset = self._load_last_offset()
         # Initialize distributed allocator to current_offset if enabled and not set yet
-        if self.distributed_offsets and self.redis:
+        # IMPORTANT: Don't initialize if RESET_OFFSETS is set - let reset_state() handle it
+        reset_offsets_env = str(os.getenv("RESET_OFFSETS", "false")).lower() in {"1", "true", "yes", "on"}
+        if self.distributed_offsets and self.redis and not reset_offsets_env:
             try:
                 exists = self.redis.exists(self.offset_alloc_key)
                 if not exists:
                     # allocator represents next start offset to allocate; set to current_offset
                     self.redis.set(self.offset_alloc_key, int(self.current_offset))
+                    logger.debug(f"Initialized distributed allocator to {self.current_offset}")
             except Exception as e:
                 logger.warning(f"Failed to init distributed offset allocator: {e}")
         
@@ -190,6 +193,15 @@ class PureAPItoKafkaProducer:
 
         if reset_offsets or start_offset is not None:
             new_offset = 0 if start_offset is None else int(start_offset)
+            # When using distributed offsets, reset the allocator FIRST (this is the source of truth)
+            if self.distributed_offsets and self.redis:
+                try:
+                    # Reset the distributed allocator - this is what matters for multi-replica
+                    self.redis.set(self.offset_alloc_key, int(new_offset))
+                    logger.info(f"Distributed offset allocator reset to: {new_offset}")
+                except Exception as e:
+                    logger.warning(f"Failed resetting distributed allocator offset: {e}")
+            # Also reset local offsets (for fallback)
             # Redis offset
             try:
                 if self.redis:
@@ -210,11 +222,6 @@ class PureAPItoKafkaProducer:
                 logger.warning(f"Failed resetting file offset: {e}")
             self.current_offset = new_offset
             logger.info(f"Offset reset. New starting offset: {self.current_offset}")
-            if self.distributed_offsets and self.redis:
-                try:
-                    self.redis.set(self.offset_alloc_key, int(new_offset))
-                except Exception as e:
-                    logger.warning(f"Failed resetting distributed allocator offset: {e}")
 
     def _load_last_offset(self) -> int:
         """Load where we left off to avoid re-reading the same data"""
@@ -382,12 +389,18 @@ class PureAPItoKafkaProducer:
         if self.error_count >= 2:
             adjustment_factor = 0.5  # Cut in half
             logger.warning(f"Multiple errors detected ({self.error_count}), reducing batch size")
-        # If response time is too high, reduce batch size
+        # If response time is too high, reduce batch size aggressively
         elif avg_response_time > self.max_response_time:
-            # Reduce proportionally to how much we're over
-            overage_ratio = avg_response_time / self.max_response_time
-            adjustment_factor = 1.0 / overage_ratio
-            logger.info(f"Response time too high ({avg_response_time:.2f}s > {self.max_response_time}s), reducing batch size")
+            # Reduce more aggressively - cut by 40% if way over, 30% if slightly over
+            if avg_response_time > self.max_response_time * 1.5:
+                adjustment_factor = 0.6  # Cut by 40%
+            else:
+                adjustment_factor = 0.7  # Cut by 30%
+            logger.warning(f"Response time too high ({avg_response_time:.2f}s > {self.max_response_time}s), aggressively reducing batch size")
+        # If response time is above target but below max, reduce slightly
+        elif avg_response_time > self.target_response_time * 1.5:
+            adjustment_factor = 0.85  # Reduce by 15%
+            logger.info(f"Response time above target ({avg_response_time:.2f}s > {self.target_response_time * 1.5:.2f}s), reducing batch size")
         # If response time is good and we have successes, increase batch size
         elif avg_response_time < self.target_response_time and self.success_count >= 3:
             # Increase by 20% if we're doing well
@@ -427,14 +440,22 @@ class PureAPItoKafkaProducer:
         if self.distributed_offsets and self.redis:
             try:
                 # Atomically allocate a range of offsets to prevent duplicates across replicas
+                # This is the ONLY source of truth when distributed offsets are enabled
+                # Add small random delay to prevent both replicas from hitting Redis at exactly the same time
+                import random
+                time.sleep(random.uniform(0.01, 0.05))  # 10-50ms random delay
+                
                 claimed = int(self.redis.incrby(self.offset_alloc_key, self.batch_size))
                 api_offset = claimed - self.batch_size
                 used_distributed = True
-                logger.debug(f"Allocated offset range {api_offset} to {claimed - 1} from distributed allocator")
+                logger.info(f"🔀 Allocated offset range {api_offset} to {claimed - 1} from distributed allocator (batch size: {self.batch_size})")
             except Exception as e:
                 logger.warning(f"Distributed offset allocation failed, falling back to local offset: {e}")
                 # Fall back to local offset tracking
                 used_distributed = False
+        else:
+            # When not using distributed offsets, use local current_offset
+            api_offset = self.current_offset
         
         logger.info(f"Downloading from API - Offset: {api_offset}, Limit: {self.batch_size}")
         
