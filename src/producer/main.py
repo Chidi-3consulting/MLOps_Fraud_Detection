@@ -65,7 +65,22 @@ class PureAPItoKafkaProducer:
         # Resolve topic from env with sensible default
         env_topic = os.getenv("KAFKA_TOPIC")
         self.topic = env_topic if env_topic else "topic_fraud_2"
-        self.batch_size = int(os.getenv("BATCH_SIZE", "50000"))
+        
+        # Adaptive batch sizing configuration
+        self.adaptive_batching = str(os.getenv("ADAPTIVE_BATCHING", "true")).lower() in {"1", "true", "yes", "on"}
+        initial_batch_size = int(os.getenv("BATCH_SIZE", "20000"))
+        self.batch_size = initial_batch_size
+        self.min_batch_size = int(os.getenv("MIN_BATCH_SIZE", "1000"))
+        self.max_batch_size = int(os.getenv("MAX_BATCH_SIZE", "50000"))
+        
+        # Adaptive batching state
+        self.batch_size_history = [initial_batch_size]  # Keep last N batch sizes
+        self.response_times = []  # Track API response times
+        self.error_count = 0  # Track consecutive errors
+        self.success_count = 0  # Track consecutive successes
+        self.adaptive_window_size = int(os.getenv("ADAPTIVE_WINDOW_SIZE", "10"))  # Number of batches to consider
+        self.target_response_time = float(os.getenv("TARGET_RESPONSE_TIME", "5.0"))  # Target API response time in seconds
+        self.max_response_time = float(os.getenv("MAX_RESPONSE_TIME", "30.0"))  # Max acceptable response time
         
         # Offset tracking - THIS PREVENTS DUPLICATES ACROSS RUNS
         self.offset_file = "api_offset.txt"
@@ -113,6 +128,11 @@ class PureAPItoKafkaProducer:
         
         logger.info(f"Kafka bootstrap: {self.bootstrap_servers}, topic: {self.topic}")
         logger.info(f"Pure API to Kafka Producer - Starting from offset: {self.current_offset}")
+        logger.info(f"Batch size: {self.batch_size} (min: {self.min_batch_size}, max: {self.max_batch_size})")
+        if self.adaptive_batching:
+            logger.info(f"✅ Adaptive batching enabled (target response time: {self.target_response_time}s, max: {self.max_response_time}s)")
+        else:
+            logger.info("Adaptive batching disabled - using fixed batch size")
         if self.distributed_offsets:
             if not self.redis:
                 logger.warning("DISTRIBUTED_OFFSET is enabled but Redis is unavailable; falling back to single-instance offset handling.")
@@ -322,40 +342,144 @@ class PureAPItoKafkaProducer:
         except Exception as e:
             logger.warning(f"Skipping topic check/create due to error: {e}")
 
-    def download_batch(self) -> Optional[list]:
-        """Download batch from API using current offset"""
+    def _adjust_batch_size(self, response_time: float, success: bool):
+        """Adaptively adjust batch size based on performance metrics."""
+        if not self.adaptive_batching:
+            return
+        
+        # Track response time
+        self.response_times.append(response_time)
+        if len(self.response_times) > self.adaptive_window_size:
+            self.response_times.pop(0)
+        
+        # Track success/failure
+        if success:
+            self.success_count += 1
+            self.error_count = 0
+        else:
+            self.error_count += 1
+            self.success_count = 0
+        
+        # Calculate average response time
+        avg_response_time = sum(self.response_times) / len(self.response_times) if self.response_times else response_time
+        
+        # Adjust batch size based on performance
+        old_batch_size = self.batch_size
+        adjustment_factor = 1.0
+        
+        # If we have errors, reduce batch size aggressively
+        if self.error_count >= 2:
+            adjustment_factor = 0.5  # Cut in half
+            logger.warning(f"Multiple errors detected ({self.error_count}), reducing batch size")
+        # If response time is too high, reduce batch size
+        elif avg_response_time > self.max_response_time:
+            # Reduce proportionally to how much we're over
+            overage_ratio = avg_response_time / self.max_response_time
+            adjustment_factor = 1.0 / overage_ratio
+            logger.info(f"Response time too high ({avg_response_time:.2f}s > {self.max_response_time}s), reducing batch size")
+        # If response time is good and we have successes, increase batch size
+        elif avg_response_time < self.target_response_time and self.success_count >= 3:
+            # Increase by 20% if we're doing well
+            adjustment_factor = 1.2
+            logger.info(f"Performance good (avg {avg_response_time:.2f}s < {self.target_response_time}s), increasing batch size")
+        # If response time is in target range, keep it stable
+        else:
+            # Small adjustments to fine-tune
+            if avg_response_time > self.target_response_time * 1.2:
+                adjustment_factor = 0.9  # Slight decrease
+            elif avg_response_time < self.target_response_time * 0.8:
+                adjustment_factor = 1.1  # Slight increase
+        
+        # Calculate new batch size
+        new_batch_size = int(self.batch_size * adjustment_factor)
+        
+        # Clamp to min/max bounds
+        new_batch_size = max(self.min_batch_size, min(self.max_batch_size, new_batch_size))
+        
+        # Only log if there's a significant change (more than 10%)
+        if abs(new_batch_size - self.batch_size) > self.batch_size * 0.1:
+            self.batch_size = new_batch_size
+            self.batch_size_history.append(self.batch_size)
+            if len(self.batch_size_history) > self.adaptive_window_size:
+                self.batch_size_history.pop(0)
+            logger.info(f"📊 Batch size adjusted: {old_batch_size} → {self.batch_size} (avg response: {avg_response_time:.2f}s, errors: {self.error_count}, successes: {self.success_count})")
+        else:
+            self.batch_size = new_batch_size
+
+    def download_batch(self) -> Optional[tuple]:
+        """Download batch from API using current offset
+        Returns: (transactions_list, api_offset_used, used_distributed) or None
+        """
         # Determine offset source (distributed allocator or local current_offset)
         api_offset = self.current_offset
+        used_distributed = False
         if self.distributed_offsets and self.redis:
             try:
+                # Atomically allocate a range of offsets to prevent duplicates across replicas
                 claimed = int(self.redis.incrby(self.offset_alloc_key, self.batch_size))
                 api_offset = claimed - self.batch_size
+                used_distributed = True
+                logger.debug(f"Allocated offset range {api_offset} to {claimed - 1} from distributed allocator")
             except Exception as e:
-                logger.warning(f"Distributed offset allocation failed, using local offset: {e}")
-        # Track the offset used for this batch
-        self.current_offset = api_offset
+                logger.warning(f"Distributed offset allocation failed, falling back to local offset: {e}")
+                # Fall back to local offset tracking
+                used_distributed = False
+        
         logger.info(f"Downloading from API - Offset: {api_offset}, Limit: {self.batch_size}")
         
+        start_time = time.time()
         try:
+            # Dynamic timeout based on batch size (at least 2s per 1000 records, minimum 30s)
+            timeout = max(30, int(self.batch_size / 1000 * 2))
             params = {'limit': self.batch_size, 'offset': api_offset}
-            response = requests.get(self.api_url, params=params, timeout=30)
+            response = requests.get(self.api_url, params=params, timeout=timeout)
+            response_time = time.time() - start_time
             
             if response.status_code == 200:
                 data = response.json()
                 if data.get('success') and data.get('data'):
                     transactions = data['data']
-                    logger.info(f"✅ Received {len(transactions)} transactions from API")
-
-                    return transactions
+                    logger.info(f"✅ Received {len(transactions)} transactions from API (offset {api_offset}, response time: {response_time:.2f}s)")
+                    
+                    # Adjust batch size based on performance
+                    self._adjust_batch_size(response_time, success=True)
+                    
+                    # Return transactions, offset used, and whether distributed allocation was used
+                    return (transactions, api_offset, used_distributed)
                 else:
-                    logger.warning("API returned no data or error")
+                    logger.warning(f"API returned no data or error: {data.get('message', 'Unknown error')}")
+                    # Adjust batch size (treat as failure)
+                    self._adjust_batch_size(response_time, success=False)
+                    # If we allocated distributed offsets but got no data, we still consumed that range
+                    # This is intentional to prevent duplicates, but log it
+                    if used_distributed:
+                        logger.info(f"Note: Allocated {self.batch_size} offsets but received 0 records. Range {api_offset}-{api_offset + self.batch_size - 1} reserved.")
                     return None
             else:
                 logger.error(f"HTTP Error: {response.status_code}")
+                response_time = time.time() - start_time
+                # Adjust batch size (treat as failure)
+                self._adjust_batch_size(response_time, success=False)
+                # If we allocated distributed offsets but request failed, the range is still consumed
+                # This prevents duplicates but means we skip that range on retry
+                if used_distributed:
+                    logger.warning(f"Request failed after allocating offset range. Range {api_offset}-{api_offset + self.batch_size - 1} was reserved.")
                 return None
                 
+        except requests.Timeout:
+            response_time = time.time() - start_time
+            logger.error(f"API request timed out after {response_time:.2f}s (batch size: {self.batch_size})")
+            # Timeout is a clear signal to reduce batch size
+            self._adjust_batch_size(response_time, success=False)
+            if used_distributed:
+                logger.warning(f"Timeout after allocating offset range. Range {api_offset}-{api_offset + self.batch_size - 1} was reserved.")
+            return None
         except Exception as e:
+            response_time = time.time() - start_time
             logger.error(f"API download failed: {e}")
+            self._adjust_batch_size(response_time, success=False)
+            if used_distributed:
+                logger.warning(f"Exception after allocating offset range. Range {api_offset}-{api_offset + self.batch_size - 1} was reserved.")
             return None
 
     def delivery_report(self, err, msg):
@@ -557,27 +681,57 @@ class PureAPItoKafkaProducer:
         self._sqlite_conn.commit()
 
     def _init_redis_client(self):
-        """Initialize Redis client if configured via environment."""
+        """Initialize Redis client if configured via environment.
+        Retries connection with exponential backoff for better reliability.
+        """
         if self._redis_lib is None:
+            logger.warning("Redis library not available. Install 'redis' package for distributed deduplication.")
             return None
         redis_url = os.getenv("REDIS_URL")
         host = os.getenv("REDIS_HOST")
         if not redis_url and not host:
+            logger.info("Redis not configured (no REDIS_URL or REDIS_HOST). Using SQLite fallback for deduplication.")
             return None
-        try:
-            if redis_url:
-                client = self._redis_lib.Redis.from_url(redis_url, decode_responses=True)
-            else:
-                port = int(os.getenv("REDIS_PORT", "6379"))
-                password = os.getenv("REDIS_PASSWORD")
-                db = int(os.getenv("REDIS_DB", "0"))
-                client = self._redis_lib.Redis(host=host, port=port, password=password, db=db, decode_responses=True)
-            client.ping()
-            logger.info("Connected to Redis for deduplication.")
-            return client
-        except Exception as e:
-            logger.warning(f"Redis not available for deduplication: {e}")
-            return None
+        
+        # Retry connection with exponential backoff
+        max_retries = 5
+        for attempt in range(max_retries):
+            try:
+                if redis_url:
+                    client = self._redis_lib.Redis.from_url(
+                        redis_url, 
+                        decode_responses=True,
+                        socket_connect_timeout=5,
+                        socket_timeout=5,
+                        retry_on_timeout=True
+                    )
+                else:
+                    port = int(os.getenv("REDIS_PORT", "6379"))
+                    password = os.getenv("REDIS_PASSWORD")
+                    db = int(os.getenv("REDIS_DB", "0"))
+                    client = self._redis_lib.Redis(
+                        host=host, 
+                        port=port, 
+                        password=password, 
+                        db=db, 
+                        decode_responses=True,
+                        socket_connect_timeout=5,
+                        socket_timeout=5,
+                        retry_on_timeout=True
+                    )
+                # Test connection
+                client.ping()
+                logger.info(f"✅ Connected to Redis at {host or 'URL'} for deduplication and distributed offsets.")
+                return client
+            except Exception as e:
+                if attempt < max_retries - 1:
+                    wait_time = 2 ** attempt  # Exponential backoff: 1s, 2s, 4s, 8s
+                    logger.warning(f"Redis connection attempt {attempt + 1}/{max_retries} failed: {e}. Retrying in {wait_time}s...")
+                    time.sleep(wait_time)
+                else:
+                    logger.warning(f"Redis not available after {max_retries} attempts: {e}. Falling back to SQLite for deduplication.")
+                    return None
+        return None
 
     def stream_continuously(self):
         """Stream data continuously - each run continues from last offset"""
@@ -586,32 +740,67 @@ class PureAPItoKafkaProducer:
         
         try:
             while self.running:
-                transactions = self.download_batch()
+                result = self.download_batch()
+                
+                if not result:
+                    logger.info("No more data from API, waiting...")
+                    time.sleep(10)
+                    continue
+                
+                # Unpack result: (transactions, api_offset_used, used_distributed)
+                if len(result) == 3:
+                    transactions, api_offset_used, used_distributed = result
+                else:
+                    # Backward compatibility
+                    transactions, api_offset_used = result
+                    used_distributed = False
                 
                 if not transactions:
-                    logger.info("No more data from API, waiting...")
+                    logger.info("Empty batch received, waiting...")
                     time.sleep(10)
                     continue
                 
                 # Send all transactions
                 self._batch_delivered = 0
-                for transaction in transactions:
-                    self.send_to_kafka(transaction)
+                sent_count = 0
+                batch_len = len(transactions)
+                # Poll more frequently for large batches to avoid buffer overflow
+                poll_interval = max(500, batch_len // 50)  # Poll ~50 times per batch
+                
+                for idx, transaction in enumerate(transactions):
+                    if self.send_to_kafka(transaction):
+                        sent_count += 1
+                    # Poll periodically to avoid buffer overflow and trigger callbacks
+                    if (idx + 1) % poll_interval == 0:
+                        self.producer.poll(0)
+                
+                # Final poll to process any remaining messages
+                self.producer.poll(0)
 
-                # Wait for delivery callbacks and advance offset only by successes
-                self.producer.flush(30)
+                # Wait for delivery callbacks with longer timeout for large batches
+                flush_timeout = max(30, batch_len // 1000)  # At least 30s, or 1s per 1000 records
+                self.producer.flush(flush_timeout)
                 delivered_now = self._batch_delivered
                 self.total_sent += delivered_now
-                # Only advance and persist local offsets when not using distributed allocator
-                if self.distributed_offsets and self.redis:
-                    if delivered_now:
-                        self.current_offset += delivered_now
-                else:
-                    self.current_offset += delivered_now
-                    if delivered_now:
-                        self._save_last_offset(self.current_offset)
                 
-                logger.info(f"📦 Sent batch - Delivered: {delivered_now}, Total: {self.total_sent}, Next offset: {self.current_offset}")
+                # Update offset: next offset = api_offset_used + number of transactions actually received
+                # This ensures we don't skip or duplicate records
+                next_offset = api_offset_used + len(transactions)
+                
+                if used_distributed and self.distributed_offsets and self.redis:
+                    # With distributed offsets, the allocator already advanced by batch_size atomically
+                    # We track the actual progress for logging, but the allocator manages the next range
+                    self.current_offset = next_offset
+                    # Note: We don't save offset when using distributed allocator
+                    # as it's managed centrally in Redis. The allocator ensures no duplicates.
+                else:
+                    # Update and save local offset (fallback mode or non-distributed)
+                    self.current_offset = next_offset
+                    self._save_last_offset(self.current_offset)
+                
+                logger.info(f"📦 Sent batch - Received: {len(transactions)}, Delivered: {delivered_now}, Skipped (duplicates): {self.dedup_skipped}, Total: {self.total_sent}, Next offset: {self.current_offset}")
+                # Reset dedup counter for next batch
+                self.dedup_skipped = 0
                 time.sleep(2)  # Be nice to the API
                 
         except KeyboardInterrupt:
@@ -626,30 +815,60 @@ class PureAPItoKafkaProducer:
         
         try:
             while self.running and self.total_sent < count:
-                transactions = self.download_batch()
+                result = self.download_batch()
                 
-                if not transactions:
+                if not result:
                     logger.info("No more data available")
                     break
                 
+                # Unpack result: (transactions, api_offset_used, used_distributed)
+                if len(result) == 3:
+                    transactions, api_offset_used, used_distributed = result
+                else:
+                    # Backward compatibility
+                    transactions, api_offset_used = result
+                    used_distributed = False
+                
+                if not transactions:
+                    logger.info("Empty batch received")
+                    break
+                
                 self._batch_delivered = 0
-                for transaction in transactions:
+                sent_count = 0
+                batch_len = len(transactions)
+                # Poll more frequently for large batches to avoid buffer overflow
+                poll_interval = max(500, batch_len // 50)  # Poll ~50 times per batch
+                
+                for idx, transaction in enumerate(transactions):
                     if self.total_sent >= count:
                         break
-                    self.send_to_kafka(transaction)
+                    if self.send_to_kafka(transaction):
+                        sent_count += 1
+                    # Poll periodically to avoid buffer overflow and trigger callbacks
+                    if (idx + 1) % poll_interval == 0:
+                        self.producer.poll(0)
+                
+                # Final poll to process any remaining messages
+                self.producer.poll(0)
 
-                self.producer.flush(30)
+                # Wait for delivery callbacks with longer timeout for large batches
+                flush_timeout = max(30, batch_len // 1000)  # At least 30s, or 1s per 1000 records
+                self.producer.flush(flush_timeout)
                 delivered_now = self._batch_delivered
                 self.total_sent += delivered_now
-                if self.distributed_offsets and self.redis:
-                    if delivered_now:
-                        self.current_offset += delivered_now
-                else:
-                    self.current_offset += delivered_now
-                    if delivered_now:
-                        self._save_last_offset(self.current_offset)
                 
-                logger.info(f"Progress: {self.total_sent}/{count}, Next offset: {self.current_offset}")
+                # Update offset: next offset = api_offset_used + number of transactions actually received
+                next_offset = api_offset_used + len(transactions)
+                
+                if used_distributed and self.distributed_offsets and self.redis:
+                    # With distributed offsets, allocator manages the next range
+                    self.current_offset = next_offset
+                else:
+                    # Update and save local offset
+                    self.current_offset = next_offset
+                    self._save_last_offset(self.current_offset)
+                
+                logger.info(f"Progress: {self.total_sent}/{count}, Received: {len(transactions)}, Delivered: {delivered_now}, Next offset: {self.current_offset}")
             
             logger.info(f"✅ Streamed {self.total_sent} records")
             

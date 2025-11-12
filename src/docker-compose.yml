@@ -339,6 +339,16 @@ services:
       - KAFKA_QUEUE_BUFFERING_MAX_MESSAGES=100000
       - KAFKA_MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION=5
       - DISTRIBUTED_OFFSET=true
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - BATCH_SIZE=20000
+      - ADAPTIVE_BATCHING=true
+      - MIN_BATCH_SIZE=1000
+      - MAX_BATCH_SIZE=50000
+      - TARGET_RESPONSE_TIME=5.0
+      - MAX_RESPONSE_TIME=30.0
+      - ADAPTIVE_WINDOW_SIZE=10
     volumes:
       - ./state:/app/state
     profiles:
@@ -349,6 +359,9 @@ services:
         limits:
           cpus: '2'
           memory: 2G
+    depends_on:
+      redis:
+        condition: service_healthy
     networks:
       - fraud-detection
 
