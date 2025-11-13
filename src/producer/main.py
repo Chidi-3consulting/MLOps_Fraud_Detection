@@ -64,7 +64,7 @@ class PureAPItoKafkaProducer:
         self.kafka_password = os.getenv("KAFKA_PASSWORD")
         # Resolve topic from env with sensible default
         env_topic = os.getenv("KAFKA_TOPIC")
-        self.topic = env_topic if env_topic else "ecommerce_fraud"
+        self.topic = env_topic if env_topic else "ecommerce_fraud2"
         
         # Adaptive batch sizing configuration
         self.adaptive_batching = str(os.getenv("ADAPTIVE_BATCHING", "true")).lower() in {"1", "true", "yes", "on"}
@@ -92,7 +92,11 @@ class PureAPItoKafkaProducer:
 
         # Optional Redis-based cross-run deduplication
         self.redis = self._init_redis_client()
-        self.redis_set_key = os.getenv("REDIS_DEDUP_SET_KEY", "fraud:seen_transaction_ids")
+        # Make deduplication topic-aware to prevent cross-topic conflicts
+        base_key = os.getenv("REDIS_DEDUP_SET_KEY", "fraud:seen_transaction_ids")
+        self.redis_set_key = f"{base_key}:{self.topic}"  # Include topic in key
+        # Keep reference to old global key for backward compatibility check
+        self.redis_set_key_global = base_key  # Old global key (for migration/fallback)
         # Optional Redis-backed offset key
         self.offset_redis_key = os.getenv("REDIS_OFFSET_KEY", "fraud:producer_offset")
         # Optional Redis-backed distributed offset allocator for multi-replica
@@ -202,31 +206,26 @@ class PureAPItoKafkaProducer:
                     reset_lock_acquired = self.redis.set(reset_flag_key, "1", ex=10, nx=True)  # 10 second lock
                     
                     if reset_lock_acquired:
-                        # This replica won the race - it resets the allocator
+                        # This replica won the race - FORCE reset the allocator (ignore current value)
+                        current_allocator = int(self.redis.get(self.offset_alloc_key) or 0)
                         self.redis.set(self.offset_alloc_key, int(new_offset))
-                        logger.info(f"Distributed offset allocator reset to: {new_offset} (this replica won the reset race)")
+                        logger.info(f"✅ FORCED RESET: Distributed offset allocator reset from {current_allocator} to {new_offset} (this replica won the reset race)")
                     else:
                         # Another replica is resetting, wait a bit and check
                         import time
-                        time.sleep(0.2)  # Wait a bit longer
-                        # Check current allocator value
+                        time.sleep(0.5)  # Wait longer for reset to complete
+                        # Check if reset completed
                         current_allocator = int(self.redis.get(self.offset_alloc_key) or 0)
-                        
-                        # CRITICAL: Only reset if allocator is still at 0 (hasn't been used yet)
-                        # If it's been incremented (current_allocator > new_offset), don't reset it!
-                        if current_allocator == 0 or current_allocator == int(new_offset):
-                            # Allocator is at reset value or 0, it's safe to ensure it's set correctly
-                            # But don't reset if it's already been incremented
-                            if current_allocator == 0:
-                                self.redis.set(self.offset_alloc_key, int(new_offset))
-                                logger.info(f"Distributed offset allocator reset to: {new_offset} (after waiting, was at 0)")
-                            else:
-                                logger.info(f"Distributed offset allocator already reset to: {new_offset} by another replica")
+                        if current_allocator == int(new_offset):
+                            logger.info(f"✅ Distributed offset allocator already reset to: {new_offset} by another replica")
                         else:
-                            # Allocator has been incremented (allocations have started), don't reset!
-                            logger.warning(f"Distributed offset allocator already in use (at {current_allocator}), skipping reset to avoid conflicts")
+                            # Reset didn't happen or value is wrong - force it now
+                            logger.warning(f"⚠️ Reset incomplete (current: {current_allocator}, expected: {new_offset}), forcing reset now...")
+                            self.redis.set(self.offset_alloc_key, int(new_offset))
+                            logger.info(f"✅ FORCED RESET: Distributed offset allocator reset to: {new_offset}")
                 except Exception as e:
-                    logger.warning(f"Failed resetting distributed allocator offset: {e}")
+                    logger.error(f"❌ CRITICAL: Failed resetting distributed allocator offset: {e}")
+                    raise  # Re-raise to ensure we know about this failure
             # Also reset local offsets (for fallback)
             # Redis offset
             try:
@@ -300,12 +299,12 @@ class PureAPItoKafkaProducer:
             "bootstrap.servers": self.bootstrap_servers,
             "client.id": "api-producer",
             # Ensure idempotent, exactly-once-in-producer semantics where possible
-            "acks": "1",  # Changed from "all" to "1" for faster throughput (still reliable)
+            "acks": "all",  # Must be "all" when idempotence is enabled
             "enable.idempotence": True,
             # Optimized for speed on Confluent Cloud
             "message.timeout.ms": 300000,  # 5 minutes (reduced from 20)
             "socket.keepalive.enable": True,
-            "max.in.flight.requests.per.connection": 10,  # Increased from 5 for more parallelism
+            "max.in.flight.requests.per.connection": 5,  # Must be <= 5 when idempotence is enabled
             "reconnect.backoff.ms": 50,  # Faster reconnection
             "reconnect.backoff.max.ms": 5000,  # Faster max backoff
             "retry.backoff.ms": 50,  # Faster retry
@@ -337,6 +336,13 @@ class PureAPItoKafkaProducer:
                         producer_config[conf_key] = val
                 except Exception:
                     producer_config[conf_key] = val
+
+        # CRITICAL: Ensure idempotence requirements are met (can't be overridden)
+        # When idempotence is enabled, acks must be "all" and max.in.flight <= 5
+        if producer_config.get("enable.idempotence", False):
+            producer_config["acks"] = "all"  # Force "all" when idempotence is enabled
+            if producer_config.get("max.in.flight.requests.per.connection", 5) > 5:
+                producer_config["max.in.flight.requests.per.connection"] = 5  # Force <= 5
 
         if self.kafka_username and self.kafka_password:
             producer_config.update({
@@ -517,11 +523,27 @@ class PureAPItoKafkaProducer:
             # Dynamic timeout based on batch size (at least 2s per 1000 records, minimum 30s)
             timeout = max(30, int(self.batch_size / 1000 * 2))
             params = {'limit': self.batch_size, 'offset': api_offset}
+            # Log the full URL being requested for debugging
+            full_url = f"{self.api_url}?limit={self.batch_size}&offset={api_offset}"
+            logger.debug(f"API Request URL: {full_url}")
             response = requests.get(self.api_url, params=params, timeout=timeout)
             response_time = time.time() - start_time
             
             if response.status_code == 200:
-                data = response.json()
+                try:
+                    data = response.json()
+                except Exception as e:
+                    logger.error(f"Failed to parse API response as JSON: {e}")
+                    logger.error(f"Response text (first 500 chars): {response.text[:500]}")
+                    self._adjust_batch_size(response_time, success=False)
+                    if used_distributed:
+                        logger.warning(f"JSON parse error after allocating offset range. Range {api_offset}-{api_offset + self.batch_size - 1} was reserved.")
+                    return (None, api_offset, used_distributed, True)
+                
+                # Log full response for debugging when there's an issue
+                if not (data.get('success') and data.get('data')):
+                    logger.warning(f"API Response (offset {api_offset}): {json.dumps(data, indent=2, default=str)}")
+                
                 if data.get('success') and data.get('data'):
                     transactions = data['data']
                     logger.info(f"✅ Received {len(transactions)} transactions from API (offset {api_offset}, response time: {response_time:.2f}s)")
@@ -529,17 +551,56 @@ class PureAPItoKafkaProducer:
                     # Adjust batch size based on performance
                     self._adjust_batch_size(response_time, success=True)
                     
-                    # Return transactions, offset used, and whether distributed allocation was used
-                    return (transactions, api_offset, used_distributed)
+                    # Return transactions, offset used, whether distributed allocation was used, and is_network_error flag
+                    return (transactions, api_offset, used_distributed, False)
                 else:
-                    logger.warning(f"API returned no data or error: {data.get('message', 'Unknown error')}")
-                    # Adjust batch size (treat as failure)
-                    self._adjust_batch_size(response_time, success=False)
-                    # If we allocated distributed offsets but got no data, we still consumed that range
-                    # This is intentional to prevent duplicates, but log it
-                    if used_distributed:
-                        logger.info(f"Note: Allocated {self.batch_size} offsets but received 0 records. Range {api_offset}-{api_offset + self.batch_size - 1} reserved.")
-                    return None
+                    # Check if this is an API error (has error message or success=false) or actual empty response
+                    success_flag = data.get('success', True)  # Default to True if not present
+                    error_message = data.get('message', '')
+                    transactions_list = data.get('data', [])
+                    
+                    # Log the full response structure for debugging
+                    logger.warning(f"API Response Details (offset {api_offset}): success={success_flag}, message='{error_message}', data_type={type(transactions_list)}, data_len={len(transactions_list) if transactions_list else 0}")
+                    logger.warning(f"Full API Response: {json.dumps(data, indent=2, default=str)}")
+                    
+                    # Determine if this is an error vs empty data
+                    # If success=false OR has error message (except benign empty messages), treat as error
+                    has_error = (success_flag is False) or (
+                        error_message and 
+                        error_message.lower() not in ['', 'no data', 'no more data', 'empty', 'no records found']
+                    )
+                    
+                    # Only treat as empty if success=true (or not set) AND no error message AND no data
+                    is_actually_empty = (
+                        success_flag is not False and 
+                        not error_message and 
+                        (not transactions_list or len(transactions_list) == 0)
+                    )
+                    
+                    if has_error:
+                        # API returned an error - treat as retryable error, not end of data
+                        logger.warning(f"API returned error (success={success_flag}, message='{error_message}') at offset {api_offset} - will retry")
+                        self._adjust_batch_size(response_time, success=False)
+                        if used_distributed:
+                            logger.warning(f"API error after allocating offset range. Range {api_offset}-{api_offset + self.batch_size - 1} was reserved.")
+                        # Return as retryable error (is_network_error=True)
+                        return (None, api_offset, used_distributed, True)
+                    elif is_actually_empty:
+                        # API returned successfully but with no data - this is actual end of data
+                        logger.info(f"API returned empty data (offset {api_offset}) - end of data reached")
+                        self._adjust_batch_size(response_time, success=False)
+                        if used_distributed:
+                            logger.info(f"Note: Allocated {self.batch_size} offsets but received 0 records. Range {api_offset}-{api_offset + self.batch_size - 1} reserved.")
+                        # Empty response (no more data) - return None with is_network_error=False
+                        return (None, api_offset, used_distributed, False)
+                    else:
+                        # Unknown case - safer to retry than to stop
+                        logger.warning(f"API returned unexpected response: {data} (offset {api_offset}) - will retry")
+                        self._adjust_batch_size(response_time, success=False)
+                        if used_distributed:
+                            logger.warning(f"Unexpected response after allocating offset range. Range {api_offset}-{api_offset + self.batch_size - 1} was reserved.")
+                        # Treat as retryable error
+                        return (None, api_offset, used_distributed, True)
             else:
                 logger.error(f"HTTP Error: {response.status_code}")
                 response_time = time.time() - start_time
@@ -549,23 +610,37 @@ class PureAPItoKafkaProducer:
                 # This prevents duplicates but means we skip that range on retry
                 if used_distributed:
                     logger.warning(f"Request failed after allocating offset range. Range {api_offset}-{api_offset + self.batch_size - 1} was reserved.")
-                return None
+                # HTTP error - treat as network error (retry, don't trigger end-of-data)
+                return (None, api_offset, used_distributed, True)
                 
-        except requests.Timeout:
+        except (requests.Timeout, requests.ConnectionError, requests.exceptions.RequestException) as e:
             response_time = time.time() - start_time
-            logger.error(f"API request timed out after {response_time:.2f}s (batch size: {self.batch_size})")
-            # Timeout is a clear signal to reduce batch size
+            error_type = "Timeout" if isinstance(e, requests.Timeout) else "Connection Error"
+            logger.error(f"API {error_type}: {e} (after {response_time:.2f}s, batch size: {self.batch_size})")
+            # Timeout/connection error is a network issue - retry, don't trigger end-of-data
             self._adjust_batch_size(response_time, success=False)
             if used_distributed:
-                logger.warning(f"Timeout after allocating offset range. Range {api_offset}-{api_offset + self.batch_size - 1} was reserved.")
-            return None
+                logger.warning(f"{error_type} after allocating offset range. Range {api_offset}-{api_offset + self.batch_size - 1} was reserved.")
+            # Network error - return with is_network_error=True
+            return (None, api_offset, used_distributed, True)
         except Exception as e:
             response_time = time.time() - start_time
-            logger.error(f"API download failed: {e}")
+            error_str = str(e).lower()
+            # Check if it's a network/DNS error
+            is_network_error = any(keyword in error_str for keyword in [
+                'name or service not known', 'name resolution', 'dns', 
+                'connection', 'network', 'resolve', 'failed to resolve'
+            ])
+            
+            if is_network_error:
+                logger.error(f"API network error: {e}")
+            else:
+                logger.error(f"API download failed: {e}")
             self._adjust_batch_size(response_time, success=False)
             if used_distributed:
                 logger.warning(f"Exception after allocating offset range. Range {api_offset}-{api_offset + self.batch_size - 1} was reserved.")
-            return None
+            # Return with is_network_error flag based on error type
+            return (None, api_offset, used_distributed, is_network_error)
 
     def delivery_report(self, err, msg):
         if err:
@@ -605,22 +680,28 @@ class PureAPItoKafkaProducer:
                 self.dedup_skipped += 1
                 return False
 
-            # Send to Kafka - don't poll here, batch polling is more efficient
-            self.producer.produce(
-                self.topic,
-                key=key_str,
-                value=json.dumps(transaction),
-                callback=self.delivery_report
-            )
-            # Don't poll here - let batch polling handle it for better performance
-            return True
-        except Exception as e:
-            logger.error(f"Send failed: {e}")
-            # On immediate send failure, release reservation so future attempts can retry
+            # Send to Kafka - handle queue full errors
             try:
-                self._release_reservation(key_str)
-            except Exception:
-                pass
+                self.producer.produce(
+                    self.topic,
+                    key=key_str,
+                    value=json.dumps(transaction),
+                    callback=self.delivery_report
+                )
+                return True
+            except BufferError:
+                # Queue is full - re-raise so caller can handle it
+                raise
+            except Exception as e:
+                logger.error(f"Send failed: {e}")
+                # On immediate send failure, release reservation so future attempts can retry
+                try:
+                    self._release_reservation(key_str)
+                except Exception:
+                    pass
+                return False
+        except Exception as e:
+            logger.error(f"Unexpected error in send_to_kafka: {e}")
             return False
 
     def _reserve_key(self, key_str: str) -> bool:
@@ -640,7 +721,7 @@ class PureAPItoKafkaProducer:
                 if key_str in self.local_seen_keys:
                     return False
                 
-                # Check Redis - use pipeline for efficiency if we had multiple keys
+                # Check Redis - use topic-specific key only (prevents cross-topic conflicts)
                 if self.redis.sismember(self.redis_set_key, key_str):
                     self.local_seen_keys.add(key_str)  # Cache locally
                     return False
@@ -858,51 +939,119 @@ class PureAPItoKafkaProducer:
         self.running = True
         logger.info("🚀 Starting continuous streaming from API...")
         
+        # Track consecutive empty responses to detect end of data (NOT network errors)
+        consecutive_empty = 0
+        max_consecutive_empty = 3  # Exit after 3 consecutive empty responses
+        network_error_backoff = 5  # Initial backoff for network errors (seconds)
+        
         try:
             while self.running:
                 result = self.download_batch()
                 
-                if not result:
-                    logger.info("No more data from API, waiting...")
-                    time.sleep(10)
+                # Handle None result (shouldn't happen with new format, but keep for safety)
+                if result is None:
+                    logger.warning("Unexpected None result from download_batch, treating as network error")
+                    logger.info(f"Network error detected, retrying in {network_error_backoff}s...")
+                    time.sleep(network_error_backoff)
+                    network_error_backoff = min(60, network_error_backoff * 1.5)  # Exponential backoff, max 60s
                     continue
                 
-                # Unpack result: (transactions, api_offset_used, used_distributed)
-                if len(result) == 3:
+                # Unpack result: (transactions, api_offset_used, used_distributed, is_network_error)
+                if len(result) == 4:
+                    transactions, api_offset_used, used_distributed, is_network_error = result
+                elif len(result) == 3:
+                    # Backward compatibility: assume not a network error
                     transactions, api_offset_used, used_distributed = result
+                    is_network_error = False
                 else:
-                    # Backward compatibility
-                    transactions, api_offset_used = result
-                    used_distributed = False
-                
-                if not transactions:
-                    logger.info("Empty batch received, waiting...")
+                    logger.error(f"Unexpected result format from download_batch: {result}")
                     time.sleep(10)
                     continue
+                
+                # Handle network errors (DNS, connection failures, etc.) - retry with backoff
+                if is_network_error:
+                    logger.warning(f"Network error detected (offset {api_offset_used}), retrying in {network_error_backoff}s...")
+                    time.sleep(network_error_backoff)
+                    network_error_backoff = min(60, network_error_backoff * 1.5)  # Exponential backoff, max 60s
+                    consecutive_empty = 0  # Reset empty counter (network errors don't count)
+                    continue
+                
+                # Reset network error backoff on successful connection
+                network_error_backoff = 5
+                
+                # Handle empty responses (actual end of data, not network errors)
+                if not transactions or len(transactions) == 0:
+                    consecutive_empty += 1
+                    if consecutive_empty >= max_consecutive_empty:
+                        logger.info("=" * 80)
+                        logger.info("🏁 END OF DATA DETECTED")
+                        logger.info(f"   Received {max_consecutive_empty} consecutive empty responses from API")
+                        logger.info(f"   Final offset: {self.current_offset}")
+                        logger.info(f"   Total records sent: {self.total_sent}")
+                        logger.info(f"   Total duplicates skipped: {self.dedup_skipped}")
+                        logger.info("=" * 80)
+                        logger.info("✅ All data has been processed. Producer will continue monitoring for new data...")
+                        logger.info("   (To stop, press Ctrl+C or restart the container)")
+                        consecutive_empty = 0  # Reset counter, continue monitoring
+                    else:
+                        logger.info(f"No more data from API (empty response {consecutive_empty}/{max_consecutive_empty}), waiting 10s before retry...")
+                    time.sleep(10)
+                    continue
+                
+                # Reset counter on successful data
+                consecutive_empty = 0
                 
                 # Send all transactions - optimized for speed
+                batch_len = len(transactions)
+                logger.info(f"📤 Starting to send {batch_len} transactions to Kafka...")
                 self._batch_delivered = 0
                 sent_count = 0
-                batch_len = len(transactions)
-                # Optimize polling - poll less frequently but more efficiently
-                poll_interval = max(1000, batch_len // 20)  # Poll ~20 times per batch (reduced from 50)
+                # Very frequent polling to prevent queue overflow and keep things moving
+                poll_interval = max(200, batch_len // 100)  # Poll ~100 times per batch for maximum throughput
                 
                 # Batch send all transactions as fast as possible
                 for idx, transaction in enumerate(transactions):
-                    self.send_to_kafka(transaction)
-                    sent_count += 1
-                    # Poll less frequently to reduce overhead
+                    try:
+                        self.send_to_kafka(transaction)
+                        sent_count += 1
+                    except BufferError:
+                        # Queue is full, poll to drain it
+                        logger.warning(f"Queue full at {idx}/{batch_len}, polling to drain...")
+                        self.producer.poll(0.1)  # Poll with small timeout to drain
+                        # Retry sending this transaction
+                        try:
+                            self.send_to_kafka(transaction)
+                            sent_count += 1
+                        except Exception as e:
+                            logger.error(f"Failed to send transaction {idx}: {e}")
+                            continue
+                    
+                    # Poll more frequently to prevent queue overflow
                     if (idx + 1) % poll_interval == 0:
                         self.producer.poll(0)
+                        if (idx + 1) % (poll_interval * 5) == 0:
+                            logger.info(f"📤 Progress: {idx + 1}/{batch_len} transactions queued...")
                 
-                # Quick poll to trigger callbacks
-                self.producer.poll(0)
-
-                # Reduced flush timeout - don't wait too long
-                flush_timeout = max(5, batch_len // 2000)  # Much faster: 5s minimum, or 0.5s per 1000 records
-                self.producer.flush(flush_timeout)
+                logger.info(f"📤 All {sent_count} transactions queued, polling for deliveries...")
+                # Poll aggressively to trigger callbacks and drain queue
+                start_poll = time.time()
+                poll_duration = 2.0  # Poll for max 2 seconds to get initial deliveries
+                while time.time() - start_poll < poll_duration:
+                    self.producer.poll(0.1)
+                    if self._batch_delivered >= sent_count * 0.9:  # 90% delivered, good enough
+                        break
+                
+                # Quick flush with short timeout - don't block forever
+                flush_timeout = min(5, batch_len // 5000)  # Max 5s, or 1s per 5000 records
+                logger.info(f"⏳ Quick flush (timeout: {flush_timeout}s)...")
+                remaining = self.producer.flush(flush_timeout)
                 delivered_now = self._batch_delivered
                 self.total_sent += delivered_now
+                
+                if remaining > 0:
+                    logger.info(f"✅ {delivered_now} delivered, {remaining} still queued (will flush in background)")
+                else:
+                    logger.info(f"✅ All {delivered_now} messages delivered")
                 
                 # Update offset: next offset = api_offset_used + number of transactions actually received
                 # This ensures we don't skip or duplicate records
@@ -943,15 +1092,25 @@ class PureAPItoKafkaProducer:
                     logger.info("No more data available")
                     break
                 
-                # Unpack result: (transactions, api_offset_used, used_distributed)
-                if len(result) == 3:
+                # Unpack result: (transactions, api_offset_used, used_distributed, is_network_error)
+                if len(result) == 4:
+                    transactions, api_offset_used, used_distributed, is_network_error = result
+                elif len(result) == 3:
+                    # Backward compatibility: assume not a network error
                     transactions, api_offset_used, used_distributed = result
+                    is_network_error = False
                 else:
-                    # Backward compatibility
-                    transactions, api_offset_used = result
-                    used_distributed = False
+                    logger.error(f"Unexpected result format from download_batch: {result}")
+                    break
                 
-                if not transactions:
+                # Handle network errors - retry with backoff
+                if is_network_error:
+                    logger.warning(f"Network error detected (offset {api_offset_used}), retrying in 5s...")
+                    time.sleep(5)
+                    continue
+                
+                # Handle empty responses
+                if not transactions or len(transactions) == 0:
                     logger.info("Empty batch received")
                     break
                 

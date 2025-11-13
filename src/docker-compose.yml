@@ -65,6 +65,8 @@ services:
     image: redis:7.2-bookworm
     expose:
       - 6379
+    volumes:
+      - redis-data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -331,13 +333,13 @@ services:
       dockerfile: producer/Dockerfile
     env_file: .env
     environment:
-      - KAFKA_TOPIC=ecommerce_fraud
+      - KAFKA_TOPIC=ecommerce_fraud2
       - KAFKA_BATCH_SIZE=65536
       - KAFKA_LINGER_MS=10
       - KAFKA_COMPRESSION_TYPE=snappy
       - KAFKA_QUEUE_BUFFERING_MAX_MS=50
       - KAFKA_QUEUE_BUFFERING_MAX_MESSAGES=200000
-      - KAFKA_MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION=10
+      - KAFKA_MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION=5
       - DISTRIBUTED_OFFSET=true
       - REDIS_HOST=redis
       - REDIS_PORT=6379
@@ -349,6 +351,7 @@ services:
       - TARGET_RESPONSE_TIME=5.0
       - MAX_RESPONSE_TIME=15.0
       - ADAPTIVE_WINDOW_SIZE=10
+      - RESET_DEDUP=false
     volumes:
       - ./state:/app/state
     profiles:
@@ -377,6 +380,7 @@ services:
 
 volumes:
   postgres-db-volume:
+  redis-data:
   minio_data:
 
 networks:
