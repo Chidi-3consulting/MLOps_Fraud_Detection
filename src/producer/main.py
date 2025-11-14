@@ -123,20 +123,47 @@ class PureAPItoKafkaProducer:
         else:
             logger.info("SQLite fallback disabled - using Redis-only for distributed offsets")
 
-        # Now that SQLite state is initialized, load the last offset
-        self.current_offset = self._load_last_offset()
-        # Initialize distributed allocator to current_offset if enabled and not set yet
-        # IMPORTANT: Don't initialize if RESET_OFFSETS is set - let reset_state() handle it
+        # CRITICAL: Offset tracks what we've FETCHED from API, not what we've SENT to Kafka
+        # Redis deduplication handles skipping duplicates, but we MUST fetch all records sequentially
         reset_offsets_env = str(os.getenv("RESET_OFFSETS", "false")).lower() in {"1", "true", "yes", "on"}
+        
+        if reset_offsets_env:
+            # Explicit reset requested
+            self.current_offset = 0
+            logger.info(f"🔄 Starting from offset 0 (RESET_OFFSETS enabled)")
+        else:
+            # Load last offset, but verify it makes sense
+            self.current_offset = self._load_last_offset()
+            # API has ~788k total records, so if offset > 1M, something is wrong - reset to 0
+            if self.current_offset > 1000000:
+                logger.warning(f"⚠️ Offset {self.current_offset} is suspiciously high (>1M). Resetting to 0.")
+                self.current_offset = 0
+            # Safety check: If offset > 0 but we're not confident, verify with Redis
+            elif self.current_offset > 0 and self.redis:
+                try:
+                    # Check if Redis has reasonable number of transaction IDs
+                    # API has ~525k unique IDs, so if Redis has way more, something might be wrong
+                    redis_count = self.redis.scard(self.redis_set_key)
+                    if redis_count > 600000:  # More than expected
+                        logger.warning(f"⚠️ Redis has {redis_count:,} transaction IDs (expected ~525k). Offset might be incorrect. Consider setting RESET_OFFSETS=true to reprocess from start.")
+                except Exception:
+                    pass  # Ignore Redis check errors
+        
+        # Initialize/sync distributed allocator with current_offset
         if self.distributed_offsets and self.redis and not reset_offsets_env:
             try:
                 exists = self.redis.exists(self.offset_alloc_key)
                 if not exists:
-                    # allocator represents next start offset to allocate; set to current_offset
                     self.redis.set(self.offset_alloc_key, int(self.current_offset))
-                    logger.debug(f"Initialized distributed allocator to {self.current_offset}")
+                    logger.info(f"Initialized distributed allocator to {self.current_offset}")
+                else:
+                    current_allocator = int(self.redis.get(self.offset_alloc_key) or 0)
+                    # Always sync allocator to current_offset (which should be 0 or reasonable)
+                    if current_allocator != self.current_offset:
+                        logger.info(f"Syncing distributed allocator from {current_allocator} to {self.current_offset}")
+                        self.redis.set(self.offset_alloc_key, int(self.current_offset))
             except Exception as e:
-                logger.warning(f"Failed to init distributed offset allocator: {e}")
+                logger.warning(f"Failed to init/sync distributed offset allocator: {e}")
         
         # Ensure topic exists before producing (best-effort; works if credentials permit)
         self._ensure_topic_exists()
@@ -157,6 +184,24 @@ class PureAPItoKafkaProducer:
                 self.distributed_offsets = False
             else:
                 logger.info("Distributed offset allocation enabled (Redis backed).")
+        
+        # Log deduplication state
+        if self.redis:
+            try:
+                dedup_count = self.redis.scard(self.redis_set_key)
+                logger.info(f"📊 Redis deduplication: {dedup_count} unique transaction IDs already seen (key: {self.redis_set_key})")
+                logger.info(f"   → New records will be sent to Kafka, duplicates will be skipped")
+            except Exception as e:
+                logger.warning(f"Failed to check Redis dedup count: {e}")
+        
+        # Verify we're starting from a reasonable offset
+        if self.current_offset > 1000000:
+            logger.warning(f"⚠️ WARNING: Starting from very high offset ({self.current_offset}). This might skip records!")
+            logger.warning(f"   If you want to reprocess from the beginning, set RESET_OFFSETS=true or use --reset-offsets")
+        elif self.current_offset > 0:
+            logger.info(f"ℹ️ Resuming from offset {self.current_offset} (previous run)")
+        else:
+            logger.info(f"✅ Starting from offset 0 - will fetch all records from API")
 
     def reset_state(self, *, reset_offsets: bool = False, reset_dedup: bool = False, start_offset: int | None = None) -> None:
         """Reset offsets and/or dedup state on demand; optionally force a starting offset."""
@@ -469,16 +514,43 @@ class PureAPItoKafkaProducer:
 
     def download_batch(self) -> Optional[tuple]:
         """Download batch from API using current offset
-        Returns: (transactions_list, api_offset_used, used_distributed) or None
+        Returns: (transactions_list, api_offset_used, used_distributed, is_network_error) or None
         """
         # Determine offset source (distributed allocator or local current_offset)
         api_offset = self.current_offset
         used_distributed = False
+        
+        # Check if we should use distributed allocation
+        # If current_offset is significantly behind the allocator, sync first to avoid skipping data
+        should_use_distributed = False
         if self.distributed_offsets and self.redis:
             try:
-                # Atomically allocate a range of offsets to prevent duplicates across replicas
-                # This is the ONLY source of truth when distributed offsets are enabled
-                # Use a distributed lock to ensure only one replica allocates at a time
+                # Check if allocator is way ahead of current_offset - if so, sync it back
+                current_allocator = int(self.redis.get(self.offset_alloc_key) or 0)
+                if current_allocator > self.current_offset + self.batch_size * 2:
+                    # Allocator is way ahead - sync it back to current_offset to avoid skipping data
+                    logger.warning(f"⚠️ Allocator ({current_allocator}) is way ahead of current_offset ({self.current_offset}). Syncing allocator back.")
+                    self.redis.set(self.offset_alloc_key, int(self.current_offset))
+                    current_allocator = self.current_offset
+                
+                # Only use distributed allocation if allocator is reasonably close to current_offset
+                # This prevents allocating huge ranges when we're behind
+                if abs(current_allocator - self.current_offset) <= self.batch_size * 2:
+                    should_use_distributed = True
+                else:
+                    logger.info(f"Using local offset ({self.current_offset}) instead of distributed allocator ({current_allocator}) to avoid skipping data")
+            except Exception as e:
+                logger.warning(f"Failed to check allocator state: {e}, using local offset")
+        
+        # CRITICAL FIX: Always use current_offset for API calls, not allocator's offset
+        # The allocator is only for coordination between replicas, not for determining what to fetch
+        # This prevents gaps when allocator is ahead of current_offset
+        api_offset = self.current_offset
+        
+        if should_use_distributed:
+            try:
+                # Atomically allocate a range in the allocator to prevent duplicates across replicas
+                # But we still use current_offset for the actual API call
                 allocation_lock_key = f"{self.offset_alloc_key}:allocating"
                 max_retries = 10
                 allocated = False
@@ -489,12 +561,19 @@ class PureAPItoKafkaProducer:
                     
                     if lock_acquired:
                         try:
-                            # We have the lock, now allocate atomically
+                            # Sync allocator to current_offset first to prevent gaps
+                            current_allocator = int(self.redis.get(self.offset_alloc_key) or 0)
+                            if current_allocator < self.current_offset:
+                                # Allocator is behind, sync it forward
+                                self.redis.set(self.offset_alloc_key, int(self.current_offset))
+                                current_allocator = self.current_offset
+                            
+                            # Now allocate a range from the allocator (for coordination)
                             claimed = int(self.redis.incrby(self.offset_alloc_key, self.batch_size))
-                            api_offset = claimed - self.batch_size
+                            allocated_range_start = claimed - self.batch_size
                             used_distributed = True
                             allocated = True
-                            logger.info(f"🔀 Allocated offset range {api_offset} to {claimed - 1} from distributed allocator (batch size: {self.batch_size})")
+                            logger.info(f"🔀 Allocated range {allocated_range_start}-{claimed-1} in allocator, but using current_offset {api_offset} for API call")
                             break
                         finally:
                             # Always release the lock
@@ -512,9 +591,6 @@ class PureAPItoKafkaProducer:
                 logger.warning(f"Distributed offset allocation failed, falling back to local offset: {e}")
                 # Fall back to local offset tracking
                 used_distributed = False
-        else:
-            # When not using distributed offsets, use local current_offset
-            api_offset = self.current_offset
         
         logger.info(f"Downloading from API - Offset: {api_offset}, Limit: {self.batch_size}")
         
@@ -688,6 +764,17 @@ class PureAPItoKafkaProducer:
                     value=json.dumps(transaction),
                     callback=self.delivery_report
                 )
+                # CRITICAL: Immediately add to Redis "seen" set to prevent duplicates
+                # This is safe because we've already reserved it in inflight
+                # If delivery fails, the inflight key will expire and it can be retried
+                if self.redis:
+                    try:
+                        # Add to seen set immediately (idempotent operation)
+                        self.redis.sadd(self.redis_set_key, key_str)
+                        # Keep inflight key until delivery confirms (handled in delivery_report)
+                    except Exception as e:
+                        logger.warning(f"Failed to add {key_str} to Redis seen set: {e}")
+                
                 return True
             except BufferError:
                 # Queue is full - re-raise so caller can handle it
@@ -709,6 +796,7 @@ class PureAPItoKafkaProducer:
         Strategy:
           - If Redis available:
               - If key already in 'seen' set -> skip
+              - Check if key is in 'inflight' -> skip (already being processed)
               - Use SETNX on 'fraud:inflight:{key}' with TTL -> if exists, skip; else proceed
           - Else if SQLite available:
                - If key in seen_keys -> skip
@@ -721,16 +809,26 @@ class PureAPItoKafkaProducer:
                 if key_str in self.local_seen_keys:
                     return False
                 
-                # Check Redis - use topic-specific key only (prevents cross-topic conflicts)
+                # CRITICAL: Check Redis "seen" set FIRST - if already sent, skip immediately
                 if self.redis.sismember(self.redis_set_key, key_str):
                     self.local_seen_keys.add(key_str)  # Cache locally
                     return False
                 
+                # CRITICAL: Check if already in-flight (being processed by another thread/replica)
                 inflight_key = f"{self.redis_set_key}:inflight:{key_str}"
-                # Reserve if not exists - use SET with EX for atomic operation (faster than setnx + expire)
+                if self.redis.exists(inflight_key):
+                    # Already being processed, skip to prevent duplicate
+                    return False
+                
+                # CRITICAL: Atomically reserve with SET NX (only if not exists)
+                # This prevents race conditions where same transaction_id appears multiple times
                 reserved = self.redis.set(inflight_key, "1", ex=self.redis_inflight_ttl, nx=True)
                 if not reserved:
+                    # Another process/replica already reserved it, skip
                     return False
+                
+                # Successfully reserved - add to local cache to avoid duplicate checks in same batch
+                self.local_seen_keys.add(key_str)
                 return True
 
             if self._sqlite_conn is not None:
@@ -981,6 +1079,27 @@ class PureAPItoKafkaProducer:
                 
                 # Handle empty responses (actual end of data, not network errors)
                 if not transactions or len(transactions) == 0:
+                    # IMPORTANT: Update offset even on empty response to track our position
+                    # The API offset represents what we've fetched (including empty positions)
+                    # Deduplication handles skipping duplicate transaction IDs separately
+                    # For empty responses, advance by 1 to indicate we've checked this position
+                    # This applies to both distributed and non-distributed modes
+                    self.current_offset = api_offset_used + 1
+                    self._save_last_offset(self.current_offset)
+                    
+                    # If using distributed offsets, sync allocator back to current_offset to prevent mismatch
+                    if used_distributed and self.distributed_offsets and self.redis:
+                        try:
+                            current_allocator = int(self.redis.get(self.offset_alloc_key) or 0)
+                            if current_allocator > self.current_offset:
+                                # Allocator is ahead (because it advanced by batch_size), sync it back
+                                self.redis.set(self.offset_alloc_key, int(self.current_offset))
+                                logger.info(f"Synced allocator from {current_allocator} to {self.current_offset} after empty response")
+                        except Exception as e:
+                            logger.warning(f"Failed to sync allocator after empty response: {e}")
+                    
+                    logger.info(f"Empty response at offset {api_offset_used}, updated current_offset to {self.current_offset}")
+                    
                     consecutive_empty += 1
                     if consecutive_empty >= max_consecutive_empty:
                         logger.info("=" * 80)
@@ -1009,11 +1128,24 @@ class PureAPItoKafkaProducer:
                 # Very frequent polling to prevent queue overflow and keep things moving
                 poll_interval = max(200, batch_len // 100)  # Poll ~100 times per batch for maximum throughput
                 
+                # CRITICAL: Track transaction IDs in this batch to prevent duplicates within same batch
+                batch_seen_ids = set()
+                
                 # Batch send all transactions as fast as possible
                 for idx, transaction in enumerate(transactions):
+                    # Get transaction_id for batch-level deduplication
+                    tx_id = transaction.get('transaction_id')
+                    if tx_id:
+                        tx_id_str = str(tx_id)
+                        # Skip if we've already seen this transaction_id in this batch
+                        if tx_id_str in batch_seen_ids:
+                            self.dedup_skipped += 1
+                            continue
+                        batch_seen_ids.add(tx_id_str)
+                    
                     try:
-                        self.send_to_kafka(transaction)
-                        sent_count += 1
+                        if self.send_to_kafka(transaction):
+                            sent_count += 1
                     except BufferError:
                         # Queue is full, poll to drain it
                         logger.warning(f"Queue full at {idx}/{batch_len}, polling to drain...")
@@ -1054,21 +1186,27 @@ class PureAPItoKafkaProducer:
                     logger.info(f"✅ All {delivered_now} messages delivered")
                 
                 # Update offset: next offset = api_offset_used + number of transactions actually received
-                # This ensures we don't skip or duplicate records
+                # IMPORTANT: Offset tracks API position (what we've fetched), NOT what we sent to Kafka
+                # Deduplication (Redis transaction IDs) handles skipping duplicates
+                # So offset = api_offset_used + len(transactions) regardless of how many were duplicates
                 next_offset = api_offset_used + len(transactions)
                 
                 if used_distributed and self.distributed_offsets and self.redis:
                     # With distributed offsets, the allocator already advanced by batch_size atomically
-                    # We track the actual progress for logging, but the allocator manages the next range
+                    # We track the actual progress and save it so we can resume properly on restart
                     self.current_offset = next_offset
-                    # Note: We don't save offset when using distributed allocator
-                    # as it's managed centrally in Redis. The allocator ensures no duplicates.
+                    # Save offset even when using distributed allocator - this allows us to resume
+                    # from the correct position on restart. The allocator syncs with this on startup.
+                    self._save_last_offset(self.current_offset)
                 else:
                     # Update and save local offset (fallback mode or non-distributed)
                     self.current_offset = next_offset
                     self._save_last_offset(self.current_offset)
                 
-                logger.info(f"📦 Sent batch - Received: {len(transactions)}, Delivered: {delivered_now}, Skipped (duplicates): {self.dedup_skipped}, Total: {self.total_sent}, Next offset: {self.current_offset}")
+                # Log detailed stats: what we fetched vs what we sent
+                unique_sent = delivered_now  # Actually sent to Kafka (after deduplication)
+                duplicates_skipped = self.dedup_skipped  # Skipped because already in Redis
+                logger.info(f"📦 Batch complete - Fetched: {len(transactions)}, Sent to Kafka: {unique_sent}, Duplicates skipped: {duplicates_skipped}, Total sent (all time): {self.total_sent}, Next API offset: {self.current_offset}")
                 # Reset dedup counter for next batch
                 self.dedup_skipped = 0
                 # Reduced sleep - only 0.5s to keep things moving fast
@@ -1143,7 +1281,9 @@ class PureAPItoKafkaProducer:
                 
                 if used_distributed and self.distributed_offsets and self.redis:
                     # With distributed offsets, allocator manages the next range
+                    # But we still save the offset so we can resume properly on restart
                     self.current_offset = next_offset
+                    self._save_last_offset(self.current_offset)
                 else:
                     # Update and save local offset
                     self.current_offset = next_offset
