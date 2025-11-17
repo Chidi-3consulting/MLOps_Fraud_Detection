@@ -2708,3 +2708,1465 @@ Traceback (most recent call last):
 sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate host name "postgres" to address: Temporary failure in name resolution
 
 (Background on this error at: https://sqlalche.me/e/14/e3q8)
+[2025-11-14T13:18:42.354+0000] {processor.py:186} INFO - Started process (PID=94) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:18:42.385+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:18:42.446+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:18:42.421+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:18:43.149+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:18:43.499+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:18:43.497+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:18:44.143+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:18:44.143+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:18:43.987+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 2.473 seconds
+[2025-11-14T13:19:15.015+0000] {processor.py:186} INFO - Started process (PID=104) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:19:15.041+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:19:15.111+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:19:15.093+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:19:15.964+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:19:16.307+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:19:16.303+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:19:17.347+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:19:17.330+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:19:17.651+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 2.949 seconds
+[2025-11-14T13:19:49.173+0000] {processor.py:186} INFO - Started process (PID=113) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:19:49.197+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:19:49.250+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:19:49.249+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:19:49.878+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:19:50.597+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:19:50.596+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:19:51.296+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:19:51.283+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:19:51.856+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 2.938 seconds
+[2025-11-14T13:20:24.866+0000] {processor.py:186} INFO - Started process (PID=122) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:20:24.924+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:20:25.455+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:20:25.454+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:20:29.911+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:20:34.558+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:20:34.558+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:20:35.252+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:20:35.252+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:20:35.792+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 11.133 seconds
+[2025-11-14T13:21:08.240+0000] {processor.py:186} INFO - Started process (PID=131) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:21:08.337+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:21:08.895+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:21:08.769+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:21:12.959+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:21:16.745+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:21:16.745+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:21:19.827+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:21:19.794+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:21:21.616+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 13.780 seconds
+[2025-11-14T13:21:53.430+0000] {processor.py:186} INFO - Started process (PID=145) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:21:53.469+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:21:53.486+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:21:53.479+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:21:53.959+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:21:54.083+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:21:54.082+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:21:54.597+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:21:54.594+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:21:55.161+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 1.782 seconds
+[2025-11-14T13:22:26.067+0000] {processor.py:186} INFO - Started process (PID=154) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:22:26.075+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:22:26.094+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:22:26.088+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:22:26.295+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:22:26.465+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:22:26.465+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:22:26.641+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:22:26.641+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:22:26.758+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 0.719 seconds
+[2025-11-14T13:22:58.257+0000] {processor.py:186} INFO - Started process (PID=164) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:22:58.284+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:22:58.305+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:22:58.304+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:22:58.721+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:22:58.975+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:22:58.974+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:22:59.346+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:22:59.346+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:22:59.785+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 1.680 seconds
+[2025-11-14T13:23:30.236+0000] {processor.py:186} INFO - Started process (PID=173) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:23:30.243+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:23:30.273+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:23:30.272+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:23:30.536+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:23:30.685+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:23:30.685+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:23:30.886+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:23:30.885+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:23:31.055+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 0.925 seconds
+[2025-11-14T13:24:02.755+0000] {processor.py:186} INFO - Started process (PID=181) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:24:02.773+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:24:02.829+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:24:02.828+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:24:04.197+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:24:06.064+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:24:06.055+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:24:08.717+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:24:08.717+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:24:09.867+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 7.581 seconds
+[2025-11-14T13:24:41.084+0000] {processor.py:186} INFO - Started process (PID=189) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:24:41.108+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:24:41.137+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:24:41.130+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:24:41.467+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:24:41.848+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:24:41.847+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:24:42.623+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:24:42.621+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:24:43.507+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 3.129 seconds
+[2025-11-14T13:25:14.662+0000] {processor.py:186} INFO - Started process (PID=200) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:25:14.676+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:25:14.700+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:25:14.699+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:25:15.287+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:25:15.872+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:25:15.871+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:25:17.077+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:25:17.046+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:25:17.616+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 3.048 seconds
+[2025-11-14T13:25:48.773+0000] {processor.py:186} INFO - Started process (PID=209) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:25:48.816+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:25:48.910+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:25:48.909+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:25:49.495+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:25:49.977+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:25:49.976+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:25:50.435+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:25:50.435+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:25:50.662+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 2.068 seconds
+[2025-11-14T13:26:21.349+0000] {processor.py:186} INFO - Started process (PID=219) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:26:21.369+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:26:21.403+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:26:21.402+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:26:21.771+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:26:21.988+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:26:21.987+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:26:22.275+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:26:22.273+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:26:22.442+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 1.150 seconds
+[2025-11-14T13:26:53.187+0000] {processor.py:186} INFO - Started process (PID=228) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:26:53.202+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:26:53.223+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:26:53.222+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:26:53.434+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:26:53.579+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:26:53.575+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:26:54.196+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:26:54.195+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:26:54.558+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 1.461 seconds
+[2025-11-14T13:27:25.141+0000] {processor.py:186} INFO - Started process (PID=237) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:27:25.153+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:27:25.176+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:27:25.166+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:27:25.710+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:27:26.258+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:27:26.257+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:27:26.750+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:27:26.750+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:27:26.941+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 1.860 seconds
+[2025-11-14T13:27:57.754+0000] {processor.py:186} INFO - Started process (PID=252) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:27:57.774+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:27:57.830+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:27:57.819+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:27:58.439+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:27:58.908+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:27:58.907+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:27:59.528+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:27:59.527+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:27:59.932+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 2.301 seconds
+[2025-11-14T13:28:30.980+0000] {processor.py:186} INFO - Started process (PID=261) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:28:30.983+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:28:31.002+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:28:31.001+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:28:31.262+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:28:31.529+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:28:31.529+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:28:31.755+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:28:31.754+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:28:31.960+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 1.056 seconds
+[2025-11-14T13:29:03.465+0000] {processor.py:186} INFO - Started process (PID=271) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:29:03.481+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:29:03.500+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:29:03.497+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:29:04.176+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:29:04.932+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:29:04.899+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:29:05.578+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:29:05.560+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:29:06.054+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 2.757 seconds
+[2025-11-14T13:29:38.654+0000] {processor.py:186} INFO - Started process (PID=280) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:29:38.786+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:29:39.312+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:29:39.293+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:29:44.593+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:29:46.227+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:29:46.226+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:29:48.105+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:29:48.089+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:29:49.134+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 12.166 seconds
+[2025-11-14T13:30:24.777+0000] {processor.py:186} INFO - Started process (PID=288) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:30:24.782+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:30:24.816+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:30:24.815+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:30:28.364+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:30:30.835+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:30:30.834+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:30:34.857+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:30:34.848+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:30:35.775+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 11.526 seconds
+[2025-11-14T13:31:08.157+0000] {processor.py:186} INFO - Started process (PID=297) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:31:08.273+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:31:08.540+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:31:08.521+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:31:10.765+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:31:12.276+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:31:12.258+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:31:13.741+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:31:13.740+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:31:17.029+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 9.903 seconds
+[2025-11-14T13:31:50.948+0000] {processor.py:186} INFO - Started process (PID=311) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:31:50.959+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:31:51.026+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:31:50.995+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:31:54.129+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:31:55.131+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:31:55.130+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:31:56.626+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:31:56.625+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:31:58.803+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 8.274 seconds
+[2025-11-14T13:32:32.559+0000] {processor.py:186} INFO - Started process (PID=321) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:32:32.621+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:32:33.688+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:32:33.670+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:32:34.536+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:32:36.074+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:32:36.073+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:32:44.165+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:32:44.152+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:32:44.449+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 12.965 seconds
+[2025-11-14T13:33:16.118+0000] {processor.py:186} INFO - Started process (PID=331) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:33:16.188+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:33:16.249+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:33:16.232+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:33:16.845+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:33:17.686+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:33:17.676+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:33:18.250+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:33:18.239+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:33:18.789+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 2.941 seconds
+[2025-11-14T13:33:49.992+0000] {processor.py:186} INFO - Started process (PID=340) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:33:50.005+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:33:50.090+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:33:50.079+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:33:50.917+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:33:51.728+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:33:51.724+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:33:52.912+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:33:52.911+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:33:59.307+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 9.473 seconds
+[2025-11-14T13:34:56.818+0000] {processor.py:186} INFO - Started process (PID=350) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:34:56.832+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:34:56.868+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:34:56.866+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:35:36.289+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:35:36.288+0000] {timeout.py:68} ERROR - Process timed out, PID: 350
+[2025-11-14T13:35:36.943+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:35:36.381+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training_dag.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training_dag.py", line 100, in <module>
+    with DAG(
+         ^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dag.py", line 655, in __init__
+    warnings.warn(
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/timeout.py", line 69, in handle_timeout
+    raise AirflowTaskTimeout(self.error_message)
+airflow.exceptions.AirflowTaskTimeout: DagBag import timeout for /opt/airflow/dags/fraud_detection_training_dag.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.10.5/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.10.5/best-practices.html#reducing-dag-complexity, PID: 350
+[2025-11-14T13:35:36.958+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:36:17.766+0000] {processor.py:186} INFO - Started process (PID=365) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:36:17.780+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:36:17.805+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:36:17.804+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:36:45.362+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:37:46.984+0000] {processor.py:186} INFO - Started process (PID=374) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:37:47.004+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:37:47.053+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:37:47.033+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:37:48.662+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:38:09.198+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:38:09.197+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:38:10.860+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:38:10.851+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:39:14.442+0000] {processor.py:186} INFO - Started process (PID=399) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:39:14.477+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:39:14.795+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:39:14.647+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:39:28.875+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:39:33.974+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:39:33.972+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:39:41.837+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:39:41.772+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:39:45.566+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 37.020 seconds
+[2025-11-14T13:40:17.294+0000] {processor.py:186} INFO - Started process (PID=415) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:40:17.521+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:40:17.747+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:40:17.746+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:40:22.359+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:40:24.364+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:40:24.363+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:40:25.205+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:40:25.190+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:40:25.962+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 8.809 seconds
+[2025-11-14T13:41:01.761+0000] {processor.py:186} INFO - Started process (PID=425) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:41:01.784+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:41:01.803+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:41:01.802+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:41:03.355+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:41:05.622+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:41:05.621+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:41:08.034+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:41:08.031+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:41:09.276+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 7.841 seconds
+[2025-11-14T13:41:51.523+0000] {processor.py:186} INFO - Started process (PID=439) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:41:51.596+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:41:51.656+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:41:51.654+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:41:53.211+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:41:55.833+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:41:55.822+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:42:00.478+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:42:00.477+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:42:04.759+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 14.785 seconds
+[2025-11-14T13:42:37.526+0000] {processor.py:186} INFO - Started process (PID=449) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:42:37.603+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:42:37.631+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:42:37.617+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:42:40.323+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:42:40.608+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:42:40.607+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:42:42.558+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:42:42.557+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:42:43.222+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 6.147 seconds
+[2025-11-14T13:43:41.270+0000] {processor.py:186} INFO - Started process (PID=464) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:43:41.563+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:43:41.764+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:43:41.763+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:43:43.935+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:43:48.246+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:43:48.216+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:43:52.777+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:43:52.776+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:43:58.456+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 20.775 seconds
+[2025-11-14T13:44:49.739+0000] {processor.py:186} INFO - Started process (PID=473) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:44:49.743+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:44:49.747+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:44:49.746+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:44:51.271+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:45:04.332+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:45:04.331+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:45:07.393+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:45:07.326+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:45:13.347+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 24.249 seconds
+[2025-11-14T13:45:44.759+0000] {processor.py:186} INFO - Started process (PID=488) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:45:44.763+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:45:44.803+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:45:44.801+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:45:45.504+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:45:45.969+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:45:45.967+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:45:46.191+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:45:46.190+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:45:46.515+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 2.048 seconds
+[2025-11-14T13:46:36.478+0000] {processor.py:186} INFO - Started process (PID=491) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:46:36.481+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:46:36.488+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:46:36.484+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:46:36.881+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:46:37.114+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:46:37.113+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T13:46:37.320+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:46:37.319+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T13:46:37.524+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 1.120 seconds
+[2025-11-14T13:47:28.044+0000] {processor.py:186} INFO - Started process (PID=500) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:47:28.269+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T13:47:28.299+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:47:28.277+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:47:45.113+0000] {logging_mixin.py:190} INFO - [2025-11-14T13:47:43.622+0000] {variable.py:357} ERROR - Unable to retrieve variable from secrets backend (MetastoreBackend). Checking subsequent secrets backend.
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+           ^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 145, in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 143, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 690, in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: could not translate host name "postgres" to address: Temporary failure in name resolution
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/variable.py", line 353, in get_variable_from_secrets
+    var_val = secrets_backend.get_variable(key=key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/secrets/metastore.py", line 66, in get_variable
+    return MetastoreBackend._fetch_variable(key=key, session=session)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/api_internal/internal_api_call.py", line 166, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 94, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/secrets/metastore.py", line 84, in _fetch_variable
+    var_value = session.scalar(select(Variable).where(Variable.key == key).limit(1))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1747, in scalar
+    return self.execute(
+           ^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1716, in execute
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1555, in _connection_for_bind
+    return self._transaction._connection_for_bind(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 750, in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/future/engine.py", line 412, in connect
+    return super(Engine, self).connect()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3325, in connect
+    return self._connection_cls(self, close_with_result=close_with_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 96, in __init__
+    else engine.raw_connection()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3404, in raw_connection
+    return self._wrap_pool_connect(self.pool.connect, _connection)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3374, in _wrap_pool_connect
+    Connection._handle_dbapi_exception_noconnection(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2208, in _handle_dbapi_exception_noconnection
+    util.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+           ^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 145, in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 143, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 690, in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate host name "postgres" to address: Temporary failure in name resolution
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+[2025-11-14T13:47:46.100+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T13:49:11.308+0000] {processor.py:211} ERROR - Got an exception! Propagating...
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+           ^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 145, in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 143, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 690, in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: could not translate host name "postgres" to address: Temporary failure in name resolution
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 207, in _run_file_processor
+    _handle_dag_file_processing()
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 188, in _handle_dag_file_processing
+    result: tuple[int, int, int] = dag_file_processor.process_file(
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 942, in process_file
+    serialize_errors = DagFileProcessor.save_dag_to_db(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/api_internal/internal_api_call.py", line 166, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 982, in save_dag_to_db
+    import_errors = DagBag._sync_to_db(dags=dags, processor_subdir=dag_directory, session=session)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 94, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 708, in _sync_to_db
+    for attempt in run_with_db_retries(logger=log):
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/tenacity/__init__.py", line 443, in __iter__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/tenacity/__init__.py", line 376, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/tenacity/__init__.py", line 418, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/tenacity/__init__.py", line 185, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 721, in _sync_to_db
+    _serialize_dag_capturing_errors(dag, session, processor_subdir)
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 686, in _serialize_dag_capturing_errors
+    dag_was_updated = SerializedDagModel.write_dag(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 94, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/serialized_dag.py", line 160, in write_dag
+    if session.scalar(
+       ^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1747, in scalar
+    return self.execute(
+           ^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1716, in execute
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1555, in _connection_for_bind
+    return self._transaction._connection_for_bind(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 750, in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/future/engine.py", line 412, in connect
+    return super(Engine, self).connect()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3325, in connect
+    return self._connection_cls(self, close_with_result=close_with_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 96, in __init__
+    else engine.raw_connection()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3404, in raw_connection
+    return self._wrap_pool_connect(self.pool.connect, _connection)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3374, in _wrap_pool_connect
+    Connection._handle_dbapi_exception_noconnection(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2208, in _handle_dbapi_exception_noconnection
+    util.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+           ^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 145, in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 143, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 690, in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate host name "postgres" to address: Temporary failure in name resolution
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+[2025-11-14T14:55:22.378+0000] {processor.py:186} INFO - Started process (PID=87) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:55:22.403+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T14:55:22.427+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:55:22.427+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:55:23.092+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:55:23.396+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:55:23.395+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T14:55:23.848+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:55:23.847+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T14:55:24.184+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 1.924 seconds
+[2025-11-14T14:55:55.723+0000] {processor.py:186} INFO - Started process (PID=97) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:55:55.735+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T14:55:55.795+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:55:55.775+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:55:56.683+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:55:56.986+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:55:56.985+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T14:55:57.347+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:55:57.347+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T14:55:57.518+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 1.875 seconds
+[2025-11-14T14:56:27.864+0000] {processor.py:186} INFO - Started process (PID=107) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:56:27.872+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T14:56:27.891+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:56:27.890+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:56:27.987+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:56:28.071+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:56:28.071+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T14:56:28.220+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:56:28.219+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T14:56:28.327+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 0.516 seconds
+[2025-11-14T14:56:58.907+0000] {processor.py:186} INFO - Started process (PID=116) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:56:58.925+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T14:56:58.947+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:56:58.946+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:56:59.392+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:56:59.714+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:56:59.714+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T14:57:00.208+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:57:00.205+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T14:57:00.651+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 1.800 seconds
+[2025-11-14T14:57:31.471+0000] {processor.py:186} INFO - Started process (PID=124) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:57:31.475+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T14:57:31.498+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:57:31.492+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:57:31.723+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:57:31.912+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:57:31.912+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T14:57:32.234+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:57:32.234+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T14:57:32.370+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 1.033 seconds
+[2025-11-14T14:58:02.927+0000] {processor.py:186} INFO - Started process (PID=133) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:58:02.974+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T14:58:03.040+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:58:03.040+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:58:03.605+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:58:04.081+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:58:04.080+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T14:58:04.359+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:58:04.357+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T14:58:04.676+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 1.950 seconds
+[2025-11-14T14:58:35.169+0000] {processor.py:186} INFO - Started process (PID=142) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:58:35.174+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T14:58:35.200+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:58:35.199+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:58:36.245+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:58:37.130+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:58:37.130+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T14:58:37.967+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:58:37.951+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T14:58:38.587+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 3.485 seconds
+[2025-11-14T14:59:12.311+0000] {processor.py:186} INFO - Started process (PID=150) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:59:12.342+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T14:59:12.634+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:59:12.402+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:59:14.104+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T14:59:15.121+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:59:15.121+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T14:59:16.291+0000] {logging_mixin.py:190} INFO - [2025-11-14T14:59:16.270+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T14:59:18.116+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 6.010 seconds
+[2025-11-14T15:00:03.703+0000] {processor.py:186} INFO - Started process (PID=159) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:00:04.061+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:00:04.426+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:00:04.425+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:00:12.967+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:00:15.633+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:00:15.633+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:00:18.133+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:00:18.133+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:00:21.403+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 18.794 seconds
+[2025-11-14T15:00:54.825+0000] {processor.py:186} INFO - Started process (PID=174) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:00:54.831+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:00:54.928+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:00:54.927+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:00:56.999+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:00:58.294+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:00:58.293+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:01:00.284+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:01:00.283+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:01:04.009+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 9.247 seconds
+[2025-11-14T15:01:35.962+0000] {processor.py:186} INFO - Started process (PID=182) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:01:35.965+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:01:35.974+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:01:35.974+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:01:36.207+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:01:36.374+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:01:36.374+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:01:36.837+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:01:36.825+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:01:37.052+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 1.182 seconds
+[2025-11-14T15:02:09.490+0000] {processor.py:186} INFO - Started process (PID=191) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:02:09.509+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:02:09.553+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:02:09.550+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:02:10.977+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:02:11.971+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:02:11.970+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:02:13.178+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:02:13.165+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:02:13.719+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 4.707 seconds
+[2025-11-14T15:02:48.780+0000] {processor.py:186} INFO - Started process (PID=200) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:02:48.809+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:02:48.951+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:02:48.945+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:02:51.570+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:02:52.499+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:02:52.498+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:02:53.876+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:02:53.867+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:02:54.136+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 6.420 seconds
+[2025-11-14T15:03:28.333+0000] {processor.py:186} INFO - Started process (PID=216) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:03:28.352+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:03:28.396+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:03:28.375+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:03:28.676+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:03:28.920+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:03:28.913+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:03:29.122+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:03:29.121+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:03:29.293+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 1.197 seconds
+[2025-11-14T15:04:00.710+0000] {processor.py:186} INFO - Started process (PID=224) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:04:00.790+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:04:00.866+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:04:00.864+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:04:01.352+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:04:01.833+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:04:01.824+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:04:04.026+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:04:04.025+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:04:04.676+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 4.223 seconds
+[2025-11-14T15:04:38.589+0000] {processor.py:186} INFO - Started process (PID=233) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:04:38.662+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:04:38.750+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:04:38.749+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:04:40.984+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:04:42.516+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:04:42.370+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:04:43.799+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:04:43.786+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:04:45.725+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 7.343 seconds
+[2025-11-14T15:05:17.907+0000] {processor.py:186} INFO - Started process (PID=242) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:05:17.922+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:05:17.958+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:05:17.951+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:05:18.478+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:05:18.944+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:05:18.944+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:05:19.212+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:05:19.212+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:05:19.434+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 1.996 seconds
+[2025-11-14T15:05:51.210+0000] {processor.py:186} INFO - Started process (PID=251) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:05:51.229+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:05:51.372+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:05:51.366+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:05:53.197+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:05:53.560+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:05:53.551+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:05:54.472+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:05:54.466+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:05:54.829+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 3.938 seconds
+[2025-11-14T15:06:25.901+0000] {processor.py:186} INFO - Started process (PID=260) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:06:25.925+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:06:25.973+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:06:25.969+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:06:26.654+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:06:27.838+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:06:27.838+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:06:29.232+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:06:29.231+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:06:29.621+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 3.877 seconds
+[2025-11-14T15:07:01.701+0000] {processor.py:186} INFO - Started process (PID=270) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:07:01.719+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:07:01.742+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:07:01.740+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:07:02.492+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:07:02.675+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:07:02.674+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:07:03.304+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:07:03.304+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:07:03.721+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 2.062 seconds
+[2025-11-14T15:07:37.734+0000] {processor.py:186} INFO - Started process (PID=278) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:07:38.113+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:07:38.713+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:07:38.698+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:07:42.841+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:07:44.780+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:07:44.667+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:07:48.018+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:07:47.882+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:07:50.569+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 13.955 seconds
+[2025-11-14T15:08:49.621+0000] {processor.py:186} INFO - Started process (PID=293) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:08:49.686+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:08:50.020+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:08:50.019+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:09:03.228+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:09:08.501+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:09:08.500+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:09:50.549+0000] {processor.py:186} INFO - Started process (PID=303) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:09:51.289+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:09:52.958+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:09:52.888+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:09:59.583+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:11:18.594+0000] {processor.py:186} INFO - Started process (PID=318) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:11:18.999+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:11:19.100+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:11:19.100+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:11:28.657+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:12:38.095+0000] {processor.py:186} INFO - Started process (PID=335) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:12:38.126+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:12:38.206+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:12:38.167+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:12:41.350+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:12:54.370+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:12:54.369+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:12:57.145+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:12:57.141+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:12:59.881+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 21.845 seconds
+[2025-11-14T15:13:30.665+0000] {processor.py:186} INFO - Started process (PID=353) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:13:30.681+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:13:30.743+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:13:30.737+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:13:31.295+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:13:31.619+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:13:31.618+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:13:33.458+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:13:33.457+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:13:33.941+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 3.385 seconds
+[2025-11-14T15:14:13.454+0000] {processor.py:186} INFO - Started process (PID=362) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:14:13.772+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:14:13.967+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:14:13.966+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:14:17.776+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:14:25.875+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:14:25.875+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:14:29.758+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:14:29.757+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:14:31.527+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 18.883 seconds
+[2025-11-14T15:15:15.705+0000] {processor.py:186} INFO - Started process (PID=371) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:15:16.148+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:15:17.011+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:15:16.636+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:15:26.205+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:15:26.636+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:15:26.635+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:15:27.352+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:15:27.351+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:15:30.472+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 17.519 seconds
+[2025-11-14T15:16:04.576+0000] {processor.py:186} INFO - Started process (PID=388) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:16:04.675+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:16:04.801+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:16:04.800+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:16:09.347+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:16:11.666+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:16:11.664+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:16:15.406+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:16:15.405+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:16:16.098+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 12.278 seconds
+[2025-11-14T15:16:57.363+0000] {processor.py:186} INFO - Started process (PID=398) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:16:57.398+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:16:57.465+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:16:57.464+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:17:02.913+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:17:05.045+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:17:05.045+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:17:08.832+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:17:08.813+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:17:12.252+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 15.291 seconds
+[2025-11-14T15:17:54.861+0000] {processor.py:186} INFO - Started process (PID=413) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:17:55.038+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:17:55.115+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:17:55.085+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:17:57.124+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:17:58.427+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:17:58.426+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:17:59.747+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:17:59.746+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:18:00.428+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 5.795 seconds
+[2025-11-14T15:18:35.226+0000] {processor.py:186} INFO - Started process (PID=421) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:18:35.381+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:18:35.410+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:18:35.398+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:18:36.495+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:18:38.125+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:18:38.124+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:18:39.404+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:18:39.403+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:18:40.648+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 5.818 seconds
+[2025-11-14T15:19:11.362+0000] {processor.py:186} INFO - Started process (PID=430) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:19:11.370+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:19:11.390+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:19:11.382+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:19:25.130+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:19:28.085+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:19:28.084+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:19:30.600+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:19:30.600+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:19:31.747+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training_dag.py took 20.416 seconds
+[2025-11-14T15:20:46.433+0000] {processor.py:186} INFO - Started process (PID=444) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:20:46.452+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:20:46.466+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:20:46.465+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:20:55.871+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:21:19.415+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:21:19.414+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:21:33.065+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:21:32.990+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:22:08.724+0000] {processor.py:186} INFO - Started process (PID=456) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:22:08.901+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:22:09.934+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:22:09.879+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:23:32.150+0000] {processor.py:186} INFO - Started process (PID=459) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:23:32.690+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:23:32.942+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:23:32.847+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:23:45.027+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:24:54.351+0000] {processor.py:186} INFO - Started process (PID=469) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:24:55.347+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:24:55.649+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:24:55.602+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:24:59.837+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:26:41.755+0000] {processor.py:186} INFO - Started process (PID=486) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:26:39.692+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:26:40.301+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:26:39.938+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:26:44.320+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:26:59.065+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:26:59.060+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:27:03.265+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:27:03.255+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:28:22.082+0000] {processor.py:186} INFO - Started process (PID=502) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:28:22.356+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:28:23.173+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:28:22.857+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:29:33.944+0000] {processor.py:186} INFO - Started process (PID=517) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:29:34.055+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:29:34.256+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:29:34.244+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:30:45.919+0000] {processor.py:186} INFO - Started process (PID=532) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:30:46.096+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:30:46.605+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:30:46.575+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:31:19.874+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:31:19.491+0000] {timeout.py:68} ERROR - Process timed out, PID: 532
+[2025-11-14T15:31:27.010+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:31:20.091+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training_dag.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training_dag.py", line 111, in <module>
+    validate_environment = BashOperator(
+                           ^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/baseoperator.py", line 508, in apply_defaults
+    result = func(self, **kwargs, default_args=default_args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/bash.py", line 177, in __init__
+    if isinstance(skip_on_exit_code, Container)
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/typing.py", line 1222, in __instancecheck__
+    return self.__subclasscheck__(type(obj))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/typing.py", line 1496, in __subclasscheck__
+    return issubclass(cls, self.__origin__)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen abc>", line 123, in __subclasscheck__
+  File "<frozen abc>", line 123, in __subclasscheck__
+  File "<frozen abc>", line 123, in __subclasscheck__
+  [Previous line repeated 1 more time]
+  File "<frozen abc>", line 121, in __subclasscheck__
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/timeout.py", line 69, in handle_timeout
+    raise AirflowTaskTimeout(self.error_message)
+airflow.exceptions.AirflowTaskTimeout: DagBag import timeout for /opt/airflow/dags/fraud_detection_training_dag.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.10.5/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.10.5/best-practices.html#reducing-dag-complexity, PID: 532
+[2025-11-14T15:31:27.022+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:32:06.602+0000] {processor.py:186} INFO - Started process (PID=547) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:32:06.642+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:32:06.693+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:32:06.685+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:32:22.624+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:33:38.126+0000] {processor.py:186} INFO - Started process (PID=563) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:33:38.161+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:33:38.401+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:33:38.331+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:33:40.511+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:34:02.518+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:34:02.509+0000] {dag.py:3239} INFO - Sync 1 DAGs
+[2025-11-14T15:34:05.848+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:34:05.841+0000] {dag.py:4180} INFO - Setting next_dagrun for fraud_detection_training to 2025-11-13 03:00:00+00:00, run_after=2025-11-14 03:00:00+00:00
+[2025-11-14T15:35:22.093+0000] {processor.py:186} INFO - Started process (PID=569) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:35:22.213+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:35:22.503+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:35:22.399+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:36:05.325+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:36:05.049+0000] {timeout.py:68} ERROR - Process timed out, PID: 569
+[2025-11-14T15:36:07.419+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:36:05.569+0000] {dagbag.py:387} ERROR - Failed to import: /opt/airflow/dags/fraud_detection_training_dag.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+           ^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 145, in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 143, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 690, in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: could not translate host name "postgres" to address: Temporary failure in name resolution
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/variable.py", line 353, in get_variable_from_secrets
+    var_val = secrets_backend.get_variable(key=key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/secrets/metastore.py", line 66, in get_variable
+    return MetastoreBackend._fetch_variable(key=key, session=session)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/api_internal/internal_api_call.py", line 166, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 94, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/secrets/metastore.py", line 84, in _fetch_variable
+    var_value = session.scalar(select(Variable).where(Variable.key == key).limit(1))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1747, in scalar
+    return self.execute(
+           ^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1716, in execute
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1555, in _connection_for_bind
+    return self._transaction._connection_for_bind(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 750, in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/future/engine.py", line 412, in connect
+    return super(Engine, self).connect()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3325, in connect
+    return self._connection_cls(self, close_with_result=close_with_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 96, in __init__
+    else engine.raw_connection()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3404, in raw_connection
+    return self._wrap_pool_connect(self.pool.connect, _connection)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3374, in _wrap_pool_connect
+    Connection._handle_dbapi_exception_noconnection(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2208, in _handle_dbapi_exception_noconnection
+    util.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+           ^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 145, in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 143, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 690, in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate host name "postgres" to address: Temporary failure in name resolution
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 383, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/fraud_detection_training_dag.py", line 118, in <module>
+    env={'CONFIG_PATH': Variable.get('config_path', default_var='/app/config.yaml')}
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/variable.py", line 140, in get
+    var_val = Variable.get_variable_from_secrets(key=key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/variable.py", line 357, in get_variable_from_secrets
+    log.exception(
+  File "/usr/local/lib/python3.12/logging/__init__.py", line 1574, in exception
+    self.error(msg, *args, exc_info=exc_info, **kwargs)
+  File "/usr/local/lib/python3.12/logging/__init__.py", line 1568, in error
+    self._log(ERROR, msg, args, **kwargs)
+  File "/usr/local/lib/python3.12/logging/__init__.py", line 1684, in _log
+    self.handle(record)
+  File "/usr/local/lib/python3.12/logging/__init__.py", line 1700, in handle
+    self.callHandlers(record)
+  File "/usr/local/lib/python3.12/logging/__init__.py", line 1762, in callHandlers
+    hdlr.handle(record)
+  File "/usr/local/lib/python3.12/logging/__init__.py", line 1028, in handle
+    self.emit(record)
+  File "/usr/local/lib/python3.12/logging/__init__.py", line 1163, in emit
+    stream.write(msg + self.terminator)
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/log/logging_mixin.py", line 202, in write
+    self.flush()
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/log/logging_mixin.py", line 209, in flush
+    self._propagate_log(buf)
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/log/logging_mixin.py", line 190, in _propagate_log
+    self.logger.log(self.level, remove_escape_codes(message))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/log/logging_mixin.py", line 60, in remove_escape_codes
+    def remove_escape_codes(text: str) -> str:
+    
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/timeout.py", line 69, in handle_timeout
+    raise AirflowTaskTimeout(self.error_message)
+airflow.exceptions.AirflowTaskTimeout: DagBag import timeout for /opt/airflow/dags/fraud_detection_training_dag.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.10.5/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.10.5/best-practices.html#reducing-dag-complexity, PID: 569
+[2025-11-14T15:36:08.305+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:37:10.815+0000] {processor.py:186} INFO - Started process (PID=572) to work on /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:37:10.925+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
+[2025-11-14T15:37:11.253+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:37:11.138+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:37:35.082+0000] {logging_mixin.py:190} INFO - [2025-11-14T15:37:30.215+0000] {variable.py:357} ERROR - Unable to retrieve variable from secrets backend (MetastoreBackend). Checking subsequent secrets backend.
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+           ^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 145, in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 143, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 690, in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: could not translate host name "postgres" to address: Temporary failure in name resolution
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/variable.py", line 353, in get_variable_from_secrets
+    var_val = secrets_backend.get_variable(key=key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/secrets/metastore.py", line 66, in get_variable
+    return MetastoreBackend._fetch_variable(key=key, session=session)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/api_internal/internal_api_call.py", line 166, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 94, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/secrets/metastore.py", line 84, in _fetch_variable
+    var_value = session.scalar(select(Variable).where(Variable.key == key).limit(1))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1747, in scalar
+    return self.execute(
+           ^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1716, in execute
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1555, in _connection_for_bind
+    return self._transaction._connection_for_bind(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 750, in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/future/engine.py", line 412, in connect
+    return super(Engine, self).connect()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3325, in connect
+    return self._connection_cls(self, close_with_result=close_with_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 96, in __init__
+    else engine.raw_connection()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3404, in raw_connection
+    return self._wrap_pool_connect(self.pool.connect, _connection)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3374, in _wrap_pool_connect
+    Connection._handle_dbapi_exception_noconnection(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2208, in _handle_dbapi_exception_noconnection
+    util.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+           ^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 145, in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 143, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 690, in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate host name "postgres" to address: Temporary failure in name resolution
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+[2025-11-14T15:37:49.669+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-14T15:39:47.197+0000] {processor.py:211} ERROR - Got an exception! Propagating...
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+           ^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 145, in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 143, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 690, in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: could not translate host name "postgres" to address: Temporary failure in name resolution
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 207, in _run_file_processor
+    _handle_dag_file_processing()
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 188, in _handle_dag_file_processing
+    result: tuple[int, int, int] = dag_file_processor.process_file(
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 942, in process_file
+    serialize_errors = DagFileProcessor.save_dag_to_db(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/api_internal/internal_api_call.py", line 166, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 982, in save_dag_to_db
+    import_errors = DagBag._sync_to_db(dags=dags, processor_subdir=dag_directory, session=session)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 94, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 708, in _sync_to_db
+    for attempt in run_with_db_retries(logger=log):
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/tenacity/__init__.py", line 443, in __iter__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/tenacity/__init__.py", line 376, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/tenacity/__init__.py", line 418, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/tenacity/__init__.py", line 185, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 721, in _sync_to_db
+    _serialize_dag_capturing_errors(dag, session, processor_subdir)
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 686, in _serialize_dag_capturing_errors
+    dag_was_updated = SerializedDagModel.write_dag(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 94, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/serialized_dag.py", line 160, in write_dag
+    if session.scalar(
+       ^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1747, in scalar
+    return self.execute(
+           ^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1716, in execute
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1555, in _connection_for_bind
+    return self._transaction._connection_for_bind(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 750, in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/future/engine.py", line 412, in connect
+    return super(Engine, self).connect()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3325, in connect
+    return self._connection_cls(self, close_with_result=close_with_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 96, in __init__
+    else engine.raw_connection()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3404, in raw_connection
+    return self._wrap_pool_connect(self.pool.connect, _connection)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3374, in _wrap_pool_connect
+    Connection._handle_dbapi_exception_noconnection(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2208, in _handle_dbapi_exception_noconnection
+    util.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+           ^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 145, in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 143, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 690, in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate host name "postgres" to address: Temporary failure in name resolution
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)

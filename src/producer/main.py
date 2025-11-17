@@ -16,7 +16,7 @@ import sqlite3
 import time as _time
 
 try:
-    from confluent_kafka import Producer
+    from confluent_kafka import Producer, Consumer
 except ImportError:
     class DummyProducer:
         def __init__(self, *args, **kwargs):
@@ -34,6 +34,7 @@ except ImportError:
         def close(self):
             return None
     Producer = DummyProducer
+    Consumer = None  # Explicitly set to None if import fails
 
 try:
     from confluent_kafka.admin import AdminClient, NewTopic
@@ -171,6 +172,12 @@ class PureAPItoKafkaProducer:
         self.producer = self._create_kafka_producer()
         signal.signal(signal.SIGINT, self.shutdown)
         
+        # CRITICAL: Load existing transaction IDs from Kafka topic
+        # This is the source of truth - only send records not already in Kafka
+        logger.info(f"📖 Loading existing transaction IDs from Kafka topic: {self.topic}")
+        self.kafka_existing_ids = self._load_existing_transaction_ids_from_kafka()
+        logger.info(f"✅ Loaded {len(self.kafka_existing_ids):,} existing transaction IDs from Kafka topic {self.topic}")
+        
         logger.info(f"Kafka bootstrap: {self.bootstrap_servers}, topic: {self.topic}")
         logger.info(f"Pure API to Kafka Producer - Starting from offset: {self.current_offset}")
         logger.info(f"Batch size: {self.batch_size} (min: {self.min_batch_size}, max: {self.max_batch_size})")
@@ -292,6 +299,90 @@ class PureAPItoKafkaProducer:
                 logger.warning(f"Failed resetting file offset: {e}")
             self.current_offset = new_offset
             logger.info(f"Offset reset. New starting offset: {self.current_offset}")
+
+    def _load_existing_transaction_ids_from_kafka(self) -> set:
+        """Load all existing transaction IDs from Kafka topic - this is the source of truth"""
+        existing_ids = set()
+        
+        if Consumer is None:
+            logger.warning("Consumer not available, cannot load existing IDs from Kafka")
+            return existing_ids
+        
+        try:
+            consumer_config = {
+                "bootstrap.servers": self.bootstrap_servers,
+                "group.id": f"producer-dedup-loader-{int(time.time())}",
+                "auto.offset.reset": "earliest",
+                "enable.auto.commit": False,
+            }
+            
+            if self.kafka_username and self.kafka_password:
+                consumer_config.update({
+                    "security.protocol": "SASL_SSL",
+                    "sasl.mechanism": "PLAIN",
+                    "sasl.username": self.kafka_username,
+                    "sasl.password": self.kafka_password,
+                    "ssl.endpoint.identification.algorithm": "https",
+                })
+            
+            consumer = Consumer(consumer_config)
+            consumer.subscribe([self.topic])
+            
+            logger.info(f"Reading all messages from Kafka topic {self.topic} to build deduplication set...")
+            message_count = 0
+            timeout_count = 0
+            max_timeouts = 3
+            
+            while True:
+                msg = consumer.poll(timeout=5.0)
+                
+                if msg is None:
+                    timeout_count += 1
+                    if timeout_count >= max_timeouts:
+                        break
+                    continue
+                
+                timeout_count = 0
+                
+                if msg.error():
+                    if msg.error().code() == -191:  # PARTITION_EOF
+                        continue
+                    logger.warning(f"Consumer error: {msg.error()}")
+                    continue
+                
+                try:
+                    # Get transaction_id from message key (if set) or value
+                    key = msg.key()
+                    if key:
+                        tx_id = key.decode('utf-8') if isinstance(key, bytes) else str(key)
+                        existing_ids.add(tx_id)
+                    else:
+                        # Fallback: parse value to get transaction_id
+                        value = msg.value()
+                        if value:
+                            if isinstance(value, bytes):
+                                value = value.decode('utf-8')
+                            data = json.loads(value)
+                            tx_id = data.get('transaction_id')
+                            if tx_id:
+                                existing_ids.add(str(tx_id))
+                    
+                    message_count += 1
+                    if message_count % 10000 == 0:
+                        logger.info(f"   Processed {message_count:,} messages, found {len(existing_ids):,} unique transaction IDs...")
+                
+                except Exception as e:
+                    logger.warning(f"Failed to parse message: {e}")
+                    continue
+            
+            consumer.close()
+            logger.info(f"✅ Finished reading Kafka topic. Total messages: {message_count:,}, Unique transaction IDs: {len(existing_ids):,}")
+            
+        except Exception as e:
+            logger.error(f"❌ Failed to load existing transaction IDs from Kafka: {e}")
+            logger.warning("Will proceed without Kafka deduplication - may send duplicates")
+        
+        return existing_ids
 
     def _load_last_offset(self) -> int:
         """Load where we left off to avoid re-reading the same data"""
@@ -719,44 +810,73 @@ class PureAPItoKafkaProducer:
             return (None, api_offset, used_distributed, is_network_error)
 
     def delivery_report(self, err, msg):
+        """Callback for Kafka message delivery - track delivery and clean up inflight"""
         if err:
             logger.error(f"Delivery failed: {err}")
-            # Release inflight reservation so we can retry later
-            try:
-                key_bytes = msg.key()
-                if key_bytes is not None:
-                    key_str = key_bytes.decode("utf-8") if isinstance(key_bytes, (bytes, bytearray)) else str(key_bytes)
-                    self._release_reservation(key_str)
-            except Exception as e:
-                logger.warning(f"Failed to release reservation on error: {e}")
+            # On failure, remove from Redis so it can be retried
+            if self.redis:
+                try:
+                    key_bytes = msg.key()
+                    if key_bytes:
+                        key_str = key_bytes.decode("utf-8") if isinstance(key_bytes, (bytes, bytearray)) else str(key_bytes)
+                        inflight_key = f"{self.redis_set_key}:inflight:{key_str}"
+                        self.redis.delete(inflight_key)
+                        # Also remove from seen set so it can be retried
+                        self.redis.srem(self.redis_set_key, key_str)
+                except Exception:
+                    pass
         else:
             self._batch_delivered += 1
-            # On successful delivery, remember the key as seen
-            try:
-                key_bytes = msg.key()
-                if key_bytes is None:
-                    return
-                key_str = key_bytes.decode("utf-8") if isinstance(key_bytes, (bytes, bytearray)) else str(key_bytes)
-                self._finalize_key(key_str)
-            except Exception as e:
-                logger.warning(f"Failed to mark key as seen in Redis: {e}")
+            # On success, clean up inflight key (already in seen set)
+            if self.redis:
+                try:
+                    key_bytes = msg.key()
+                    if key_bytes:
+                        key_str = key_bytes.decode("utf-8") if isinstance(key_bytes, (bytes, bytearray)) else str(key_bytes)
+                        inflight_key = f"{self.redis_set_key}:inflight:{key_str}"
+                        self.redis.delete(inflight_key)
+                except Exception:
+                    pass
 
     def send_to_kafka(self, transaction: Dict[str, Any]) -> bool:
         try:
-            # Deterministic key for deduplication downstream (log compaction/upserts)
+            # Get transaction_id - this is what we use for deduplication
             tx_id = transaction.get('transaction_id')
-            if tx_id:
-                key_str = str(tx_id)
-            else:
+            if not tx_id:
+                # If no transaction_id, use hash of payload as key
                 payload = json.dumps(transaction, sort_keys=True, separators=(',', ':'))
                 key_str = hashlib.sha256(payload.encode('utf-8')).hexdigest()
-
-            # Fast dedup: reserve key before producing to prevent duplicates across restarts
-            if not self._reserve_key(key_str):
+            else:
+                key_str = str(tx_id)
+            
+            # CRITICAL: Check if this transaction_id is already in Kafka topic (loaded on startup)
+            if key_str in self.kafka_existing_ids:
                 self.dedup_skipped += 1
                 return False
 
-            # Send to Kafka - handle queue full errors
+            # CRITICAL: Check Redis for coordination between replicas
+            # If another replica is processing this, skip it
+            if self.redis:
+                # Check if already in Redis (another replica might have sent it)
+                if self.redis.sismember(self.redis_set_key, key_str):
+                    self.dedup_skipped += 1
+                    self.kafka_existing_ids.add(key_str)  # Update local cache
+                    return False
+                
+                # Check if in-flight (another replica is currently sending it)
+                inflight_key = f"{self.redis_set_key}:inflight:{key_str}"
+                if self.redis.exists(inflight_key):
+                    self.dedup_skipped += 1
+                    return False
+                
+                # Reserve it atomically to prevent other replicas from sending it
+                reserved = self.redis.set(inflight_key, "1", ex=self.redis_inflight_ttl, nx=True)
+                if not reserved:
+                    # Another replica just reserved it, skip
+                    self.dedup_skipped += 1
+                    return False
+
+            # Not in Kafka and not being processed by another replica - send it
             try:
                 self.producer.produce(
                     self.topic,
@@ -764,28 +884,28 @@ class PureAPItoKafkaProducer:
                     value=json.dumps(transaction),
                     callback=self.delivery_report
                 )
-                # CRITICAL: Immediately add to Redis "seen" set to prevent duplicates
-                # This is safe because we've already reserved it in inflight
-                # If delivery fails, the inflight key will expire and it can be retried
+                # Immediately add to our local set and Redis
+                self.kafka_existing_ids.add(key_str)
                 if self.redis:
                     try:
-                        # Add to seen set immediately (idempotent operation)
+                        # Add to Redis seen set immediately (before delivery)
                         self.redis.sadd(self.redis_set_key, key_str)
-                        # Keep inflight key until delivery confirms (handled in delivery_report)
                     except Exception as e:
-                        logger.warning(f"Failed to add {key_str} to Redis seen set: {e}")
-                
+                        logger.warning(f"Failed to add to Redis: {e}")
                 return True
             except BufferError:
                 # Queue is full - re-raise so caller can handle it
                 raise
             except Exception as e:
                 logger.error(f"Send failed: {e}")
-                # On immediate send failure, release reservation so future attempts can retry
-                try:
-                    self._release_reservation(key_str)
-                except Exception:
-                    pass
+                # On immediate send failure, release Redis reservation so future attempts can retry
+                if self.redis:
+                    try:
+                        inflight_key = f"{self.redis_set_key}:inflight:{key_str}"
+                        self.redis.delete(inflight_key)
+                        self.redis.srem(self.redis_set_key, key_str)
+                    except Exception:
+                        pass
                 return False
         except Exception as e:
             logger.error(f"Unexpected error in send_to_kafka: {e}")
@@ -1128,21 +1248,9 @@ class PureAPItoKafkaProducer:
                 # Very frequent polling to prevent queue overflow and keep things moving
                 poll_interval = max(200, batch_len // 100)  # Poll ~100 times per batch for maximum throughput
                 
-                # CRITICAL: Track transaction IDs in this batch to prevent duplicates within same batch
-                batch_seen_ids = set()
-                
                 # Batch send all transactions as fast as possible
+                # send_to_kafka() already checks against kafka_existing_ids to prevent duplicates
                 for idx, transaction in enumerate(transactions):
-                    # Get transaction_id for batch-level deduplication
-                    tx_id = transaction.get('transaction_id')
-                    if tx_id:
-                        tx_id_str = str(tx_id)
-                        # Skip if we've already seen this transaction_id in this batch
-                        if tx_id_str in batch_seen_ids:
-                            self.dedup_skipped += 1
-                            continue
-                        batch_seen_ids.add(tx_id_str)
-                    
                     try:
                         if self.send_to_kafka(transaction):
                             sent_count += 1
