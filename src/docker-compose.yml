@@ -82,12 +82,19 @@ services:
     command: webserver
     ports:
       - "8080:8080"
+    environment:
+      <<: *airflow-common-env
+      # Increase gunicorn timeout significantly - DAG parsing is very slow
+      AIRFLOW__WEBSERVER__WEB_SERVER_MASTER_TIMEOUT: "600"
+      AIRFLOW__WEBSERVER__WEB_SERVER_WORKER_TIMEOUT: "600"
+      # Use only 1 worker to speed up startup (each worker parses all DAGs)
+      AIRFLOW__WEBSERVER__WORKERS: "2"
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
       interval: 30s
       timeout: 10s
-      retries: 5
-      start_period: 30s
+      retries: 10
+      start_period: 120s
     restart: always
     depends_on:
       <<: *airflow-common-depends-on
