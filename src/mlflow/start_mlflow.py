@@ -1,53 +1,58 @@
 #!/usr/bin/env python3
 """
-MLflow startup script that patches Flask before starting MLflow server.
+MLflow startup script that patches Flask host validation and then runs the
+standard `mlflow server` CLI in-process so the patch takes effect.
 """
 import os
 import sys
 
-# Patch Werkzeug/Flask host checking BEFORE importing mlflow
-import werkzeug.serving
+import werkzeug.serving as wz_serving
 from werkzeug.serving import WSGIRequestHandler
 
 class NoHostCheckHandler(WSGIRequestHandler):
+    """Request handler that bypasses Flask's host header validation."""
+
     def make_environ(self):
         environ = super().make_environ()
-        if 'HTTP_HOST' in environ:
-            environ['HTTP_HOST'] = 'localhost:5500'
+        host = environ.get('HTTP_HOST', 'localhost:5500')
+        environ['_ORIGINAL_HTTP_HOST'] = host
+        environ['HTTP_HOST'] = 'mlflow-server:5500'
+        environ['SERVER_NAME'] = 'mlflow-server'
         return environ
 
-# Patch Werkzeug functions
-_original_run_simple = werkzeug.serving.run_simple
-def patched_run_simple(*args, **kwargs):
-    kwargs['request_handler'] = NoHostCheckHandler
-    return _original_run_simple(*args, **kwargs)
-werkzeug.serving.run_simple = patched_run_simple
+# Apply the patched handler globally before mlflow imports Flask
+wz_serving.WSGIRequestHandler = NoHostCheckHandler
 
-_original_make_server = werkzeug.serving.make_server
-def patched_make_server(*args, **kwargs):
-    kwargs['request_handler'] = NoHostCheckHandler
-    return _original_make_server(*args, **kwargs)
-werkzeug.serving.make_server = patched_make_server
-
-# Now start MLflow using subprocess (patches won't apply, so use direct API call)
-try:
-    from mlflow.server import _run_server
-    
+def build_cli_argv():
     backend_store_uri = os.environ.get('MLFLOW_BACKEND_STORE_URI', '')
-    artifact_root = os.environ.get('MLFLOW_ARTIFACTS_DESTINATION', None)
-    
-    _run_server(
-        host='0.0.0.0',
-        port=5500,
-        backend_store_uri=backend_store_uri,
-        default_artifact_root=artifact_root,
-    )
-except ImportError:
-    # Fallback: use subprocess
-    import subprocess
-    backend_store_uri = os.environ.get('MLFLOW_BACKEND_STORE_URI', '')
-    artifact_root = os.environ.get('MLFLOW_ARTIFACTS_DESTINATION', None)
-    cmd = ['mlflow', 'server', '--host', '0.0.0.0', '--port', '5500', '--backend-store-uri', backend_store_uri]
+    artifact_root = os.environ.get('MLFLOW_ARTIFACTS_DESTINATION')
+    argv = [
+        'mlflow',
+        'server',
+        '--host',
+        '0.0.0.0',
+        '--port',
+        '5500',
+        '--backend-store-uri',
+        backend_store_uri,
+    ]
     if artifact_root:
-        cmd.extend(['--default-artifact-root', artifact_root])
-    sys.exit(subprocess.call(cmd))
+        argv.extend(['--default-artifact-root', artifact_root])
+    return argv
+
+def main():
+    # Build CLI args and run mlflow CLI in-process
+    sys.argv = build_cli_argv()
+    try:
+        from mlflow import cli
+        cli.cli()
+    except SystemExit as exc:
+        raise
+    except Exception as exc:
+        print(f'Error starting MLflow server: {exc}', file=sys.stderr)
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)
+
+if __name__ == '__main__':
+    main()
