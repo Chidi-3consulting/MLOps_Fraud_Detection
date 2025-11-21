@@ -85,8 +85,8 @@ services:
     environment:
       <<: *airflow-common-env
       # Increase gunicorn timeout significantly - DAG parsing is very slow
-      AIRFLOW__WEBSERVER__WEB_SERVER_MASTER_TIMEOUT: "600"
-      AIRFLOW__WEBSERVER__WEB_SERVER_WORKER_TIMEOUT: "600"
+      AIRFLOW__WEBSERVER__WEB_SERVER_MASTER_TIMEOUT: "1000"
+      AIRFLOW__WEBSERVER__WEB_SERVER_WORKER_TIMEOUT: "1000"
       # Use only 1 worker to speed up startup (each worker parses all DAGs)
       AIRFLOW__WEBSERVER__WORKERS: "2"
     healthcheck:
