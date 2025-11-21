@@ -101,7 +101,7 @@ with DAG(
     'fraud_detection_training',
     default_args=default_args,
     description='Fraud detection model training pipeline (configurable)',
-    schedule_interval='0 3 * * *',
+    schedule_interval='0 12 * * *',
     max_active_runs=1,
     catchup=False,
     tags=['fraud', 'ML']
