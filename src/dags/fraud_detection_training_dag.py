@@ -56,9 +56,8 @@ def _train_model(**context):
     try:
         logger.info('Initializing fraud detection training (transactions_table=%s)', transactions_table)
         # Import at runtime so DAG parse doesn't require heavy deps
-        # Import from the local dags package so the module can be found when
-        # Airflow adds the dags folder to PYTHONPATH.
-        from dags.fraud_detection_training import FraudDetectionTraining
+        # Import directly from the module since Airflow adds the dags folder to PYTHONPATH
+        from fraud_detection_training import FraudDetectionTraining
 
         trainer = FraudDetectionTraining()
 

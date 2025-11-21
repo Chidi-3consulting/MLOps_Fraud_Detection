@@ -298,6 +298,12 @@ services:
     environment:
       - MINIO_ROOT_USER=${MINIO_USERNAME}
       - MINIO_ROOT_PASSWORD=${MINIO_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9000/minio/health/live || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     volumes:
       - minio_data:/data
     networks:
@@ -310,27 +316,29 @@ services:
     image: mlflow-server
     container_name: mlflow-server
     depends_on:
-      - mc
       - postgres
+      - minio
     ports:
       - "5500:5500"
     environment:
       - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      # Make the mlflow backend-store configurable and default to using the repository DB_* vars
-      - 'MLFLOW_BACKEND_STORE_URI=postgresql+psycopg2://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSLMODE}'
-    # NOTE: some mlflow/cli versions may treat the artifact root argument as a positional
-    # unexpected token which results in the container repeatedly exiting. To avoid that
-    # failure during local compose runs we omit the explicit --default-artifact-root here.
-    # If you require S3-backed artifacts, set the default artifact root inside your
-    # MLflow configuration or adjust this command for your mlflow version.
-    # Use a shell inside the container so the environment variable set in the
-    # service's `environment:` block is expanded at container runtime rather
-    # than at docker-compose interpolation time on the host.
-    # Use double dollar to defer variable expansion to the container shell
-    # (a single $ would be interpolated by docker-compose at parse time).
-    command: ["sh", "-c", "mlflow server --port 5500 --host 0.0.0.0 --backend-store-uri \"$$MLFLOW_BACKEND_STORE_URI\""]
+      # Use the mlflow database created by init-multiple-dbs.sh
+      # Default to mlflow database if DB_* vars not set, otherwise use provided vars
+      - 'MLFLOW_BACKEND_STORE_URI=postgresql+psycopg2://${MLFLOW_DB_USER:-mlflow}:${MLFLOW_DB_PASSWORD:-mlflow}@postgres:${POSTGRES_PORT:-5432}/${MLFLOW_DB_NAME:-mlflow}?sslmode=${DB_SSLMODE:-prefer}'
+      # Set artifact destination for S3-compatible storage
+      - 'MLFLOW_ARTIFACTS_DESTINATION=s3://mlflow/fraud_detection'
+      # Disable Werkzeug host header checking to allow Docker network requests
+      - WERKZEUG_RUN_MAIN=true
+    # Use simple mlflow server command (same as before, just with our wrapper script)
+    command: ["python", "/app/start_mlflow.py"]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5500/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
     networks:
       - fraud-detection
 
