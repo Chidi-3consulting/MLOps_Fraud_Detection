@@ -1347,3 +1347,8 @@ sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate
 [2025-11-22T15:21:20.496+0000] {logging_mixin.py:190} INFO - [2025-11-22T15:21:20.495+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/__init__.py
 [2025-11-22T15:21:20.547+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/__init__.py
 [2025-11-22T15:21:20.636+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/__init__.py took 0.194 seconds
+[2025-11-22T15:21:51.232+0000] {processor.py:186} INFO - Started process (PID=704) to work on /opt/airflow/dags/__init__.py
+[2025-11-22T15:21:51.234+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/__init__.py for tasks to queue
+[2025-11-22T15:21:51.240+0000] {logging_mixin.py:190} INFO - [2025-11-22T15:21:51.239+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/__init__.py
+[2025-11-22T15:21:51.296+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/__init__.py
+[2025-11-22T15:21:51.335+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/__init__.py took 0.134 seconds
