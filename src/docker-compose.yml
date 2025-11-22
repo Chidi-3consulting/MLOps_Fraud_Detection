@@ -89,6 +89,8 @@ services:
       AIRFLOW__WEBSERVER__WEB_SERVER_WORKER_TIMEOUT: "1000"
       # Use only 1 worker to speed up startup (each worker parses all DAGs)
       AIRFLOW__WEBSERVER__WORKERS: "2"
+      # Configure Flask-Limiter to use Redis instead of in-memory storage
+      RATELIMIT_STORAGE_URL: "redis://:@redis:6379/1"
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
       interval: 30s
@@ -316,8 +318,10 @@ services:
     image: mlflow-server
     container_name: mlflow-server
     depends_on:
-      - postgres
-      - minio
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
     ports:
       - "5500:5500"
     environment:
@@ -329,16 +333,26 @@ services:
       - 'MLFLOW_BACKEND_STORE_URI=postgresql+psycopg2://${MLFLOW_DB_USER:-mlflow}:${MLFLOW_DB_PASSWORD:-mlflow}@postgres:${POSTGRES_PORT:-5432}/${MLFLOW_DB_NAME:-mlflow}?sslmode=${DB_SSLMODE:-prefer}'
       # Set artifact destination for S3-compatible storage
       - 'MLFLOW_ARTIFACTS_DESTINATION=s3://mlflow/fraud_detection'
-      # Disable Werkzeug host header checking to allow Docker network requests
-      - WERKZEUG_RUN_MAIN=true
-    # Use simple mlflow server command (same as before, just with our wrapper script)
-    command: ["python", "/app/start_mlflow.py"]
+      # Allow all hosts (bypass Flask host header validation)
+      - MLFLOW_SERVER_HOST=0.0.0.0
+    # Drop/recreate database and start MLflow server
+    command: >
+      bash -c "
+      echo 'Resetting MLflow database to fix migration issues...';
+      export PGPASSWORD=$${MLFLOW_DB_PASSWORD:-mlflow};
+      export DB_NAME=$${MLFLOW_DB_NAME:-mlflow};
+      export DB_USER=$${MLFLOW_DB_USER:-mlflow};
+      psql -h postgres -U $$DB_USER -d postgres -c \"DROP DATABASE IF EXISTS $$DB_NAME;\" 2>/dev/null || true;
+      psql -h postgres -U $$DB_USER -d postgres -c \"CREATE DATABASE $$DB_NAME;\" 2>/dev/null || true;
+      echo 'Starting MLflow server...';
+      exec mlflow server --host 0.0.0.0 --port 5500 --backend-store-uri \"$${MLFLOW_BACKEND_STORE_URI}\" --default-artifact-root \"$${MLFLOW_ARTIFACTS_DESTINATION}\"
+      "
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:5500/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 40s
+      start_period: 60s
     networks:
       - fraud-detection
 
