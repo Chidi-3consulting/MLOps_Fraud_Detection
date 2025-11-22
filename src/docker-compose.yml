@@ -65,6 +65,8 @@ services:
     image: redis:7.2-bookworm
     expose:
       - 6379
+    volumes:
+      - redis-data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -80,12 +82,21 @@ services:
     command: webserver
     ports:
       - "8080:8080"
+    environment:
+      <<: *airflow-common-env
+      # Increase gunicorn timeout significantly - DAG parsing is very slow
+      AIRFLOW__WEBSERVER__WEB_SERVER_MASTER_TIMEOUT: "1000"
+      AIRFLOW__WEBSERVER__WEB_SERVER_WORKER_TIMEOUT: "1000"
+      # Use only 1 worker to speed up startup (each worker parses all DAGs)
+      AIRFLOW__WEBSERVER__WORKERS: "2"
+      # Configure Flask-Limiter to use Redis instead of in-memory storage
+      RATELIMIT_STORAGE_URL: "redis://:@redis:6379/1"
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
       interval: 30s
       timeout: 10s
-      retries: 5
-      start_period: 30s
+      retries: 10
+      start_period: 120s
     restart: always
     depends_on:
       <<: *airflow-common-depends-on
@@ -289,6 +300,12 @@ services:
     environment:
       - MINIO_ROOT_USER=${MINIO_USERNAME}
       - MINIO_ROOT_PASSWORD=${MINIO_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9000/minio/health/live || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     volumes:
       - minio_data:/data
     networks:
@@ -301,27 +318,41 @@ services:
     image: mlflow-server
     container_name: mlflow-server
     depends_on:
-      - mc
-      - postgres
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
     ports:
       - "5500:5500"
     environment:
       - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      # Make the mlflow backend-store configurable and default to using the repository DB_* vars
-      - 'MLFLOW_BACKEND_STORE_URI=postgresql+psycopg2://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSLMODE}'
-    # NOTE: some mlflow/cli versions may treat the artifact root argument as a positional
-    # unexpected token which results in the container repeatedly exiting. To avoid that
-    # failure during local compose runs we omit the explicit --default-artifact-root here.
-    # If you require S3-backed artifacts, set the default artifact root inside your
-    # MLflow configuration or adjust this command for your mlflow version.
-    # Use a shell inside the container so the environment variable set in the
-    # service's `environment:` block is expanded at container runtime rather
-    # than at docker-compose interpolation time on the host.
-    # Use double dollar to defer variable expansion to the container shell
-    # (a single $ would be interpolated by docker-compose at parse time).
-    command: ["sh", "-c", "mlflow server --port 5500 --host 0.0.0.0 --backend-store-uri \"$$MLFLOW_BACKEND_STORE_URI\""]
+      # Use the mlflow database created by init-multiple-dbs.sh
+      # Default to mlflow database if DB_* vars not set, otherwise use provided vars
+      - 'MLFLOW_BACKEND_STORE_URI=postgresql+psycopg2://${MLFLOW_DB_USER:-mlflow}:${MLFLOW_DB_PASSWORD:-mlflow}@postgres:${POSTGRES_PORT:-5432}/${MLFLOW_DB_NAME:-mlflow}?sslmode=${DB_SSLMODE:-prefer}'
+      # Set artifact destination for S3-compatible storage
+      - 'MLFLOW_ARTIFACTS_DESTINATION=s3://mlflow/fraud_detection'
+      # Allow all hosts (bypass Flask host header validation)
+      - MLFLOW_SERVER_HOST=0.0.0.0
+    # Drop/recreate database and start MLflow server
+    command: >
+      bash -c "
+      echo 'Resetting MLflow database to fix migration issues...';
+      export PGPASSWORD=$${MLFLOW_DB_PASSWORD:-mlflow};
+      export DB_NAME=$${MLFLOW_DB_NAME:-mlflow};
+      export DB_USER=$${MLFLOW_DB_USER:-mlflow};
+      psql -h postgres -U $$DB_USER -d postgres -c \"DROP DATABASE IF EXISTS $$DB_NAME;\" 2>/dev/null || true;
+      psql -h postgres -U $$DB_USER -d postgres -c \"CREATE DATABASE $$DB_NAME;\" 2>/dev/null || true;
+      echo 'Starting MLflow server...';
+      exec mlflow server --host 0.0.0.0 --port 5500 --backend-store-uri \"$${MLFLOW_BACKEND_STORE_URI}\" --default-artifact-root \"$${MLFLOW_ARTIFACTS_DESTINATION}\"
+      "
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5500/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
     networks:
       - fraud-detection
 
@@ -330,6 +361,28 @@ services:
       context: .
       dockerfile: producer/Dockerfile
     env_file: .env
+    environment:
+      - KAFKA_TOPIC=ecommerce_fraud2
+      - KAFKA_BATCH_SIZE=65536
+      - KAFKA_LINGER_MS=10
+      - KAFKA_COMPRESSION_TYPE=snappy
+      - KAFKA_QUEUE_BUFFERING_MAX_MS=50
+      - KAFKA_QUEUE_BUFFERING_MAX_MESSAGES=200000
+      - KAFKA_MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION=5
+      - DISTRIBUTED_OFFSET=true
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - BATCH_SIZE=10000
+      - ADAPTIVE_BATCHING=true
+      - MIN_BATCH_SIZE=1000
+      - MAX_BATCH_SIZE=50000
+      - TARGET_RESPONSE_TIME=5.0
+      - MAX_RESPONSE_TIME=15.0
+      - ADAPTIVE_WINDOW_SIZE=10
+      - RESET_OFFSETS=true
+    volumes:
+      - ./state:/app/state
     profiles:
       - producer
     deploy:
@@ -338,13 +391,9 @@ services:
         limits:
           cpus: '2'
           memory: 2G
-    environment:
-      - KAFKA_BATCH_SIZE=32768
-      - KAFKA_LINGER_MS=50
-      - KAFKA_COMPRESSION_TYPE=snappy
-      - KAFKA_QUEUE_BUFFERING_MAX_MS=100
-      - KAFKA_QUEUE_BUFFERING_MAX_MESSAGES=100000
-      - KAFKA_MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION=5
+    depends_on:
+      redis:
+        condition: service_healthy
     networks:
       - fraud-detection
 
@@ -360,6 +409,7 @@ services:
 
 volumes:
   postgres-db-volume:
+  redis-data:
   minio_data:
 
 networks:
