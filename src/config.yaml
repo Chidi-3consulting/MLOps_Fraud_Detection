@@ -10,7 +10,7 @@ kafka:
   bootstrap_servers: "pkc-921jm.us-east-2.aws.confluent.cloud:9092"
   username: "5OIHYGHTVCSUQ4TH"
   password: "cfltd/xTtRzuw3ooRxgqtMcHb5Y6we/PgxnvExk2JeuJiPCo8EuJGV1kqn0xM3MA"
-  topic: "ecommerce fraud"
+  topic: "ecommerce_fraud2"
   output_topic: "fraud_predictions"
   security_protocol: 'SASL_SSL'
 
