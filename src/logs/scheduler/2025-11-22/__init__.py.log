@@ -335,3 +335,10 @@ Traceback (most recent call last):
 sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate host name "postgres" to address: Temporary failure in name resolution
 
 (Background on this error at: https://sqlalche.me/e/14/e3q8)
+[2025-11-22T07:09:39.975+0000] {processor.py:186} INFO - Started process (PID=247) to work on /opt/airflow/dags/__init__.py
+[2025-11-22T07:09:40.007+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/__init__.py for tasks to queue
+[2025-11-22T07:09:40.136+0000] {logging_mixin.py:190} INFO - [2025-11-22T07:09:40.109+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/__init__.py
+[2025-11-22T07:09:40.535+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/__init__.py
+[2025-11-22T07:09:43.767+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/__init__.py took 3.976 seconds
+[2025-11-22T07:10:20.420+0000] {processor.py:186} INFO - Started process (PID=255) to work on /opt/airflow/dags/__init__.py
+[2025-11-22T07:10:20.605+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/__init__.py for tasks to queue

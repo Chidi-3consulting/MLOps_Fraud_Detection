@@ -663,3 +663,4 @@ sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate
 [2025-11-22T07:09:15.784+0000] {processor.py:186} INFO - Started process (PID=245) to work on /opt/airflow/dags/fraud_detection_training_dag.py
 [2025-11-22T07:09:16.074+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training_dag.py for tasks to queue
 [2025-11-22T07:09:16.272+0000] {logging_mixin.py:190} INFO - [2025-11-22T07:09:16.216+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training_dag.py
+[2025-11-22T07:09:25.925+0000] {processor.py:925} INFO - DAG(s) 'fraud_detection_training' retrieved from /opt/airflow/dags/fraud_detection_training_dag.py
