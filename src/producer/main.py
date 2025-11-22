@@ -1,679 +1,1459 @@
-import json
-import logging
+#!/usr/bin/env python3
+"""
+pure_api_to_kafka.py - Only reads from API, no mock data
+"""
+
 import os
-import random
+import json
 import time
-import signal
+import logging
+import requests
 from typing import Dict, Any, Optional
-from datetime import datetime, timezone, timedelta
-from random import randint, choice
+from datetime import datetime
+import signal
+import hashlib
+import sqlite3
+import time as _time
 
 try:
-    from confluent_kafka import Producer
-except Exception:
-    # If confluent_kafka is not installed (common in test/dev), provide a dummy
-    # Producer implementation so the generator can run and still write to local sinks or DB.
+    from confluent_kafka import Producer, Consumer
+except ImportError:
     class DummyProducer:
         def __init__(self, *args, **kwargs):
             pass
-
         def produce(self, topic, key=None, value=None, callback=None):
-            # simulate immediate success by invoking callback with None
             if callback:
                 try:
                     callback(None, type('Msg', (), {'topic': lambda: topic, 'partition': lambda: 0})())
                 except Exception:
                     pass
-
         def poll(self, timeout=0):
             return None
-
         def flush(self, timeout=None):
             return 0
-
         def close(self):
             return None
-
     Producer = DummyProducer
-from dotenv import load_dotenv
-from faker import Faker
-from jsonschema import validate, ValidationError, FormatChecker
-# Robust import: when running inside the producer container the files are copied
-# into /app (same directory) so `producer.file_sink` may not be a package.
+    Consumer = None  # Explicitly set to None if import fails
 
+try:
+    from confluent_kafka.admin import AdminClient, NewTopic
+except ImportError:
+    AdminClient = None
+    NewTopic = None
+
+from dotenv import load_dotenv
 
 # Configure logging
-logging.basicConfig(
-    format="%(asctime)s - %(levelname)s - %(module)s - %(message)s",
-    level=logging.INFO
-)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Load environment variables from repo-root .env if present (safer than relative path)
-try:
-    _repo_env = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".env"))
-    if os.path.exists(_repo_env):
-        load_dotenv(_repo_env)
-    else:
-        # fall back to default location resolution
-        load_dotenv(dotenv_path="../.env")
-except Exception:
-    load_dotenv(dotenv_path="../.env")
+load_dotenv()
 
-# Faker instance for generating random data
-# Faker instance for generating Nigerian-focused data
-fake = Faker('en_NG')  # Nigerian locale
+class PureAPItoKafkaProducer:
+    def __init__(self):
+        # Optional Redis import (lazy to keep runtime flexible)
+        try:
+            import redis as _redis
+            self._redis_lib = _redis
+        except Exception:
+            self._redis_lib = None
 
-# JSON Schema for e-commerce transaction validation
-ECOMMERCE_TRANSACTION_SCHEMA = {
-    "type": "object",
-    "properties": {
-        # Customer/Profile elements
-        "user_id": {"type": "string"},
-        "full_name": {"type": "string"},
-        "email": {"type": "string", "format": "email"},
-        "phone_number": {"type": "string"},
-        "gender": {"type": "string", "enum": ["Male", "Female", "Other"]},
-        "age": {"type": "integer", "minimum": 18, "maximum": 80},
-        "registration_date": {"type": "string", "format": "date-time"},
-        "account_status": {"type": "string", "enum": ["active", "suspended", "inactive"]},
-        "device_id": {"type": "string"},
-        "ip_address": {"type": "string", "format": "ipv4"},
-        "location": {"type": "string"},
-        "country": {"type": "string"},
-
-        # Session/Behavioral elements
-        "session_id": {"type": "string"},
-        "timestamp": {"type": "string", "format": "date-time"},
-        "action": {"type": "string", "enum": ["login", "browse", "add_to_cart", "purchase", "logout", "view_product"]},
-        "product_id": {"type": "string"},
-        "device_type": {"type": "string", "enum": ["mobile", "desktop", "tablet"]},
-        "browser": {"type": "string", "enum": ["Chrome", "Firefox", "Safari", "Edge", "Opera"]},
-        "geo_location": {"type": "string"},
-        "session_duration": {"type": "number", "minimum": 0},
-
-        # Product/Inventory elements
-        "product_name": {"type": "string"},
-        "category": {"type": "string", "enum": ["Electronics", "Fashion", "Home & Kitchen", "Phones & Tablets", "Computers", "Health & Beauty", "Sporting Goods", "Automotive", "Baby Products", "Groceries"]},
-        "price": {"type": "number", "minimum": 0.01},
-        "discount": {"type": "number", "minimum": 0, "maximum": 100},
-        "vendor_id": {"type": "string"},
-        # For multi-item orders (list of line items)
-        "items": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "product_id": {"type": "string"},
-                    "product_name": {"type": "string"},
-                    "category": {"type": "string"},
-                    "price": {"type": "number", "minimum": 0.01},
-                    "quantity": {"type": "integer", "minimum": 1},
-                    "discount": {"type": "number", "minimum": 0, "maximum": 100},
-                    "vendor_id": {"type": "string"},
-                    "item_total": {"type": "number", "minimum": 0}
-                },
-                "required": ["product_id", "price", "quantity", "item_total"]
-            }
-        },
-
-        # Transaction/Payment elements
-        "transaction_id": {"type": "string"},
-        "order_id": {"type": "string"},
-        "quantity": {"type": "integer", "minimum": 1},
-        "payment_method": {"type": "string", "enum": ["Card", "Bank Transfer", "USSD", "Mobile Money", "Pay on Delivery"]},
-        "payment_status": {"type": "string", "enum": ["success", "failed", "pending", "refunded"]},
-        "amount": {"type": "number", "minimum": 0.01},
-        "currency": {"type": "string", "enum": ["NGN", "USD"]},
-        "delivery_address": {"type": "string"},
-
-        # Feedback/Post-Transaction elements
-        "return_request": {"type": "boolean"},
-        "refund_status": {"type": "string", "enum": ["none", "requested", "approved", "rejected", "processed"]},
-        "rating": {"type": "integer", "minimum": 1, "maximum": 5},
-
-        # Fraud detection target
-        # Keep is_fraud as integer (0/1) to match generator usage; could be boolean as an alternative.
-        "is_fraud": {"type": "integer", "minimum": 0, "maximum": 1},
-        "fraud_type": {"type": "string", "enum": ["none", "account_takeover", "card_testing", "friendly_fraud", "merchant_collusion", "geo_anomaly", "identity_theft"]},
-
-        # Extended feature set for model training (ELEMENTS FOR MODEL TRAINING)
-        "account_age_days": {"type": "integer", "minimum": 0},
-        "identity_mismatch_score": {"type": "number", "minimum": 0, "maximum": 1},
-        "identity_verification_score": {"type": "number", "minimum": 0, "maximum": 1},
-        "SIM_swap_probability": {"type": "number", "minimum": 0, "maximum": 1},
-        "NIN_verification_status": {"type": "string"},
-        "phone_verified": {"type": "boolean"},
-        "sim_card_age_days": {"type": "integer", "minimum": 0},
-        "email_disposable_flag": {"type": "boolean"},
-        "device_fingerprint_score": {"type": "number", "minimum": 0, "maximum": 1},
-        "android_emulator_detection": {"type": "boolean"},
-
-        "unusual_discount_flag": {"type": "boolean"},
-        "product_price_anomaly_score": {"type": "number", "minimum": 0, "maximum": 1},
-        "cart_tampering_detection": {"type": "boolean"},
-        "discount_velocity_24h": {"type": "integer", "minimum": 0},
-        "browser_integrity_score": {"type": "number", "minimum": 0, "maximum": 1},
-
-        "transaction_velocity_1h": {"type": "integer", "minimum": 0},
-        "transaction_velocity_24h": {"type": "integer", "minimum": 0},
-        "payment_velocity_1h": {"type": "number", "minimum": 0},
-        "payment_velocity_24h": {"type": "number", "minimum": 0},
-        "failed_payment_ratio": {"type": "number", "minimum": 0, "maximum": 1},
-        "avg_order_value": {"type": "number", "minimum": 0},
-        "current_order_value_ratio": {"type": "number", "minimum": 0},
-        "payment_method_anomaly": {"type": "boolean"},
-        "is_linked_card": {"type": "boolean"},
-        "bank_transfer_verification": {"type": "boolean"},
-        "partial_payment_requirement": {"type": "boolean"},
-        "address_risk_score": {"type": "number", "minimum": 0, "maximum": 1},
-
-        "ip_location_mismatch_flag": {"type": "boolean"},
-        "location_distance_score": {"type": "number", "minimum": 0},
-        "address_reuse_rate": {"type": "number", "minimum": 0},
-        "delivery_delay_ratio": {"type": "number", "minimum": 0, "maximum": 1},
-        "failed_delivery_pattern": {"type": "boolean"},
-        "shared_address_count": {"type": "integer", "minimum": 0},
-        "rider_collusion_risk": {"type": "number", "minimum": 0, "maximum": 1},
-        "otp_delivery_verification": {"type": "boolean"},
-        "gps_delivery_confirmation": {"type": "boolean"},
-
-        "refund_abuse_score": {"type": "number", "minimum": 0, "maximum": 1},
-        "refund_to_purchase_ratio": {"type": "number", "minimum": 0},
-        "refund_timing_pattern": {"type": "string"},
-        "complaint_frequency": {"type": "integer", "minimum": 0},
-        "delivery_dispute_rate": {"type": "number", "minimum": 0, "maximum": 1},
-        "serial_number_mismatch": {"type": "boolean"},
-        "return_inspection_score": {"type": "number", "minimum": 0, "maximum": 1},
-        "product_swap_probability": {"type": "number", "minimum": 0, "maximum": 1},
-
-        "fraud_ring_score": {"type": "number", "minimum": 0, "maximum": 1},
-        "account_link_density": {"type": "number", "minimum": 0},
-        "shared_phone_number_count": {"type": "integer", "minimum": 0},
-        "shared_ip_count": {"type": "integer", "minimum": 0},
-        "linked_accounts": {"type": "integer", "minimum": 0},
-        "device_change_rate": {"type": "number", "minimum": 0},
-        "multi_device_login_flag": {"type": "boolean"},
-        "proxy_detection_flag": {"type": "boolean"},
-        "VPN_usage_flag": {"type": "boolean"},
-        "device_trust_score": {"type": "number", "minimum": 0, "maximum": 1},
-        "ip_risk_score": {"type": "number", "minimum": 0, "maximum": 1},
-        "user_reputation_score": {"type": "number", "minimum": 0, "maximum": 1},
-        "activity_timing_score": {"type": "number", "minimum": 0},
-        "anomaly_frequency_score": {"type": "number", "minimum": 0},
-        "login_frequency": {"type": "integer", "minimum": 0},
-        "behavioral_consistency_score": {"type": "number", "minimum": 0, "maximum": 1},
-
-        "vendor_risk_score": {"type": "number", "minimum": 0, "maximum": 1},
-        "vendor_age_days": {"type": "integer", "minimum": 0},
-        "fake_review_score": {"type": "number", "minimum": 0, "maximum": 1},
-        "rating_burst_detection": {"type": "boolean"},
-        "seller_fraud_pattern": {"type": "string"}
-    },
-    "required": ["user_id", "transaction_id", "timestamp", "amount", "is_fraud"]
-}
-
-
-class EcommerceTransactionProducer:
-    def __init__(self, additional_config=None):
+        self.api_url = os.getenv("FRAUD_API_URL", "https://3consult-ng.com/fraud_api.php")
         self.bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
         self.kafka_username = os.getenv("KAFKA_USERNAME")
         self.kafka_password = os.getenv("KAFKA_PASSWORD")
-        self.topic = os.getenv("KAFKA_TOPIC", "ecommerce_transactions")
+        # Resolve topic from env with sensible default
+        env_topic = os.getenv("KAFKA_TOPIC")
+        self.topic = env_topic if env_topic else "ecommerce_fraud2"
+        
+        # Adaptive batch sizing configuration
+        self.adaptive_batching = str(os.getenv("ADAPTIVE_BATCHING", "true")).lower() in {"1", "true", "yes", "on"}
+        initial_batch_size = int(os.getenv("BATCH_SIZE", "20000"))
+        self.batch_size = initial_batch_size
+        self.min_batch_size = int(os.getenv("MIN_BATCH_SIZE", "1000"))
+        self.max_batch_size = int(os.getenv("MAX_BATCH_SIZE", "50000"))
+        
+        # Adaptive batching state
+        self.batch_size_history = [initial_batch_size]  # Keep last N batch sizes
+        self.response_times = []  # Track API response times
+        self.error_count = 0  # Track consecutive errors
+        self.success_count = 0  # Track consecutive successes
+        self.adaptive_window_size = int(os.getenv("ADAPTIVE_WINDOW_SIZE", "10"))  # Number of batches to consider
+        self.target_response_time = float(os.getenv("TARGET_RESPONSE_TIME", "5.0"))  # Target API response time in seconds
+        self.max_response_time = float(os.getenv("MAX_RESPONSE_TIME", "30.0"))  # Max acceptable response time
+        
+        # Offset tracking - THIS PREVENTS DUPLICATES ACROSS RUNS
+        self.offset_file = "api_offset.txt"
+        
         self.running = False
+        self.total_sent = 0
+        self._batch_delivered = 0
+        self.dedup_skipped = 0
 
-        # Log connection info (do not log secrets)
-        logger.debug("Kafka Username: %s", self.kafka_username)
-        logger.debug("Bootstrap Servers: %s", self.bootstrap_servers)
-        logger.debug("Kafka Topic: %s", self.topic)
+        # Optional Redis-based cross-run deduplication
+        self.redis = self._init_redis_client()
+        # Make deduplication topic-aware to prevent cross-topic conflicts
+        base_key = os.getenv("REDIS_DEDUP_SET_KEY", "fraud:seen_transaction_ids")
+        self.redis_set_key = f"{base_key}:{self.topic}"  # Include topic in key
+        # Keep reference to old global key for backward compatibility check
+        self.redis_set_key_global = base_key  # Old global key (for migration/fallback)
+        # Optional Redis-backed offset key
+        self.offset_redis_key = os.getenv("REDIS_OFFSET_KEY", "fraud:producer_offset")
+        # Optional Redis-backed distributed offset allocator for multi-replica
+        self.distributed_offsets = str(os.getenv("DISTRIBUTED_OFFSET", "false")).lower() in {"1", "true", "yes", "on"}
+        self.offset_alloc_key = os.getenv("REDIS_OFFSET_ALLOC_KEY", "fraud:producer_offset_alloc")
+        # TTL (seconds) for inflight reservations; prevents duplicates across short restarts
+        self.redis_inflight_ttl = int(os.getenv("REDIS_INFLIGHT_TTL", "900"))
+        # Local fallback guard within process in case Redis is unavailable
+        self.local_seen_keys = set()
 
-        # Producer configuration with performance optimizations
-        self.producer_config = {
+        # Durable local fallback (works even if Redis is down): SQLite-backed state
+        # Make SQLite path unique per replica to avoid locking issues
+        import socket
+        hostname = socket.gethostname()
+        default_db_name = f"producer_state_{hostname}.sqlite"
+        default_db_path = os.path.join("state", default_db_name)
+        self.state_db_path = os.getenv("DEDUP_DB_PATH", default_db_path)
+        self._sqlite_conn = None
+        # Only initialize SQLite if not using distributed offsets (to avoid conflicts)
+        # Or if explicitly enabled via env var
+        use_sqlite_fallback = str(os.getenv("USE_SQLITE_FALLBACK", "true")).lower() in {"1", "true", "yes", "on"}
+        if not (self.distributed_offsets and self.redis) or use_sqlite_fallback:
+            self._init_sqlite_state()
+        else:
+            logger.info("SQLite fallback disabled - using Redis-only for distributed offsets")
+
+        # CRITICAL: Offset tracks what we've FETCHED from API, not what we've SENT to Kafka
+        # Redis deduplication handles skipping duplicates, but we MUST fetch all records sequentially
+        reset_offsets_env = str(os.getenv("RESET_OFFSETS", "false")).lower() in {"1", "true", "yes", "on"}
+        
+        if reset_offsets_env:
+            # Explicit reset requested
+            self.current_offset = 0
+            logger.info(f"🔄 Starting from offset 0 (RESET_OFFSETS enabled)")
+        else:
+            # Load last offset, but verify it makes sense
+            self.current_offset = self._load_last_offset()
+            # API has ~788k total records, so if offset > 1M, something is wrong - reset to 0
+            if self.current_offset > 1000000:
+                logger.warning(f"⚠️ Offset {self.current_offset} is suspiciously high (>1M). Resetting to 0.")
+                self.current_offset = 0
+            # Safety check: If offset > 0 but we're not confident, verify with Redis
+            elif self.current_offset > 0 and self.redis:
+                try:
+                    # Check if Redis has reasonable number of transaction IDs
+                    # API has ~525k unique IDs, so if Redis has way more, something might be wrong
+                    redis_count = self.redis.scard(self.redis_set_key)
+                    if redis_count > 600000:  # More than expected
+                        logger.warning(f"⚠️ Redis has {redis_count:,} transaction IDs (expected ~525k). Offset might be incorrect. Consider setting RESET_OFFSETS=true to reprocess from start.")
+                except Exception:
+                    pass  # Ignore Redis check errors
+        
+        # Initialize/sync distributed allocator with current_offset
+        if self.distributed_offsets and self.redis and not reset_offsets_env:
+            try:
+                exists = self.redis.exists(self.offset_alloc_key)
+                if not exists:
+                    self.redis.set(self.offset_alloc_key, int(self.current_offset))
+                    logger.info(f"Initialized distributed allocator to {self.current_offset}")
+                else:
+                    current_allocator = int(self.redis.get(self.offset_alloc_key) or 0)
+                    # Always sync allocator to current_offset (which should be 0 or reasonable)
+                    if current_allocator != self.current_offset:
+                        logger.info(f"Syncing distributed allocator from {current_allocator} to {self.current_offset}")
+                        self.redis.set(self.offset_alloc_key, int(self.current_offset))
+            except Exception as e:
+                logger.warning(f"Failed to init/sync distributed offset allocator: {e}")
+        
+        # Ensure topic exists before producing (best-effort; works if credentials permit)
+        self._ensure_topic_exists()
+
+        self.producer = self._create_kafka_producer()
+        signal.signal(signal.SIGINT, self.shutdown)
+        
+        # CRITICAL: Load existing transaction IDs from Kafka topic
+        # This is the source of truth - only send records not already in Kafka
+        logger.info(f"📖 Loading existing transaction IDs from Kafka topic: {self.topic}")
+        self.kafka_existing_ids = self._load_existing_transaction_ids_from_kafka()
+        logger.info(f"✅ Loaded {len(self.kafka_existing_ids):,} existing transaction IDs from Kafka topic {self.topic}")
+        
+        logger.info(f"Kafka bootstrap: {self.bootstrap_servers}, topic: {self.topic}")
+        logger.info(f"Pure API to Kafka Producer - Starting from offset: {self.current_offset}")
+        logger.info(f"Batch size: {self.batch_size} (min: {self.min_batch_size}, max: {self.max_batch_size})")
+        if self.adaptive_batching:
+            logger.info(f"✅ Adaptive batching enabled (target response time: {self.target_response_time}s, max: {self.max_response_time}s)")
+        else:
+            logger.info("Adaptive batching disabled - using fixed batch size")
+        if self.distributed_offsets:
+            if not self.redis:
+                logger.warning("DISTRIBUTED_OFFSET is enabled but Redis is unavailable; falling back to single-instance offset handling.")
+                self.distributed_offsets = False
+            else:
+                logger.info("Distributed offset allocation enabled (Redis backed).")
+        
+        # Log deduplication state
+        if self.redis:
+            try:
+                dedup_count = self.redis.scard(self.redis_set_key)
+                logger.info(f"📊 Redis deduplication: {dedup_count} unique transaction IDs already seen (key: {self.redis_set_key})")
+                logger.info(f"   → New records will be sent to Kafka, duplicates will be skipped")
+            except Exception as e:
+                logger.warning(f"Failed to check Redis dedup count: {e}")
+        
+        # Verify we're starting from a reasonable offset
+        if self.current_offset > 1000000:
+            logger.warning(f"⚠️ WARNING: Starting from very high offset ({self.current_offset}). This might skip records!")
+            logger.warning(f"   If you want to reprocess from the beginning, set RESET_OFFSETS=true or use --reset-offsets")
+        elif self.current_offset > 0:
+            logger.info(f"ℹ️ Resuming from offset {self.current_offset} (previous run)")
+        else:
+            logger.info(f"✅ Starting from offset 0 - will fetch all records from API")
+
+    def reset_state(self, *, reset_offsets: bool = False, reset_dedup: bool = False, start_offset: int | None = None) -> None:
+        """Reset offsets and/or dedup state on demand; optionally force a starting offset."""
+        if reset_dedup:
+            # Clear Redis seen and inflight
+            try:
+                if self.redis:
+                    # Best-effort scan deletion for inflight keys
+                    try:
+                        cursor = 0
+                        pattern = f"{self.redis_set_key}:inflight:*"
+                        while True:
+                            cursor, keys = self.redis.scan(cursor=cursor, match=pattern, count=500)
+                            if keys:
+                                self.redis.delete(*keys)
+                            if cursor == 0:
+                                break
+                    except Exception:
+                        pass
+                    try:
+                        self.redis.delete(self.redis_set_key)
+                    except Exception:
+                        pass
+            except Exception as e:
+                logger.warning(f"Failed clearing Redis dedup: {e}")
+
+            # Clear SQLite seen and inflight
+            try:
+                if self._sqlite_conn is not None:
+                    self._sqlite_conn.execute("DELETE FROM seen_keys")
+                    self._sqlite_conn.execute("DELETE FROM inflight_keys")
+                    self._sqlite_conn.commit()
+            except Exception as e:
+                logger.warning(f"Failed clearing SQLite dedup: {e}")
+
+            # Local in-memory
+            self.local_seen_keys.clear()
+
+        if reset_offsets or start_offset is not None:
+            new_offset = 0 if start_offset is None else int(start_offset)
+            # When using distributed offsets, reset the allocator FIRST (this is the source of truth)
+            # Use SETNX to ensure only ONE replica resets it (atomic operation)
+            if self.distributed_offsets and self.redis:
+                try:
+                    # Try to set the reset flag atomically - only first replica succeeds
+                    reset_flag_key = f"{self.offset_alloc_key}:reset_lock"
+                    reset_lock_acquired = self.redis.set(reset_flag_key, "1", ex=10, nx=True)  # 10 second lock
+                    
+                    if reset_lock_acquired:
+                        # This replica won the race - FORCE reset the allocator (ignore current value)
+                        current_allocator = int(self.redis.get(self.offset_alloc_key) or 0)
+                        self.redis.set(self.offset_alloc_key, int(new_offset))
+                        logger.info(f"✅ FORCED RESET: Distributed offset allocator reset from {current_allocator} to {new_offset} (this replica won the reset race)")
+                    else:
+                        # Another replica is resetting, wait a bit and check
+                        import time
+                        time.sleep(0.5)  # Wait longer for reset to complete
+                        # Check if reset completed
+                        current_allocator = int(self.redis.get(self.offset_alloc_key) or 0)
+                        if current_allocator == int(new_offset):
+                            logger.info(f"✅ Distributed offset allocator already reset to: {new_offset} by another replica")
+                        else:
+                            # Reset didn't happen or value is wrong - force it now
+                            logger.warning(f"⚠️ Reset incomplete (current: {current_allocator}, expected: {new_offset}), forcing reset now...")
+                            self.redis.set(self.offset_alloc_key, int(new_offset))
+                            logger.info(f"✅ FORCED RESET: Distributed offset allocator reset to: {new_offset}")
+                except Exception as e:
+                    logger.error(f"❌ CRITICAL: Failed resetting distributed allocator offset: {e}")
+                    raise  # Re-raise to ensure we know about this failure
+            # Also reset local offsets (for fallback)
+            # Redis offset
+            try:
+                if self.redis:
+                    self.redis.set(self.offset_redis_key, str(new_offset))
+            except Exception as e:
+                logger.warning(f"Failed resetting Redis offset: {e}")
+            # SQLite offset
+            try:
+                if self._sqlite_conn is not None:
+                    self._sqlite_set_offset(new_offset)
+            except Exception as e:
+                logger.warning(f"Failed resetting SQLite offset: {e}")
+            # File offset
+            try:
+                with open(self.offset_file, 'w') as f:
+                    f.write(str(new_offset))
+            except Exception as e:
+                logger.warning(f"Failed resetting file offset: {e}")
+            self.current_offset = new_offset
+            logger.info(f"Offset reset. New starting offset: {self.current_offset}")
+
+    def _load_existing_transaction_ids_from_kafka(self) -> set:
+        """Load all existing transaction IDs from Kafka topic - this is the source of truth"""
+        existing_ids = set()
+        
+        if Consumer is None:
+            logger.warning("Consumer not available, cannot load existing IDs from Kafka")
+            return existing_ids
+        
+        try:
+            consumer_config = {
+                "bootstrap.servers": self.bootstrap_servers,
+                "group.id": f"producer-dedup-loader-{int(time.time())}",
+                "auto.offset.reset": "earliest",
+                "enable.auto.commit": False,
+            }
+            
+            if self.kafka_username and self.kafka_password:
+                consumer_config.update({
+                    "security.protocol": "SASL_SSL",
+                    "sasl.mechanism": "PLAIN",
+                    "sasl.username": self.kafka_username,
+                    "sasl.password": self.kafka_password,
+                    "ssl.endpoint.identification.algorithm": "https",
+                })
+            
+            consumer = Consumer(consumer_config)
+            consumer.subscribe([self.topic])
+            
+            logger.info(f"Reading all messages from Kafka topic {self.topic} to build deduplication set...")
+            message_count = 0
+            timeout_count = 0
+            max_timeouts = 3
+            
+            while True:
+                msg = consumer.poll(timeout=5.0)
+                
+                if msg is None:
+                    timeout_count += 1
+                    if timeout_count >= max_timeouts:
+                        break
+                    continue
+                
+                timeout_count = 0
+                
+                if msg.error():
+                    if msg.error().code() == -191:  # PARTITION_EOF
+                        continue
+                    logger.warning(f"Consumer error: {msg.error()}")
+                    continue
+                
+                try:
+                    # Get transaction_id from message key (if set) or value
+                    key = msg.key()
+                    if key:
+                        tx_id = key.decode('utf-8') if isinstance(key, bytes) else str(key)
+                        existing_ids.add(tx_id)
+                    else:
+                        # Fallback: parse value to get transaction_id
+                        value = msg.value()
+                        if value:
+                            if isinstance(value, bytes):
+                                value = value.decode('utf-8')
+                            data = json.loads(value)
+                            tx_id = data.get('transaction_id')
+                            if tx_id:
+                                existing_ids.add(str(tx_id))
+                    
+                    message_count += 1
+                    if message_count % 10000 == 0:
+                        logger.info(f"   Processed {message_count:,} messages, found {len(existing_ids):,} unique transaction IDs...")
+                
+                except Exception as e:
+                    logger.warning(f"Failed to parse message: {e}")
+                    continue
+            
+            consumer.close()
+            logger.info(f"✅ Finished reading Kafka topic. Total messages: {message_count:,}, Unique transaction IDs: {len(existing_ids):,}")
+            
+        except Exception as e:
+            logger.error(f"❌ Failed to load existing transaction IDs from Kafka: {e}")
+            logger.warning("Will proceed without Kafka deduplication - may send duplicates")
+        
+        return existing_ids
+
+    def _load_last_offset(self) -> int:
+        """Load where we left off to avoid re-reading the same data"""
+        # Prefer Redis if available
+        if hasattr(self, "redis") and self.redis:
+            try:
+                val = self.redis.get(self.offset_redis_key)
+                if val is not None:
+                    return int(val)
+            except Exception as e:
+                logger.warning(f"Failed to load offset from Redis, falling back to file: {e}")
+        # Next, try SQLite durable store
+        try:
+            sqlite_offset = self._sqlite_get_offset()
+            if sqlite_offset is not None:
+                return sqlite_offset
+        except Exception as e:
+            logger.warning(f"Failed to load offset from SQLite, falling back to file: {e}")
+        # Fallback to local file
+        try:
+            if os.path.exists(self.offset_file):
+                with open(self.offset_file, 'r') as f:
+                    return int(f.read().strip())
+        except Exception:
+            pass
+        return 0  # Start from beginning on first run
+
+    def _save_last_offset(self, offset: int):
+        """Save progress so next run continues from here"""
+        # Write to Redis if available
+        if hasattr(self, "redis") and self.redis:
+            try:
+                self.redis.set(self.offset_redis_key, str(offset))
+            except Exception as e:
+                logger.warning(f"Failed to save offset to Redis: {e}")
+        # Also persist to SQLite
+        try:
+            self._sqlite_set_offset(offset)
+        except Exception as e:
+            logger.warning(f"Failed to save offset to SQLite: {e}")
+        # Always persist to file as a backup
+        try:
+            with open(self.offset_file, 'w') as f:
+                f.write(str(offset))
+        except Exception as e:
+            logger.error(f"Failed to save offset file: {e}")
+
+    def _create_kafka_producer(self):
+        producer_config = {
             "bootstrap.servers": self.bootstrap_servers,
-            "client.id": "ecommerce-transaction-producer",
-            "compression.type": "snappy",  # Changed from gzip for better performance
-            "linger.ms": 5,
-            "batch.size": 32768,  # Increased batch size
-            "queue.buffering.max.messages": 100000,  # Large buffer for messages
-            "queue.buffering.max.ms": 5,  # Maximum time to buffer
-            "acks": "1",  # Only wait for leader acknowledgment
+            "client.id": "api-producer",
+            # Ensure idempotent, exactly-once-in-producer semantics where possible
+            "acks": "all",  # Must be "all" when idempotence is enabled
+            "enable.idempotence": True,
+            # Optimized for speed on Confluent Cloud
+            "message.timeout.ms": 300000,  # 5 minutes (reduced from 20)
+            "socket.keepalive.enable": True,
+            "max.in.flight.requests.per.connection": 5,  # Must be <= 5 when idempotence is enabled
+            "reconnect.backoff.ms": 50,  # Faster reconnection
+            "reconnect.backoff.max.ms": 5000,  # Faster max backoff
+            "retry.backoff.ms": 50,  # Faster retry
+            "message.send.max.retries": 2147483647,  # effectively unlimited
+            # Performance optimizations
+            "compression.type": "snappy",  # Fast compression
+            "batch.num.messages": 10000,  # Larger batches
+            "queue.buffering.max.messages": 200000,  # Larger queue
+            "queue.buffering.max.kbytes": 1048576,  # 1GB buffer
         }
 
+        # Optional tunables via env (match docker-compose KAFKA_* vars if present)
+        optional_mappings = {
+            "KAFKA_BATCH_SIZE": "batch.size",
+            "KAFKA_LINGER_MS": "linger.ms",
+            "KAFKA_COMPRESSION_TYPE": "compression.type",
+            "KAFKA_QUEUE_BUFFERING_MAX_MS": "queue.buffering.max.ms",
+            "KAFKA_QUEUE_BUFFERING_MAX_MESSAGES": "queue.buffering.max.messages",
+            "KAFKA_MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION": "max.in.flight.requests.per.connection",
+        }
+        for env_key, conf_key in optional_mappings.items():
+            val = os.getenv(env_key)
+            if val:
+                # Cast numeric fields where applicable
+                try:
+                    if conf_key.endswith(".ms") or conf_key in {"batch.size", "queue.buffering.max.messages", "max.in.flight.requests.per.connection"}:
+                        producer_config[conf_key] = int(val)
+                    else:
+                        producer_config[conf_key] = val
+                except Exception:
+                    producer_config[conf_key] = val
+
+        # CRITICAL: Ensure idempotence requirements are met (can't be overridden)
+        # When idempotence is enabled, acks must be "all" and max.in.flight <= 5
+        if producer_config.get("enable.idempotence", False):
+            producer_config["acks"] = "all"  # Force "all" when idempotence is enabled
+            if producer_config.get("max.in.flight.requests.per.connection", 5) > 5:
+                producer_config["max.in.flight.requests.per.connection"] = 5  # Force <= 5
+
         if self.kafka_username and self.kafka_password:
-            self.producer_config.update({
+            producer_config.update({
                 "security.protocol": "SASL_SSL",
                 "sasl.mechanism": "PLAIN",
                 "sasl.username": self.kafka_username,
                 "sasl.password": self.kafka_password,
+                "ssl.endpoint.identification.algorithm": "https",
+                "broker.address.family": "v4",
+                "request.timeout.ms": 20000,
             })
+
+        return Producer(producer_config)
+
+    def _ensure_topic_exists(self):
+        """Best-effort check/create of topic on startup.
+        For Confluent Cloud, this requires appropriate permissions; otherwise it no-ops.
+        """
+        if AdminClient is None or NewTopic is None:
+            logger.info("AdminClient not available; skipping topic existence check.")
+            return
+
+        admin_config = {
+            "bootstrap.servers": self.bootstrap_servers
+        }
+        if self.kafka_username and self.kafka_password:
+            admin_config.update({
+                "security.protocol": "SASL_SSL",
+                "sasl.mechanism": "PLAIN",
+                "sasl.username": self.kafka_username,
+                "sasl.password": self.kafka_password,
+                "ssl.endpoint.identification.algorithm": "https",
+                "broker.address.family": "v4",
+            })
+
+        try:
+            admin = AdminClient(admin_config)
+            md = admin.list_topics(timeout=10)
+            topic_meta = md.topics.get(self.topic)
+            if topic_meta is not None and not topic_meta.error:
+                return
+
+            logger.info(f"Topic '{self.topic}' not found; attempting to create...")
+            futures = admin.create_topics([NewTopic(self.topic, num_partitions=3, replication_factor=3)])
+            for _, f in futures.items():
+                try:
+                    f.result()
+                    logger.info(f"Topic '{self.topic}' created successfully.")
+                except Exception as e:
+                    # If the topic already exists or creation is forbidden, log and continue
+                    logger.warning(f"Topic create result: {e}")
+        except Exception as e:
+            logger.warning(f"Skipping topic check/create due to error: {e}")
+
+    def _adjust_batch_size(self, response_time: float, success: bool):
+        """Adaptively adjust batch size based on performance metrics."""
+        if not self.adaptive_batching:
+            return
+        
+        # Track response time
+        self.response_times.append(response_time)
+        if len(self.response_times) > self.adaptive_window_size:
+            self.response_times.pop(0)
+        
+        # Track success/failure
+        if success:
+            self.success_count += 1
+            self.error_count = 0
         else:
-            self.producer_config["security.protocol"] = "PLAINTEXT"
+            self.error_count += 1
+            self.success_count = 0
+        
+        # Calculate average response time
+        avg_response_time = sum(self.response_times) / len(self.response_times) if self.response_times else response_time
+        
+        # Adjust batch size based on performance
+        old_batch_size = self.batch_size
+        adjustment_factor = 1.0
+        
+        # If we have errors, reduce batch size aggressively
+        if self.error_count >= 2:
+            adjustment_factor = 0.5  # Cut in half
+            logger.warning(f"Multiple errors detected ({self.error_count}), reducing batch size")
+        # If response time is too high, reduce batch size aggressively
+        elif avg_response_time > self.max_response_time:
+            # Reduce more aggressively - cut by 40% if way over, 30% if slightly over
+            if avg_response_time > self.max_response_time * 1.5:
+                adjustment_factor = 0.6  # Cut by 40%
+            else:
+                adjustment_factor = 0.7  # Cut by 30%
+            logger.warning(f"Response time too high ({avg_response_time:.2f}s > {self.max_response_time}s), aggressively reducing batch size")
+        # If response time is above target but below max, reduce slightly
+        elif avg_response_time > self.target_response_time * 1.5:
+            adjustment_factor = 0.85  # Reduce by 15%
+            logger.info(f"Response time above target ({avg_response_time:.2f}s > {self.target_response_time * 1.5:.2f}s), reducing batch size")
+        # If response time is good and we have successes, increase batch size
+        elif avg_response_time < self.target_response_time and self.success_count >= 3:
+            # Increase by 20% if we're doing well
+            adjustment_factor = 1.2
+            logger.info(f"Performance good (avg {avg_response_time:.2f}s < {self.target_response_time}s), increasing batch size")
+        # If response time is in target range, keep it stable
+        else:
+            # Small adjustments to fine-tune
+            if avg_response_time > self.target_response_time * 1.2:
+                adjustment_factor = 0.9  # Slight decrease
+            elif avg_response_time < self.target_response_time * 0.8:
+                adjustment_factor = 1.1  # Slight increase
+        
+        # Calculate new batch size
+        new_batch_size = int(self.batch_size * adjustment_factor)
+        
+        # Clamp to min/max bounds
+        new_batch_size = max(self.min_batch_size, min(self.max_batch_size, new_batch_size))
+        
+        # Only log if there's a significant change (more than 10%)
+        if abs(new_batch_size - self.batch_size) > self.batch_size * 0.1:
+            self.batch_size = new_batch_size
+            self.batch_size_history.append(self.batch_size)
+            if len(self.batch_size_history) > self.adaptive_window_size:
+                self.batch_size_history.pop(0)
+            logger.info(f"📊 Batch size adjusted: {old_batch_size} → {self.batch_size} (avg response: {avg_response_time:.2f}s, errors: {self.error_count}, successes: {self.success_count})")
+        else:
+            self.batch_size = new_batch_size
 
+    def download_batch(self) -> Optional[tuple]:
+        """Download batch from API using current offset
+        Returns: (transactions_list, api_offset_used, used_distributed, is_network_error) or None
+        """
+        # Determine offset source (distributed allocator or local current_offset)
+        api_offset = self.current_offset
+        used_distributed = False
+        
+        # Check if we should use distributed allocation
+        # If current_offset is significantly behind the allocator, sync first to avoid skipping data
+        should_use_distributed = False
+        if self.distributed_offsets and self.redis:
+            try:
+                # Check if allocator is way ahead of current_offset - if so, sync it back
+                current_allocator = int(self.redis.get(self.offset_alloc_key) or 0)
+                if current_allocator > self.current_offset + self.batch_size * 2:
+                    # Allocator is way ahead - sync it back to current_offset to avoid skipping data
+                    logger.warning(f"⚠️ Allocator ({current_allocator}) is way ahead of current_offset ({self.current_offset}). Syncing allocator back.")
+                    self.redis.set(self.offset_alloc_key, int(self.current_offset))
+                    current_allocator = self.current_offset
+                
+                # Only use distributed allocation if allocator is reasonably close to current_offset
+                # This prevents allocating huge ranges when we're behind
+                if abs(current_allocator - self.current_offset) <= self.batch_size * 2:
+                    should_use_distributed = True
+                else:
+                    logger.info(f"Using local offset ({self.current_offset}) instead of distributed allocator ({current_allocator}) to avoid skipping data")
+            except Exception as e:
+                logger.warning(f"Failed to check allocator state: {e}, using local offset")
+        
+        # CRITICAL FIX: Always use current_offset for API calls, not allocator's offset
+        # The allocator is only for coordination between replicas, not for determining what to fetch
+        # This prevents gaps when allocator is ahead of current_offset
+        api_offset = self.current_offset
+        
+        if should_use_distributed:
+            try:
+                # Atomically allocate a range in the allocator to prevent duplicates across replicas
+                # But we still use current_offset for the actual API call
+                allocation_lock_key = f"{self.offset_alloc_key}:allocating"
+                max_retries = 10
+                allocated = False
+                
+                for attempt in range(max_retries):
+                    # Try to acquire lock (expires in 5 seconds to prevent deadlock)
+                    lock_acquired = self.redis.set(allocation_lock_key, "1", ex=5, nx=True)
+                    
+                    if lock_acquired:
+                        try:
+                            # Sync allocator to current_offset first to prevent gaps
+                            current_allocator = int(self.redis.get(self.offset_alloc_key) or 0)
+                            if current_allocator < self.current_offset:
+                                # Allocator is behind, sync it forward
+                                self.redis.set(self.offset_alloc_key, int(self.current_offset))
+                                current_allocator = self.current_offset
+                            
+                            # Now allocate a range from the allocator (for coordination)
+                            claimed = int(self.redis.incrby(self.offset_alloc_key, self.batch_size))
+                            allocated_range_start = claimed - self.batch_size
+                            used_distributed = True
+                            allocated = True
+                            logger.info(f"🔀 Allocated range {allocated_range_start}-{claimed-1} in allocator, but using current_offset {api_offset} for API call")
+                            break
+                        finally:
+                            # Always release the lock
+                            self.redis.delete(allocation_lock_key)
+                    else:
+                        # Another replica is allocating, wait and retry
+                        import random
+                        wait_time = random.uniform(0.05, 0.15)  # 50-150ms
+                        time.sleep(wait_time)
+                
+                if not allocated:
+                    logger.warning("Failed to acquire allocation lock after retries, falling back to local offset")
+                    used_distributed = False
+            except Exception as e:
+                logger.warning(f"Distributed offset allocation failed, falling back to local offset: {e}")
+                # Fall back to local offset tracking
+                used_distributed = False
+        
+        logger.info(f"Downloading from API - Offset: {api_offset}, Limit: {self.batch_size}")
+        
+        start_time = time.time()
         try:
-            self.producer = Producer(self.producer_config)
-            logger.info("E-commerce Kafka Producer initialized successfully.")
-        except Exception as e:
-            logger.error(f"Failed to initialize Kafka Producer: {str(e)}")
-            raise e
-
-        # Attempt to initialize DB engine if DB env vars provided
-        # Lazy import to avoid importing SQLAlchemy at module import time (helps local testing)
-        try:
-            from utils.db import get_engine, create_transactions_table, insert_transaction as _insert_transaction
-            self.db_engine = get_engine()
-            create_transactions_table(self.db_engine)
-            self.insert_transaction = _insert_transaction
-            logger.info("Connected to Postgres and ensured transactions table exists.")
-        except Exception as e:
-            logger.warning("Postgres not configured or unreachable (skipping DB): %s", e)
-            self.db_engine = None
-            self.insert_transaction = None
-
-        # Nigerian-specific data
-        self.nigerian_states = ['Lagos', 'Abuja', 'Kano', 'Rivers', 'Delta', 'Oyo', 'Kaduna', 'Edo', 'Enugu', 'Anambra']
-        self.nigerian_cities = ['Lagos', 'Abuja', 'Kano', 'Port Harcourt', 'Ibadan', 'Benin City', 'Enugu', 'Aba', 'Onitsha', 'Warri']
-        
-        # Fraud patterns specific to Nigerian e-commerce
-        self.compromised_users = set(random.sample(range(1000, 9999), 50))
-        self.high_risk_vendors = ['QuickDealsNG', 'NaijaMarket', 'JumiaFlash', 'KongaDeals']
-        self.suspicious_domains = ['tempmail.ng', 'fakebox.com', 'mailinator.com']
-        
-        # Nigerian payment methods
-        self.payment_methods = ["Card", "Bank Transfer", "USSD", "Mobile Money", "Pay on Delivery"]
-        
-        # Product categories with typical Nigerian pricing
-        self.product_categories = {
-            "Electronics": (5000, 500000),
-            "Fashion": (1000, 50000),
-            "Phones & Tablets": (15000, 300000),
-            "Computers": (50000, 800000),
-            "Home & Kitchen": (2000, 100000),
-            "Health & Beauty": (500, 25000),
-            "Groceries": (500, 20000)
-        }
-
-        # Configure graceful shutdown
-        signal.signal(signal.SIGINT, self.shutdown)
-        signal.signal(signal.SIGTERM, self.shutdown)
-        
-        # User profiles cache
-        self.user_profiles = self._generate_user_profiles(1000)
-
-        # Optional local file sink configuration (for debugging / offline ingestion)
-        # Local file sink removed
-
-    def _generate_user_profiles(self, count: int) -> Dict[str, Dict]:
-        """Generate realistic user profiles for Nigerian users"""
-        profiles = {}
-        for i in range(count):
-            user_id = f"USER{1000 + i}"
-            registration_date = fake.date_time_between(start_date='-2y', end_date='now', tzinfo=timezone.utc)
+            # Dynamic timeout based on batch size (at least 2s per 1000 records, minimum 30s)
+            timeout = max(30, int(self.batch_size / 1000 * 2))
+            params = {'limit': self.batch_size, 'offset': api_offset}
+            # Log the full URL being requested for debugging
+            full_url = f"{self.api_url}?limit={self.batch_size}&offset={api_offset}"
+            logger.debug(f"API Request URL: {full_url}")
+            response = requests.get(self.api_url, params=params, timeout=timeout)
+            response_time = time.time() - start_time
             
-            profiles[user_id] = {
-                "user_id": user_id,
-                "full_name": fake.name(),
-                "email": fake.email(),
-                "phone_number": f"+234{random.randint(7000000000, 8099999999)}",
-                "gender": random.choice(["Male", "Female"]),
-                "age": random.randint(18, 65),
-                "registration_date": registration_date.isoformat(),
-                "account_status": random.choices(["active", "suspended", "inactive"], weights=[0.85, 0.05, 0.1])[0],
-                "device_id": f"DEV{random.randint(10000, 99999)}",
-                "location": random.choice(self.nigerian_cities),
-                "country": "Nigeria",
-                "typical_device": random.choice(["mobile", "desktop", "tablet"]),
-                "typical_browser": random.choice(["Chrome", "Firefox", "Safari"]),
-                "typical_payment_method": random.choice(self.payment_methods)
-            }
-        return profiles
+            if response.status_code == 200:
+                try:
+                    data = response.json()
+                except Exception as e:
+                    logger.error(f"Failed to parse API response as JSON: {e}")
+                    logger.error(f"Response text (first 500 chars): {response.text[:500]}")
+                    self._adjust_batch_size(response_time, success=False)
+                    if used_distributed:
+                        logger.warning(f"JSON parse error after allocating offset range. Range {api_offset}-{api_offset + self.batch_size - 1} was reserved.")
+                    return (None, api_offset, used_distributed, True)
+                
+                # Log full response for debugging when there's an issue
+                if not (data.get('success') and data.get('data')):
+                    logger.warning(f"API Response (offset {api_offset}): {json.dumps(data, indent=2, default=str)}")
+                
+                if data.get('success') and data.get('data'):
+                    transactions = data['data']
+                    logger.info(f"✅ Received {len(transactions)} transactions from API (offset {api_offset}, response time: {response_time:.2f}s)")
 
-    def _generate_nigerian_ip(self) -> str:
-        """Generate Nigerian IP addresses"""
-        return f"197.210.{random.randint(0, 255)}.{random.randint(0, 255)}"
-
-    def _generate_suspicious_ip(self) -> str:
-        """Generate suspicious non-Nigerian IPs for fraud patterns"""
-        suspicious_ranges = [
-            f"185.100.{random.randint(0, 255)}.{random.randint(0, 255)}",  # Some European ranges
-            f"192.168.{random.randint(0, 255)}.{random.randint(0, 255)}",  # Private network
-            f"10.0.{random.randint(0, 255)}.{random.randint(0, 255)}",     # Private network
-        ]
-        return random.choice(suspicious_ranges)
-
-    def validate_transaction(self, transaction: Dict[str, Any]) -> bool:
-        """Validate transaction against JSON schema"""
-        try:
-            validate(
-                instance=transaction,
-                schema=ECOMMERCE_TRANSACTION_SCHEMA,
-                format_checker=FormatChecker()
-            )
-            return True
-        except ValidationError as e:
-            logger.error(f"Invalid transaction: {e.message}")
-            return False
-
-    def generate_transaction(self) -> Optional[Dict[str, Any]]:
-        """Generate complete e-commerce transaction with Nigerian context"""
-        # Select a user profile
-        user_id = random.choice(list(self.user_profiles.keys()))
-        user_profile = self.user_profiles[user_id]
-        
-        # Generate product details
-        category = random.choice(list(self.product_categories.keys()))
-        min_price, max_price = self.product_categories[category]
-        price = round(random.uniform(min_price, max_price), 2)
-        # Base transaction
-        # Ensure quantity is generated once and used to compute amount = price * quantity
-        qty = random.randint(1, 5)
-        transaction = {
-            # Customer/Profile elements
-            **user_profile,
-
-            # Session/Behavioral elements
-            "session_id": f"SESS{random.randint(10000, 99999)}",
-            "timestamp": (datetime.now(timezone.utc) +
-                         timedelta(seconds=random.randint(-300, 300))).isoformat(),
-            "action": random.choice(["login", "browse", "add_to_cart", "purchase", "view_product"]),
-            "product_id": f"PROD{random.randint(1000, 9999)}",
-            "device_type": user_profile["typical_device"],
-            "browser": user_profile["typical_browser"],
-            "geo_location": f"{user_profile['location']}, Nigeria",
-            "session_duration": random.randint(30, 1800),  # 30 seconds to 30 minutes
-
-            # Product/Inventory elements
-            "product_name": f"{category} Product {random.randint(1, 100)}",
-            "category": category,
-            "price": price,
-            "discount": random.choices([0, 5, 10, 15, 20, 30, 50], weights=[0.4, 0.2, 0.15, 0.1, 0.08, 0.05, 0.02])[0],
-            "vendor_id": random.choice([f"VEND{random.randint(100, 999)}"] + self.high_risk_vendors),
-
-            # Transaction/Payment elements
-            "transaction_id": f"TXN{random.randint(100000, 999999)}",
-            "order_id": f"ORD{random.randint(100000, 999999)}",
-            "quantity": qty,
-            "payment_method": user_profile["typical_payment_method"],
-            "payment_status": "success",
-            # Ensure amount reflects price * quantity
-            "amount": round(price * qty, 2),
-            "currency": "NGN",
-            "delivery_address": f"{random.randint(1, 999)} {fake.street_name()}, {user_profile['location']}",
-
-            # Feedback/Post-Transaction elements
-            "return_request": False,
-            "refund_status": "none",
-            "rating": random.randint(1, 5),
-
-            # Fraud detection
-            "is_fraud": 0,
-            "fraud_type": "none"
-        }
-
-        # Populate extended feature set derived from the ELEMENT FOR MODEL TRAINING
-        # Account / identity
-        reg_dt = datetime.fromisoformat(user_profile["registration_date"])
-        account_age_days = max(0, (datetime.now(timezone.utc) - reg_dt).days)
-        transaction.update({
-            "account_age_days": account_age_days,
-            "identity_mismatch_score": round(random.random(), 3),
-            "identity_verification_score": round(random.random(), 3),
-            "SIM_swap_probability": round(random.random() * 0.2, 3),
-            "NIN_verification_status": random.choice(["verified", "unverified", "pending"]),
-            "phone_verified": random.random() < 0.9,
-            "sim_card_age_days": random.randint(30, 4000),
-            "email_disposable_flag": any(d in transaction["email"] for d in self.suspicious_domains),
-            "device_fingerprint_score": round(random.random(), 3),
-            "android_emulator_detection": random.random() < 0.02,
-        })
-
-        # Product / cart
-        transaction.update({
-            "unusual_discount_flag": transaction["discount"] >= 30,
-            "product_price_anomaly_score": round(random.random(), 3),
-            "cart_tampering_detection": random.random() < 0.01,
-            "discount_velocity_24h": random.randint(0, 5),
-            "browser_integrity_score": round(random.random(), 3),
-        })
-
-        # Payment processing
-        transaction.update({
-            "transaction_velocity_1h": random.randint(0, 5),
-            "transaction_velocity_24h": random.randint(0, 20),
-            "payment_velocity_1h": round(random.uniform(0, 500000), 2),
-            "payment_velocity_24h": round(random.uniform(0, 2000000), 2),
-            "failed_payment_ratio": round(random.random() * 0.2, 3),
-            "avg_order_value": round(random.uniform(1000, 200000), 2),
-            "current_order_value_ratio": round(transaction["amount"] / max(1, random.uniform(1000, 50000)), 3),
-            "payment_method_anomaly": random.random() < 0.02,
-            "is_linked_card": random.random() < 0.15,
-            "bank_transfer_verification": random.random() < 0.95,
-            "partial_payment_requirement": transaction["amount"] > 100000,
-            "address_risk_score": round(random.random(), 3),
-        })
-
-        # Delivery & logistics
-        transaction.update({
-            "ip_location_mismatch_flag": random.random() < 0.03,
-            "location_distance_score": round(random.uniform(0, 1000), 2),
-            "address_reuse_rate": round(random.random(), 3),
-            "delivery_delay_ratio": round(random.random(), 3),
-            "failed_delivery_pattern": random.random() < 0.02,
-            "shared_address_count": random.randint(1, 4),
-            "rider_collusion_risk": round(random.random(), 3),
-            "otp_delivery_verification": random.random() < 0.95,
-            "gps_delivery_confirmation": random.random() < 0.9,
-        })
-
-        # Returns & refunds
-        transaction.update({
-            "refund_abuse_score": round(random.random(), 3),
-            "refund_to_purchase_ratio": round(random.random(), 3),
-            "refund_timing_pattern": random.choice(["immediate", "within_week", "delayed", "none"]),
-            "complaint_frequency": random.randint(0, 5),
-            "delivery_dispute_rate": round(random.random(), 3),
-            "serial_number_mismatch": random.random() < 0.005,
-            "return_inspection_score": round(random.random(), 3),
-            "product_swap_probability": round(random.random(), 3),
-        })
-
-        # Behavioral & network
-        transaction.update({
-            "fraud_ring_score": round(random.random(), 3),
-            "account_link_density": round(random.random(), 3),
-            "shared_phone_number_count": random.randint(0, 3),
-            "shared_ip_count": random.randint(0, 5),
-            "linked_accounts": random.randint(0, 3),
-            "device_change_rate": round(random.random(), 3),
-            "multi_device_login_flag": random.random() < 0.05,
-            "proxy_detection_flag": random.random() < 0.02,
-            "VPN_usage_flag": random.random() < 0.02,
-            "device_trust_score": round(random.random(), 3),
-            "ip_risk_score": round(random.random(), 3),
-            "user_reputation_score": round(random.random(), 3),
-            "activity_timing_score": round(random.random(), 3),
-            "anomaly_frequency_score": round(random.random(), 3),
-            "login_frequency": random.randint(0, 10),
-            "behavioral_consistency_score": round(random.random(), 3),
-        })
-
-        # Vendor & marketplace
-        transaction.update({
-            "vendor_risk_score": round(random.random(), 3),
-            "vendor_age_days": random.randint(0, 4000),
-            "fake_review_score": round(random.random(), 3),
-            "rating_burst_detection": random.random() < 0.01,
-            "seller_fraud_pattern": random.choice(["none", "history_of_charges", "sudden_spike", "multiple_returns"]) 
-        })
-
-        # Apply Nigerian-specific fraud patterns
-        transaction = self._apply_fraud_patterns(transaction, user_id)
-        
-        # Validate the complete transaction
-        if self.validate_transaction(transaction):
-            return transaction
-        return None
-
-    def _apply_fraud_patterns(self, transaction: Dict[str, Any], user_id: str) -> Dict[str, Any]:
-        """Apply realistic Nigerian e-commerce fraud patterns"""
-        is_fraud = 0
-        fraud_type = "none"
-        amount = transaction['amount']
-        
-        # Pattern 1: Account Takeover (compromised credentials)
-        if int(user_id[4:]) in self.compromised_users and transaction['action'] == 'purchase':
-            if random.random() < 0.4:
-                is_fraud = 1
-                fraud_type = "account_takeover"
-                transaction['device_type'] = random.choice(["mobile", "desktop"])  # Different device
-                transaction['browser'] = random.choice(["Chrome", "Firefox"])  # Different browser
-                transaction['ip_address'] = self._generate_suspicious_ip()
-                transaction['amount'] = random.uniform(50000, 300000)  # High value
-                transaction['payment_method'] = "Card"  # Preferred for takeovers
-        
-        # Pattern 2: Card Testing (small rapid transactions)
-        elif (not is_fraud and amount < 2000 and 
-              transaction['payment_method'] == "Card" and
-              transaction['action'] == 'purchase'):
-            if random.random() < 0.3:
-                is_fraud = 1
-                fraud_type = "card_testing"
-                transaction['amount'] = round(random.uniform(100, 2000), 2)
-                transaction['quantity'] = 1
-        
-        # Pattern 3: High-Risk Vendor Collusion
-        elif (not is_fraud and transaction['vendor_id'] in self.high_risk_vendors):
-            if random.random() < 0.25:
-                is_fraud = 1
-                fraud_type = "merchant_collusion"
-                transaction['amount'] = random.uniform(30000, 150000)
-                transaction['discount'] = 0  # No discounts on fraudulent items
-        
-        # Pattern 4: Geographic Anomalies
-        elif (not is_fraud and random.random() < 0.1):
-            is_fraud = 1
-            fraud_type = "geo_anomaly"
-            transaction['ip_address'] = self._generate_suspicious_ip()
-            transaction['location'] = random.choice(self.nigerian_cities)
-            transaction['geo_location'] = f"Unknown Location"
-        
-        # Pattern 5: New Account Fraud (recent registration + high value)
-        registration_date = datetime.fromisoformat(transaction['registration_date'])
-        days_since_registration = (datetime.now(timezone.utc) - registration_date).days
-        
-        if (not is_fraud and days_since_registration < 7 and amount > 50000 and
-            transaction['action'] == 'purchase'):
-            if random.random() < 0.4:
-                is_fraud = 1
-                fraud_type = "identity_theft"
-        
-        # Pattern 6: Friendly Fraud (legit customer claims non-delivery)
-        if (not is_fraud and transaction['action'] == 'purchase' and 
-            random.random() < 0.05):
-            is_fraud = 1
-            fraud_type = "friendly_fraud"
-            transaction['return_request'] = True
-            transaction['refund_status'] = "requested"
-            transaction['rating'] = 1  # Low rating despite "issue"
-        
-        # Baseline random fraud
-        if not is_fraud and random.random() < 0.015:  # 1.5% baseline
-            is_fraud = 1
-            fraud_type = random.choice(["account_takeover", "card_testing", "identity_theft"])
-        
-        # Ensure realistic fraud rate (1-3%)
-        final_fraud = is_fraud if random.random() < 0.98 else 0
-        
-        transaction['is_fraud'] = final_fraud
-        transaction['fraud_type'] = fraud_type if final_fraud else "none"
-        
-        # Update IP address for all transactions
-        transaction['ip_address'] = (self._generate_suspicious_ip() if final_fraud and fraud_type in ["geo_anomaly", "account_takeover"] 
-                                   else self._generate_nigerian_ip())
-        
-        return transaction
-
-    
+                    # Adjust batch size based on performance
+                    self._adjust_batch_size(response_time, success=True)
+                    
+                    # Return transactions, offset used, whether distributed allocation was used, and is_network_error flag
+                    return (transactions, api_offset, used_distributed, False)
+                else:
+                    # Check if this is an API error (has error message or success=false) or actual empty response
+                    success_flag = data.get('success', True)  # Default to True if not present
+                    error_message = data.get('message', '')
+                    transactions_list = data.get('data', [])
+                    
+                    # Log the full response structure for debugging
+                    logger.warning(f"API Response Details (offset {api_offset}): success={success_flag}, message='{error_message}', data_type={type(transactions_list)}, data_len={len(transactions_list) if transactions_list else 0}")
+                    logger.warning(f"Full API Response: {json.dumps(data, indent=2, default=str)}")
+                    
+                    # Determine if this is an error vs empty data
+                    # If success=false OR has error message (except benign empty messages), treat as error
+                    has_error = (success_flag is False) or (
+                        error_message and 
+                        error_message.lower() not in ['', 'no data', 'no more data', 'empty', 'no records found']
+                    )
+                    
+                    # Only treat as empty if success=true (or not set) AND no error message AND no data
+                    is_actually_empty = (
+                        success_flag is not False and 
+                        not error_message and 
+                        (not transactions_list or len(transactions_list) == 0)
+                    )
+                    
+                    if has_error:
+                        # API returned an error - treat as retryable error, not end of data
+                        logger.warning(f"API returned error (success={success_flag}, message='{error_message}') at offset {api_offset} - will retry")
+                        self._adjust_batch_size(response_time, success=False)
+                        if used_distributed:
+                            logger.warning(f"API error after allocating offset range. Range {api_offset}-{api_offset + self.batch_size - 1} was reserved.")
+                        # Return as retryable error (is_network_error=True)
+                        return (None, api_offset, used_distributed, True)
+                    elif is_actually_empty:
+                        # API returned successfully but with no data - this is actual end of data
+                        logger.info(f"API returned empty data (offset {api_offset}) - end of data reached")
+                        self._adjust_batch_size(response_time, success=False)
+                        if used_distributed:
+                            logger.info(f"Note: Allocated {self.batch_size} offsets but received 0 records. Range {api_offset}-{api_offset + self.batch_size - 1} reserved.")
+                        # Empty response (no more data) - return None with is_network_error=False
+                        return (None, api_offset, used_distributed, False)
+                    else:
+                        # Unknown case - safer to retry than to stop
+                        logger.warning(f"API returned unexpected response: {data} (offset {api_offset}) - will retry")
+                        self._adjust_batch_size(response_time, success=False)
+                        if used_distributed:
+                            logger.warning(f"Unexpected response after allocating offset range. Range {api_offset}-{api_offset + self.batch_size - 1} was reserved.")
+                        # Treat as retryable error
+                        return (None, api_offset, used_distributed, True)
+            else:
+                logger.error(f"HTTP Error: {response.status_code}")
+                response_time = time.time() - start_time
+                # Adjust batch size (treat as failure)
+                self._adjust_batch_size(response_time, success=False)
+                # If we allocated distributed offsets but request failed, the range is still consumed
+                # This prevents duplicates but means we skip that range on retry
+                if used_distributed:
+                    logger.warning(f"Request failed after allocating offset range. Range {api_offset}-{api_offset + self.batch_size - 1} was reserved.")
+                # HTTP error - treat as network error (retry, don't trigger end-of-data)
+                return (None, api_offset, used_distributed, True)
+                
+        except (requests.Timeout, requests.ConnectionError, requests.exceptions.RequestException) as e:
+            response_time = time.time() - start_time
+            error_type = "Timeout" if isinstance(e, requests.Timeout) else "Connection Error"
+            logger.error(f"API {error_type}: {e} (after {response_time:.2f}s, batch size: {self.batch_size})")
+            # Timeout/connection error is a network issue - retry, don't trigger end-of-data
+            self._adjust_batch_size(response_time, success=False)
+            if used_distributed:
+                logger.warning(f"{error_type} after allocating offset range. Range {api_offset}-{api_offset + self.batch_size - 1} was reserved.")
+            # Network error - return with is_network_error=True
+            return (None, api_offset, used_distributed, True)
+        except Exception as e:
+            response_time = time.time() - start_time
+            error_str = str(e).lower()
+            # Check if it's a network/DNS error
+            is_network_error = any(keyword in error_str for keyword in [
+                'name or service not known', 'name resolution', 'dns', 
+                'connection', 'network', 'resolve', 'failed to resolve'
+            ])
+            
+            if is_network_error:
+                logger.error(f"API network error: {e}")
+            else:
+                logger.error(f"API download failed: {e}")
+            self._adjust_batch_size(response_time, success=False)
+            if used_distributed:
+                logger.warning(f"Exception after allocating offset range. Range {api_offset}-{api_offset + self.batch_size - 1} was reserved.")
+            # Return with is_network_error flag based on error type
+            return (None, api_offset, used_distributed, is_network_error)
 
     def delivery_report(self, err, msg):
-        """Delivery callback for confirming message delivery"""
-        if err is not None:
-            logger.error(f"Message delivery failed: {err}")
+        """Callback for Kafka message delivery - track delivery and clean up inflight"""
+        if err:
+            logger.error(f"Delivery failed: {err}")
+            # On failure, remove from Redis so it can be retried
+            if self.redis:
+                try:
+                    key_bytes = msg.key()
+                    if key_bytes:
+                        key_str = key_bytes.decode("utf-8") if isinstance(key_bytes, (bytes, bytearray)) else str(key_bytes)
+                        inflight_key = f"{self.redis_set_key}:inflight:{key_str}"
+                        self.redis.delete(inflight_key)
+                        # Also remove from seen set so it can be retried
+                        self.redis.srem(self.redis_set_key, key_str)
+                except Exception:
+                    pass
         else:
-            logger.info(f"Message delivered to {msg.topic()} [{msg.partition()}]")
+            self._batch_delivered += 1
+            # On success, clean up inflight key (already in seen set)
+            if self.redis:
+                try:
+                    key_bytes = msg.key()
+                    if key_bytes:
+                        key_str = key_bytes.decode("utf-8") if isinstance(key_bytes, (bytes, bytearray)) else str(key_bytes)
+                        inflight_key = f"{self.redis_set_key}:inflight:{key_str}"
+                        self.redis.delete(inflight_key)
+                except Exception:
+                    pass
 
-    def send_transaction(self) -> bool:
-        """Send a single transaction to Kafka with error handling"""
+    def send_to_kafka(self, transaction: Dict[str, Any]) -> bool:
         try:
-            transaction = self.generate_transaction()
-            if not transaction:
+            # Get transaction_id - this is what we use for deduplication
+            tx_id = transaction.get('transaction_id')
+            if not tx_id:
+                # If no transaction_id, use hash of payload as key
+                payload = json.dumps(transaction, sort_keys=True, separators=(',', ':'))
+                key_str = hashlib.sha256(payload.encode('utf-8')).hexdigest()
+            else:
+                key_str = str(tx_id)
+            
+            # CRITICAL: Check if this transaction_id is already in Kafka topic (loaded on startup)
+            if key_str in self.kafka_existing_ids:
+                self.dedup_skipped += 1
                 return False
 
-            self.producer.produce(
-                self.topic,
-                key=transaction["transaction_id"],
-                value=json.dumps(transaction),
-                callback=self.delivery_report
-            )
+            # CRITICAL: Check Redis for coordination between replicas
+            # If another replica is processing this, skip it
+            if self.redis:
+                # Check if already in Redis (another replica might have sent it)
+                if self.redis.sismember(self.redis_set_key, key_str):
+                    self.dedup_skipped += 1
+                    self.kafka_existing_ids.add(key_str)  # Update local cache
+                    return False
+                
+                # Check if in-flight (another replica is currently sending it)
+                inflight_key = f"{self.redis_set_key}:inflight:{key_str}"
+                if self.redis.exists(inflight_key):
+                    self.dedup_skipped += 1
+                    return False
+                
+                # Reserve it atomically to prevent other replicas from sending it
+                reserved = self.redis.set(inflight_key, "1", ex=self.redis_inflight_ttl, nx=True)
+                if not reserved:
+                    # Another replica just reserved it, skip
+                    self.dedup_skipped += 1
+                    return False
 
-            self.producer.poll(0)  # Trigger callbacks
-            # Persist to Postgres if available (existing functionality)
-            if getattr(self, "db_engine", None):
-                insert_fn = getattr(self, "insert_transaction", None)
-                if insert_fn:
+            # Not in Kafka and not being processed by another replica - send it
+            try:
+                self.producer.produce(
+                    self.topic,
+                    key=key_str,
+                    value=json.dumps(transaction),
+                    callback=self.delivery_report
+                )
+                # Immediately add to our local set and Redis
+                self.kafka_existing_ids.add(key_str)
+                if self.redis:
                     try:
-                        insert_fn(self.db_engine, transaction)
+                        # Add to Redis seen set immediately (before delivery)
+                        self.redis.sadd(self.redis_set_key, key_str)
+                    except Exception as e:
+                        logger.warning(f"Failed to add to Redis: {e}")
+                return True
+            except BufferError:
+                # Queue is full - re-raise so caller can handle it
+                raise
+            except Exception as e:
+                logger.error(f"Send failed: {e}")
+                # On immediate send failure, release Redis reservation so future attempts can retry
+                if self.redis:
+                    try:
+                        inflight_key = f"{self.redis_set_key}:inflight:{key_str}"
+                        self.redis.delete(inflight_key)
+                        self.redis.srem(self.redis_set_key, key_str)
                     except Exception:
-                        logger.exception("Failed to write transaction to Postgres")
-
-
-
-            return True
-
+                        pass
+                return False
         except Exception as e:
-            logger.error(f"Error producing message: {str(e)}")
+            logger.error(f"Unexpected error in send_to_kafka: {e}")
             return False
 
-    def run_continuous_production(self, interval: float = 0.0, batch_size: int = 50):
-        """Run continuous message production with graceful shutdown and batching"""
-        self.running = True
-        logger.info("Starting producer for topic %s with batch size %d...", self.topic, batch_size)
+    def _reserve_key(self, key_str: str) -> bool:
+        """Reserve a key before producing to avoid duplicates across restarts.
+        Strategy:
+          - If Redis available:
+              - If key already in 'seen' set -> skip
+              - Check if key is in 'inflight' -> skip (already being processed)
+              - Use SETNX on 'fraud:inflight:{key}' with TTL -> if exists, skip; else proceed
+          - Else if SQLite available:
+               - If key in seen_keys -> skip
+               - Insert into inflight_keys with expires_at -> if conflict, skip
+          - If neither available: fall back to in-memory set for current process
+        """
+        try:
+            if self.redis:
+                # Fast path: check local cache first to avoid Redis call
+                if key_str in self.local_seen_keys:
+                    return False
+                
+                # CRITICAL: Check Redis "seen" set FIRST - if already sent, skip immediately
+                if self.redis.sismember(self.redis_set_key, key_str):
+                    self.local_seen_keys.add(key_str)  # Cache locally
+                    return False
+                
+                # CRITICAL: Check if already in-flight (being processed by another thread/replica)
+                inflight_key = f"{self.redis_set_key}:inflight:{key_str}"
+                if self.redis.exists(inflight_key):
+                    # Already being processed, skip to prevent duplicate
+                    return False
+                
+                # CRITICAL: Atomically reserve with SET NX (only if not exists)
+                # This prevents race conditions where same transaction_id appears multiple times
+                reserved = self.redis.set(inflight_key, "1", ex=self.redis_inflight_ttl, nx=True)
+                if not reserved:
+                    # Another process/replica already reserved it, skip
+                    return False
+                
+                # Successfully reserved - add to local cache to avoid duplicate checks in same batch
+                self.local_seen_keys.add(key_str)
+                return True
 
+            if self._sqlite_conn is not None:
+                # Clean expired inflight
+                now = int(_time.time())
+                try:
+                    self._sqlite_conn.execute("DELETE FROM inflight_keys WHERE expires_at IS NOT NULL AND expires_at < ?", (now,))
+                    self._sqlite_conn.commit()
+                except sqlite3.OperationalError:
+                    # Database locked - skip SQLite check, rely on Redis
+                    pass
+                except Exception:
+                    pass
+                # Check seen
+                try:
+                    cur = self._sqlite_conn.execute("SELECT 1 FROM seen_keys WHERE key = ? LIMIT 1", (key_str,))
+                    if cur.fetchone():
+                        return False
+                except sqlite3.OperationalError:
+                    # Database locked - skip SQLite check, rely on Redis
+                    pass
+                # Try reserve inflight
+                expires_at = now + self.redis_inflight_ttl
+                try:
+                    self._sqlite_conn.execute("INSERT INTO inflight_keys(key, expires_at) VALUES(?, ?)", (key_str, expires_at))
+                    self._sqlite_conn.commit()
+                    return True
+                except sqlite3.IntegrityError:
+                    return False
+                except sqlite3.OperationalError:
+                    # Database locked - skip SQLite, rely on Redis or local memory
+                    pass
+                except Exception as e:
+                    logger.warning(f"SQLite reserve failed, falling back to local memory: {e}")
+                    # Fallthrough to local
+
+            # Fallback local-only guard
+            if key_str in self.local_seen_keys:
+                return False
+            self.local_seen_keys.add(key_str)
+            return True
+        except Exception as e:
+            logger.warning(f"Reserve key failed, proceeding without Redis reservation: {e}")
+            # Last resort: allow, relying on idempotence and downstream compaction
+            return True
+
+    def _finalize_key(self, key_str: str) -> None:
+        """Mark key as seen and release inflight reservation on successful delivery."""
+        try:
+            if self.redis:
+                self.redis.sadd(self.redis_set_key, key_str)
+                inflight_key = f"{self.redis_set_key}:inflight:{key_str}"
+                try:
+                    self.redis.delete(inflight_key)
+                except Exception:
+                    pass
+            if self._sqlite_conn is not None:
+                try:
+                    self._sqlite_conn.execute("INSERT OR IGNORE INTO seen_keys(key) VALUES(?)", (key_str,))
+                    self._sqlite_conn.execute("DELETE FROM inflight_keys WHERE key = ?", (key_str,))
+                    self._sqlite_conn.commit()
+                except sqlite3.OperationalError as e:
+                    if "database is locked" in str(e).lower():
+                        # Silently ignore lock errors - Redis is handling deduplication anyway
+                        pass
+                    else:
+                        logger.warning(f"SQLite finalize failed: {e}")
+                except Exception as e:
+                    logger.warning(f"SQLite finalize failed: {e}")
+            # Always add to local guard too
+            self.local_seen_keys.add(key_str)
+        except Exception as e:
+            logger.warning(f"Finalize key failed: {e}")
+
+    def _release_reservation(self, key_str: str) -> None:
+        """Release inflight reservation without marking as seen (e.g., on delivery failure)."""
+        try:
+            if self.redis:
+                inflight_key = f"{self.redis_set_key}:inflight:{key_str}"
+                try:
+                    self.redis.delete(inflight_key)
+                except Exception:
+                    pass
+            if self._sqlite_conn is not None:
+                try:
+                    self._sqlite_conn.execute("DELETE FROM inflight_keys WHERE key = ?", (key_str,))
+                    self._sqlite_conn.commit()
+                except Exception:
+                    pass
+            # Local guard: allow retry by removing from set if present
+            try:
+                if key_str in self.local_seen_keys:
+                    # Do not remove from seen set here; only inflight would be in a separate structure.
+                    # Since local fallback uses seen set for both, we cannot distinguish reliably.
+                    # Intentionally not removing from seen to avoid duplicates in local-only mode.
+                    pass
+            except Exception:
+                pass
+        except Exception:
+            pass
+
+    def _init_sqlite_state(self) -> None:
+        """Initialize durable local SQLite state for offsets and dedup when Redis is unavailable."""
+        try:
+            state_dir = os.path.dirname(self.state_db_path)
+            if state_dir and not os.path.exists(state_dir):
+                os.makedirs(state_dir, exist_ok=True)
+            # Use WAL mode and set timeout for better concurrency handling
+            # timeout=5.0 means wait up to 5 seconds for locks
+            self._sqlite_conn = sqlite3.connect(
+                self.state_db_path, 
+                check_same_thread=False,
+                timeout=5.0  # Wait up to 5 seconds for locks
+            )
+            self._sqlite_conn.execute("PRAGMA journal_mode=WAL;")
+            self._sqlite_conn.execute("PRAGMA synchronous=NORMAL;")
+            self._sqlite_conn.execute("PRAGMA busy_timeout=5000;")  # 5 second busy timeout
+            # Create tables
+            self._sqlite_conn.execute("CREATE TABLE IF NOT EXISTS offsets (id INTEGER PRIMARY KEY CHECK (id = 1), value INTEGER NOT NULL)")
+            self._sqlite_conn.execute("CREATE TABLE IF NOT EXISTS seen_keys (key TEXT PRIMARY KEY)")
+            self._sqlite_conn.execute("CREATE TABLE IF NOT EXISTS inflight_keys (key TEXT PRIMARY KEY, expires_at INTEGER)")
+            # Ensure single row for offsets
+            cur = self._sqlite_conn.execute("SELECT value FROM offsets WHERE id = 1")
+            if cur.fetchone() is None:
+                self._sqlite_conn.execute("INSERT INTO offsets(id, value) VALUES(1, 0)")
+            self._sqlite_conn.commit()
+            logger.info(f"SQLite state initialized at {self.state_db_path}")
+        except sqlite3.OperationalError as e:
+            if "database is locked" in str(e).lower():
+                logger.warning(f"SQLite database is locked (another replica may be using it). This is normal with multiple replicas. Using Redis-only mode.")
+            else:
+                logger.warning(f"SQLite operational error: {e}")
+            self._sqlite_conn = None
+        except Exception as e:
+            self._sqlite_conn = None
+            logger.warning(f"SQLite state not available: {e}")
+
+    def _sqlite_get_offset(self) -> Optional[int]:
+        if self._sqlite_conn is None:
+            return None
+        cur = self._sqlite_conn.execute("SELECT value FROM offsets WHERE id = 1")
+        row = cur.fetchone()
+        return int(row[0]) if row else None
+
+    def _sqlite_set_offset(self, offset: int) -> None:
+        if self._sqlite_conn is None:
+            return
+        self._sqlite_conn.execute("UPDATE offsets SET value = ? WHERE id = 1", (int(offset),))
+        self._sqlite_conn.commit()
+
+    def _init_redis_client(self):
+        """Initialize Redis client if configured via environment.
+        Retries connection with exponential backoff for better reliability.
+        """
+        if self._redis_lib is None:
+            logger.warning("Redis library not available. Install 'redis' package for distributed deduplication.")
+            return None
+        redis_url = os.getenv("REDIS_URL")
+        host = os.getenv("REDIS_HOST")
+        if not redis_url and not host:
+            logger.info("Redis not configured (no REDIS_URL or REDIS_HOST). Using SQLite fallback for deduplication.")
+            return None
+        
+        # Retry connection with exponential backoff
+        max_retries = 5
+        for attempt in range(max_retries):
+            try:
+                if redis_url:
+                    client = self._redis_lib.Redis.from_url(
+                        redis_url, 
+                        decode_responses=True,
+                        socket_connect_timeout=5,
+                        socket_timeout=5,
+                        retry_on_timeout=True
+                    )
+                else:
+                    port = int(os.getenv("REDIS_PORT", "6379"))
+                    password = os.getenv("REDIS_PASSWORD")
+                    db = int(os.getenv("REDIS_DB", "0"))
+                    client = self._redis_lib.Redis(
+                        host=host, 
+                        port=port, 
+                        password=password, 
+                        db=db, 
+                        decode_responses=True,
+                        socket_connect_timeout=5,
+                        socket_timeout=5,
+                        retry_on_timeout=True
+                    )
+                # Test connection
+                client.ping()
+                logger.info(f"✅ Connected to Redis at {host or 'URL'} for deduplication and distributed offsets.")
+                return client
+            except Exception as e:
+                if attempt < max_retries - 1:
+                    wait_time = 2 ** attempt  # Exponential backoff: 1s, 2s, 4s, 8s
+                    logger.warning(f"Redis connection attempt {attempt + 1}/{max_retries} failed: {e}. Retrying in {wait_time}s...")
+                    time.sleep(wait_time)
+                else:
+                    logger.warning(f"Redis not available after {max_retries} attempts: {e}. Falling back to SQLite for deduplication.")
+                    return None
+        return None
+
+    def stream_continuously(self):
+        """Stream data continuously - each run continues from last offset"""
+        self.running = True
+        logger.info("🚀 Starting continuous streaming from API...")
+        
+        # Track consecutive empty responses to detect end of data (NOT network errors)
+        consecutive_empty = 0
+        max_consecutive_empty = 3  # Exit after 3 consecutive empty responses
+        network_error_backoff = 5  # Initial backoff for network errors (seconds)
+        
         try:
             while self.running:
-                # Generate and send multiple transactions in a batch
-                batch = []
-                for _ in range(batch_size):
-                    transaction = self.generate_transaction()
-                    if transaction:
-                        batch.append(transaction)
+                result = self.download_batch()
                 
-                # Send entire batch at once
-                for transaction in batch:
-                    self.producer.produce(
-                        self.topic,
-                        key=transaction["transaction_id"],
-                        value=json.dumps(transaction),
-                        callback=self.delivery_report
-                    )
+                # Handle None result (shouldn't happen with new format, but keep for safety)
+                if result is None:
+                    logger.warning("Unexpected None result from download_batch, treating as network error")
+                    logger.info(f"Network error detected, retrying in {network_error_backoff}s...")
+                    time.sleep(network_error_backoff)
+                    network_error_backoff = min(60, network_error_backoff * 1.5)  # Exponential backoff, max 60s
+                    continue
                 
-                self.producer.poll(0)  # Trigger any available callbacks
-                if interval > 0:
-                    time.sleep(interval)  # Optional sleep between batches
+                # Unpack result: (transactions, api_offset_used, used_distributed, is_network_error)
+                if len(result) == 4:
+                    transactions, api_offset_used, used_distributed, is_network_error = result
+                elif len(result) == 3:
+                    # Backward compatibility: assume not a network error
+                    transactions, api_offset_used, used_distributed = result
+                    is_network_error = False
+                else:
+                    logger.error(f"Unexpected result format from download_batch: {result}")
+                    time.sleep(10)
+                    continue
+                
+                # Handle network errors (DNS, connection failures, etc.) - retry with backoff
+                if is_network_error:
+                    logger.warning(f"Network error detected (offset {api_offset_used}), retrying in {network_error_backoff}s...")
+                    time.sleep(network_error_backoff)
+                    network_error_backoff = min(60, network_error_backoff * 1.5)  # Exponential backoff, max 60s
+                    consecutive_empty = 0  # Reset empty counter (network errors don't count)
+                    continue
+                
+                # Reset network error backoff on successful connection
+                network_error_backoff = 5
+                
+                # Handle empty responses (actual end of data, not network errors)
+                if not transactions or len(transactions) == 0:
+                    # IMPORTANT: Update offset even on empty response to track our position
+                    # The API offset represents what we've fetched (including empty positions)
+                    # Deduplication handles skipping duplicate transaction IDs separately
+                    # For empty responses, advance by 1 to indicate we've checked this position
+                    # This applies to both distributed and non-distributed modes
+                    self.current_offset = api_offset_used + 1
+                    self._save_last_offset(self.current_offset)
+                    
+                    # If using distributed offsets, sync allocator back to current_offset to prevent mismatch
+                    if used_distributed and self.distributed_offsets and self.redis:
+                        try:
+                            current_allocator = int(self.redis.get(self.offset_alloc_key) or 0)
+                            if current_allocator > self.current_offset:
+                                # Allocator is ahead (because it advanced by batch_size), sync it back
+                                self.redis.set(self.offset_alloc_key, int(self.current_offset))
+                                logger.info(f"Synced allocator from {current_allocator} to {self.current_offset} after empty response")
+                        except Exception as e:
+                            logger.warning(f"Failed to sync allocator after empty response: {e}")
+                    
+                    logger.info(f"Empty response at offset {api_offset_used}, updated current_offset to {self.current_offset}")
+                    
+                    consecutive_empty += 1
+                    if consecutive_empty >= max_consecutive_empty:
+                        logger.info("=" * 80)
+                        logger.info("🏁 END OF DATA DETECTED")
+                        logger.info(f"   Received {max_consecutive_empty} consecutive empty responses from API")
+                        logger.info(f"   Final offset: {self.current_offset}")
+                        logger.info(f"   Total records sent: {self.total_sent}")
+                        logger.info(f"   Total duplicates skipped: {self.dedup_skipped}")
+                        logger.info("=" * 80)
+                        logger.info("✅ All data has been processed. Producer will continue monitoring for new data...")
+                        logger.info("   (To stop, press Ctrl+C or restart the container)")
+                        consecutive_empty = 0  # Reset counter, continue monitoring
+                    else:
+                        logger.info(f"No more data from API (empty response {consecutive_empty}/{max_consecutive_empty}), waiting 10s before retry...")
+                    time.sleep(10)
+                    continue
+                
+                # Reset counter on successful data
+                consecutive_empty = 0
+                
+                # Send all transactions - optimized for speed
+                batch_len = len(transactions)
+                logger.info(f"📤 Starting to send {batch_len} transactions to Kafka...")
+                self._batch_delivered = 0
+                sent_count = 0
+                # Very frequent polling to prevent queue overflow and keep things moving
+                poll_interval = max(200, batch_len // 100)  # Poll ~100 times per batch for maximum throughput
+                
+                # Batch send all transactions as fast as possible
+                # send_to_kafka() already checks against kafka_existing_ids to prevent duplicates
+                for idx, transaction in enumerate(transactions):
+                    try:
+                        if self.send_to_kafka(transaction):
+                            sent_count += 1
+                    except BufferError:
+                        # Queue is full, poll to drain it
+                        logger.warning(f"Queue full at {idx}/{batch_len}, polling to drain...")
+                        self.producer.poll(0.1)  # Poll with small timeout to drain
+                        # Retry sending this transaction
+                        try:
+                            self.send_to_kafka(transaction)
+                            sent_count += 1
+                        except Exception as e:
+                            logger.error(f"Failed to send transaction {idx}: {e}")
+                            continue
+                    
+                    # Poll more frequently to prevent queue overflow
+                    if (idx + 1) % poll_interval == 0:
+                        self.producer.poll(0)
+                        if (idx + 1) % (poll_interval * 5) == 0:
+                            logger.info(f"📤 Progress: {idx + 1}/{batch_len} transactions queued...")
+                
+                logger.info(f"📤 All {sent_count} transactions queued, polling for deliveries...")
+                # Poll aggressively to trigger callbacks and drain queue
+                start_poll = time.time()
+                poll_duration = 2.0  # Poll for max 2 seconds to get initial deliveries
+                while time.time() - start_poll < poll_duration:
+                    self.producer.poll(0.1)
+                    if self._batch_delivered >= sent_count * 0.9:  # 90% delivered, good enough
+                        break
+                
+                # Quick flush with short timeout - don't block forever
+                flush_timeout = min(5, batch_len // 5000)  # Max 5s, or 1s per 5000 records
+                logger.info(f"⏳ Quick flush (timeout: {flush_timeout}s)...")
+                remaining = self.producer.flush(flush_timeout)
+                delivered_now = self._batch_delivered
+                self.total_sent += delivered_now
+                
+                if remaining > 0:
+                    logger.info(f"✅ {delivered_now} delivered, {remaining} still queued (will flush in background)")
+                else:
+                    logger.info(f"✅ All {delivered_now} messages delivered")
+                
+                # Update offset: next offset = api_offset_used + number of transactions actually received
+                # IMPORTANT: Offset tracks API position (what we've fetched), NOT what we sent to Kafka
+                # Deduplication (Redis transaction IDs) handles skipping duplicates
+                # So offset = api_offset_used + len(transactions) regardless of how many were duplicates
+                next_offset = api_offset_used + len(transactions)
+                
+                if used_distributed and self.distributed_offsets and self.redis:
+                    # With distributed offsets, the allocator already advanced by batch_size atomically
+                    # We track the actual progress and save it so we can resume properly on restart
+                    self.current_offset = next_offset
+                    # Save offset even when using distributed allocator - this allows us to resume
+                    # from the correct position on restart. The allocator syncs with this on startup.
+                    self._save_last_offset(self.current_offset)
+                else:
+                    # Update and save local offset (fallback mode or non-distributed)
+                    self.current_offset = next_offset
+                    self._save_last_offset(self.current_offset)
+                
+                # Log detailed stats: what we fetched vs what we sent
+                unique_sent = delivered_now  # Actually sent to Kafka (after deduplication)
+                duplicates_skipped = self.dedup_skipped  # Skipped because already in Redis
+                logger.info(f"📦 Batch complete - Fetched: {len(transactions)}, Sent to Kafka: {unique_sent}, Duplicates skipped: {duplicates_skipped}, Total sent (all time): {self.total_sent}, Next API offset: {self.current_offset}")
+                # Reset dedup counter for next batch
+                self.dedup_skipped = 0
+                # Reduced sleep - only 0.5s to keep things moving fast
+                time.sleep(0.5)
+                
+        except KeyboardInterrupt:
+            logger.info("Stopped by user")
+        finally:
+            self.shutdown()
+
+    def stream_count(self, count: int):
+        """Stream specific number of records"""
+        self.running = True
+        logger.info(f"Streaming {count} records from API...")
+        
+        try:
+            while self.running and self.total_sent < count:
+                result = self.download_batch()
+                
+                if not result:
+                    logger.info("No more data available")
+                    break
+                
+                # Unpack result: (transactions, api_offset_used, used_distributed, is_network_error)
+                if len(result) == 4:
+                    transactions, api_offset_used, used_distributed, is_network_error = result
+                elif len(result) == 3:
+                    # Backward compatibility: assume not a network error
+                    transactions, api_offset_used, used_distributed = result
+                    is_network_error = False
+                else:
+                    logger.error(f"Unexpected result format from download_batch: {result}")
+                    break
+                
+                # Handle network errors - retry with backoff
+                if is_network_error:
+                    logger.warning(f"Network error detected (offset {api_offset_used}), retrying in 5s...")
+                    time.sleep(5)
+                    continue
+                
+                # Handle empty responses
+                if not transactions or len(transactions) == 0:
+                    logger.info("Empty batch received")
+                    break
+                
+                self._batch_delivered = 0
+                sent_count = 0
+                batch_len = len(transactions)
+                # Poll more frequently for large batches to avoid buffer overflow
+                poll_interval = max(500, batch_len // 50)  # Poll ~50 times per batch
+                
+                for idx, transaction in enumerate(transactions):
+                    if self.total_sent >= count:
+                        break
+                    if self.send_to_kafka(transaction):
+                        sent_count += 1
+                    # Poll periodically to avoid buffer overflow and trigger callbacks
+                    if (idx + 1) % poll_interval == 0:
+                        self.producer.poll(0)
+                
+                # Quick poll to process any remaining messages
+                self.producer.poll(0)
+
+                # Reduced flush timeout for faster processing
+                flush_timeout = max(5, batch_len // 2000)  # Much faster: 5s minimum, or 0.5s per 1000 records
+                self.producer.flush(flush_timeout)
+                delivered_now = self._batch_delivered
+                self.total_sent += delivered_now
+                
+                # Update offset: next offset = api_offset_used + number of transactions actually received
+                next_offset = api_offset_used + len(transactions)
+                
+                if used_distributed and self.distributed_offsets and self.redis:
+                    # With distributed offsets, allocator manages the next range
+                    # But we still save the offset so we can resume properly on restart
+                    self.current_offset = next_offset
+                    self._save_last_offset(self.current_offset)
+                else:
+                    # Update and save local offset
+                    self.current_offset = next_offset
+                    self._save_last_offset(self.current_offset)
+                
+                logger.info(f"Progress: {self.total_sent}/{count}, Received: {len(transactions)}, Delivered: {delivered_now}, Next offset: {self.current_offset}")
+            
+            logger.info(f"✅ Streamed {self.total_sent} records")
+            
+        except KeyboardInterrupt:
+            logger.info("Stopped by user")
         finally:
             self.shutdown()
 
     def shutdown(self, signum=None, frame=None):
-        """Graceful shutdown procedure"""
         if self.running:
-            logger.info("Initiating shutdown...")
             self.running = False
-            if self.producer:
-                self.producer.flush(timeout=30)  # <-- Ensure flush() is called
-                self.producer.close()
-            # Local file sink removed
-            logger.info("Producer stopped")
-
+            logger.info(f"🛑 Shutdown - Final offset: {self.current_offset}, Total sent: {self.total_sent}")
+            self.producer.flush(10)
 
 if __name__ == "__main__":
-    producer = EcommerceTransactionProducer()
-    producer.run_continuous_production()
+    import argparse
+    import os
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--mode', choices=['continuous', 'batch'], default='continuous')
+    parser.add_argument('--count', type=int, default=1000)
+    parser.add_argument('--reset-offsets', action='store_true', help='Reset stored offsets to 0 before starting')
+    parser.add_argument('--reset-dedup', action='store_true', help='Clear dedup state (seen/inflight) before starting')
+    parser.add_argument('--start-offset', type=int, default=None, help='Force a specific starting offset (overrides stored offset)')
+    
+    args = parser.parse_args()
+    
+    # Allow environment overrides for containerized runs
+    def _env_truthy(name: str) -> bool:
+        val = os.getenv(name)
+        return str(val).lower() in {"1", "true", "yes", "on"} if val is not None else False
+    env_reset_offsets = _env_truthy("RESET_OFFSETS")
+    env_reset_dedup = _env_truthy("RESET_DEDUP")
+    env_start_offset = os.getenv("START_OFFSET")
+    env_mode = os.getenv("STREAM_MODE")
+    env_count = os.getenv("STREAM_COUNT")
+
+    producer = PureAPItoKafkaProducer()
+
+    # Apply optional resets before streaming
+    reset_offsets = args.reset_offsets or env_reset_offsets
+    reset_dedup = args.reset_dedup or env_reset_dedup
+    start_offset = args.start_offset if args.start_offset is not None else (int(env_start_offset) if env_start_offset is not None else None)
+    if reset_offsets or reset_dedup or start_offset is not None:
+        producer.reset_state(
+            reset_offsets=reset_offsets,
+            reset_dedup=reset_dedup,
+            start_offset=start_offset
+        )
+    
+    try:
+        run_mode = env_mode if env_mode in {'continuous', 'batch'} else args.mode
+        run_count = int(env_count) if env_count is not None else args.count
+        if run_mode == 'batch':
+            producer.stream_count(run_count)
+        else:
+            producer.stream_continuously()
+    except Exception as e:
+        logger.error(f"Failed: {e}")

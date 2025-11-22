@@ -8,9 +8,9 @@ mlflow:
 
 kafka:
   bootstrap_servers: "pkc-921jm.us-east-2.aws.confluent.cloud:9092"
-  username: "6O6ERBVTLQDXJPKO"
-  password: "cfltjRt1N2S26dnrtsq/xYUiCdZhbndNDJ9nO/tqPX5biWmKFuI+DPxUV6T4JGsg"
-  topic: "transactions"
+  username: "5OIHYGHTVCSUQ4TH"
+  password: "cfltd/xTtRzuw3ooRxgqtMcHb5Y6we/PgxnvExk2JeuJiPCo8EuJGV1kqn0xM3MA"
+  topic: "ecommerce fraud"
   output_topic: "fraud_predictions"
   security_protocol: 'SASL_SSL'
 

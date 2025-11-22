@@ -83,9 +83,13 @@ class FraudDetectionTraining:
         # Pre-flight system checks
         self._validate_environment()
 
-        # MLflow configuration for experiment tracking
-        mlflow.set_tracking_uri(self.config['mlflow']['tracking_uri'])
-        mlflow.set_experiment(self.config['mlflow']['experiment_name'])
+        # MLflow configuration for experiment tracking (imported locally to avoid DAG parse issues)
+        try:
+            import mlflow
+            mlflow.set_tracking_uri(self.config['mlflow']['tracking_uri'])
+            mlflow.set_experiment(self.config['mlflow']['experiment_name'])
+        except ImportError:
+            logger.warning('MLflow not available during initialization, will be imported during training')
 
     def _load_config(self, config_path: str) -> dict:
         """
@@ -155,7 +159,7 @@ class FraudDetectionTraining:
         except Exception as e:
             logger.error('Minio connection failed: %s', str(e))
 
-    def read_from_kafka(self) -> pd.DataFrame:
+    def read_from_kafka(self) -> "pd.DataFrame":
         """
         Secure Kafka consumer implementation with enterprise features:
 
@@ -165,6 +169,7 @@ class FraudDetectionTraining:
           - Schema validation
           - Fraud label existence
           - Fraud rate monitoring
+        - Comprehensive data type conversion for Kafka string data
 
         Implements graceful shutdown on timeout/error conditions.
         """
@@ -195,80 +200,257 @@ class FraudDetectionTraining:
             if df.empty:
                 raise ValueError('No messages received from Kafka.')
 
-            # Temporal data standardization
-            df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True)
+            logger.info('Received %d messages from Kafka with %d columns', len(df), len(df.columns))
 
-            if 'is_fraud' not in df.columns:
+            # Convert timestamp fields
+            timestamp_cols = ['timestamp', 'registration_date', 'created_at']
+            for col in timestamp_cols:
+                if col in df.columns:
+                    df[col] = pd.to_datetime(df[col], errors='coerce', utc=True)
+
+            # Convert numeric fields (all come as strings from Kafka)
+            numeric_cols = [
+                'id', 'age', 'session_duration', 'price', 'discount', 'quantity',
+                'amount', 'rating', 'account_age_days', 'sim_card_age_days',
+                'vendor_age_days', 'discount_velocity_24h', 'transaction_velocity_1h',
+                'transaction_velocity_24h', 'payment_velocity_1h', 'payment_velocity_24h',
+                'shared_address_count', 'shared_phone_number_count', 'shared_ip_count',
+                'linked_accounts', 'login_frequency', 'complaint_frequency'
+            ]
+            for col in numeric_cols:
+                if col in df.columns:
+                    df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
+
+            # Convert float/score fields
+            float_cols = [
+                'identity_mismatch_score', 'identity_verification_score', 'sim_swap_probability',
+                'device_fingerprint_score', 'product_price_anomaly_score', 'browser_integrity_score',
+                'failed_payment_ratio', 'avg_order_value', 'current_order_value_ratio',
+                'address_risk_score', 'location_distance_score', 'address_reuse_rate',
+                'delivery_delay_ratio', 'rider_collusion_risk', 'refund_abuse_score',
+                'refund_to_purchase_ratio', 'return_inspection_score', 'product_swap_probability',
+                'fraud_ring_score', 'account_link_density', 'device_change_rate',
+                'device_trust_score', 'ip_risk_score', 'user_reputation_score',
+                'activity_timing_score', 'anomaly_frequency_score', 'behavioral_consistency_score',
+                'vendor_risk_score', 'fake_review_score', 'delivery_dispute_rate'
+            ]
+            for col in float_cols:
+                if col in df.columns:
+                    df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0.0)
+
+            # Convert boolean fields (f/t strings to 0/1)
+            boolean_cols = [
+                'return_request', 'phone_verified', 'android_emulator_detection',
+                'unusual_discount_flag', 'cart_tampering_detection', 'payment_method_anomaly',
+                'is_linked_card', 'bank_transfer_verification', 'partial_payment_requirement',
+                'ip_location_mismatch_flag', 'failed_delivery_pattern', 'otp_delivery_verification',
+                'gps_delivery_confirmation', 'serial_number_mismatch', 'multi_device_login_flag',
+                'proxy_detection_flag', 'vpn_usage_flag', 'rating_burst_detection',
+                'email_disposable_flag'
+            ]
+            for col in boolean_cols:
+                if col in df.columns:
+                    df[col] = (df[col].astype(str).str.lower() == 't').astype(int)
+
+            # Convert is_fraud (target variable) from string "1"/"0" to int
+            if 'is_fraud' in df.columns:
+                df['is_fraud'] = pd.to_numeric(df['is_fraud'], errors='coerce').fillna(0).astype(int)
+            else:
                 raise ValueError('Fraud label (is_fraud) missing from Kafka data')
 
             # Data quality monitoring point
             fraud_rate = df['is_fraud'].mean() * 100
             logger.info('Kafka data read successfully with fraud rate: %.2f%%', fraud_rate)
+            logger.info('Data shape: %d rows, %d columns', len(df), len(df.columns))
 
             return df
         except Exception as e:
             logger.error('Failed to read data from Kafka: %s', str(e), exc_info=True)
             raise
 
-    def create_features(self, df: pd.DataFrame) -> pd.DataFrame:
+    def create_features(self, df) -> "pd.DataFrame":
         """
-        Feature engineering pipeline implementing domain-driven fraud detection concepts:
+        Feature engineering pipeline leveraging rich fraud detection features from Kafka:
 
         1. Temporal Features:
-           - Transaction hour
-           - Night/weekend indicators
+           - Transaction hour, night/weekend indicators
+           - Account age, session duration
 
         2. Behavioral Features:
-           - 24h user activity window
+           - Transaction velocity (1h, 24h)
+           - Payment velocity (1h, 24h)
+           - User activity patterns
 
         3. Monetary Features:
-           - Amount to historical average ratio
+           - Amount, price, discount
+           - Current order value ratio
+           - Payment method analysis
 
-        4. Merchant Risk:
-           - Predefined high-risk merchant list
+        4. Identity & Verification Features:
+           - Identity mismatch/verification scores
+           - Phone/email verification status
+           - SIM swap probability
+
+        5. Device & Location Features:
+           - Device fingerprint score
+           - IP risk score
+           - Location distance score
+           - VPN/proxy detection
+
+        6. Transaction Pattern Features:
+           - Failed payment ratio
+           - Refund patterns
+           - Delivery patterns
+
+        7. Risk Scores:
+           - Fraud ring score
+           - Vendor risk score
+           - User reputation score
+           - Various anomaly scores
 
         Maintains immutability via DataFrame.copy() and validates feature set integrity.
         """
-    # Local import for numpy/pandas to reduce DAG parse time
-    import numpy as np
-    import pandas as pd
+        # Local import for numpy/pandas to reduce DAG parse time
+        import numpy as np
+        import pandas as pd
 
-    df = df.sort_values(['user_id', 'timestamp']).copy()
+        df = df.sort_values(['user_id', 'timestamp']).copy()
 
         # ---- Temporal Feature Engineering ----
         # Captures time-based fraud patterns (e.g., nighttime transactions)
-        df['transaction_hour'] = df['timestamp'].dt.hour
-        df['is_night'] = ((df['transaction_hour'] >= 22) | (df['transaction_hour'] < 5)).astype(int)
-        df['is_weekend'] = (df['timestamp'].dt.dayofweek >= 5).astype(int)
-        df['transaction_day'] = df['timestamp'].dt.day
+        if 'timestamp' in df.columns:
+            df['transaction_hour'] = df['timestamp'].dt.hour
+            df['is_night'] = ((df['transaction_hour'] >= 22) | (df['transaction_hour'] < 5)).astype(int)
+            df['is_weekend'] = (df['timestamp'].dt.dayofweek >= 5).astype(int)
+            df['transaction_day'] = df['timestamp'].dt.day
+        else:
+            df['transaction_hour'] = 0
+            df['is_night'] = 0
+            df['is_weekend'] = 0
+            df['transaction_day'] = 0
+
+        # -- Additional Temporal Features from Data --
+        # Account age (already in data, but ensure it's numeric)
+        if 'account_age_days' not in df.columns:
+            df['account_age_days'] = 0
 
         # -- Behavioral Feature Engineering --
-        # Rolling window captures recent user activity patterns
-        df['user_activity_24h'] = df.groupby('user_id', group_keys=False).apply(
-            lambda g: g.rolling('24h', on='timestamp', closed='left')['amount'].count().fillna(0)
-        )
+        # Use transaction velocity from data if available, otherwise compute
+        if 'transaction_velocity_24h' not in df.columns:
+            df['transaction_velocity_24h'] = df.groupby('user_id', group_keys=False).apply(
+                lambda g: g.rolling('24h', on='timestamp', closed='left')['amount'].count().fillna(0)
+            ).reset_index(0, drop=True) if 'timestamp' in df.columns else 0
 
         # -- Monetary Feature Engineering --
-        # Relative amount detection compared to user's historical pattern
-        df['amount_to_avg_ratio'] = df.groupby('user_id', group_keys=False).apply(
-            lambda g: (g['amount'] / g['amount'].rolling(7, min_periods=1).mean()).fillna(1.0)
+        # Use current_order_value_ratio from data if available, otherwise compute
+        if 'current_order_value_ratio' not in df.columns and 'amount' in df.columns:
+            df['current_order_value_ratio'] = df.groupby('user_id', group_keys=False).apply(
+                lambda g: (g['amount'] / g['amount'].rolling(7, min_periods=1).mean()).fillna(1.0)
+            ).reset_index(0, drop=True)
+
+        # -- Vendor Risk Profiling --
+        # Use vendor_id instead of merchant
+        if 'vendor_id' in df.columns:
+            high_risk_vendors = self.config.get('high_risk_vendors', [])
+            df['vendor_risk_flag'] = df['vendor_id'].isin(high_risk_vendors).astype(int)
+        else:
+            df['vendor_risk_flag'] = 0
+
+        # Select comprehensive feature set from available columns
+        # Core transaction features
+        core_features = [
+            'amount', 'price', 'discount', 'quantity',
+            'is_night', 'is_weekend', 'transaction_day', 'transaction_hour',
+            'account_age_days', 'session_duration'
+        ]
+
+        # Velocity and activity features
+        velocity_features = [
+            'transaction_velocity_1h', 'transaction_velocity_24h',
+            'payment_velocity_1h', 'payment_velocity_24h',
+            'discount_velocity_24h', 'login_frequency'
+        ]
+
+        # Identity and verification features
+        identity_features = [
+            'identity_mismatch_score', 'identity_verification_score',
+            'sim_swap_probability', 'phone_verified', 'email_disposable_flag'
+        ]
+
+        # Device and location features
+        device_features = [
+            'device_fingerprint_score', 'android_emulator_detection',
+            'browser_integrity_score', 'ip_risk_score',
+            'ip_location_mismatch_flag', 'location_distance_score',
+            'proxy_detection_flag', 'vpn_usage_flag', 'device_trust_score'
+        ]
+
+        # Payment and transaction pattern features
+        payment_features = [
+            'failed_payment_ratio', 'current_order_value_ratio',
+            'payment_method_anomaly', 'is_linked_card',
+            'bank_transfer_verification', 'partial_payment_requirement'
+        ]
+
+        # Risk and anomaly scores
+        risk_features = [
+            'fraud_ring_score', 'vendor_risk_score', 'user_reputation_score',
+            'activity_timing_score', 'anomaly_frequency_score',
+            'behavioral_consistency_score', 'fake_review_score',
+            'product_price_anomaly_score', 'address_risk_score',
+            'rider_collusion_risk', 'refund_abuse_score'
+        ]
+
+        # Delivery and return features
+        delivery_features = [
+            'delivery_delay_ratio', 'failed_delivery_pattern',
+            'address_reuse_rate', 'shared_address_count',
+            'refund_to_purchase_ratio', 'return_inspection_score',
+            'product_swap_probability', 'delivery_dispute_rate'
+        ]
+
+        # Account linkage features
+        linkage_features = [
+            'account_link_density', 'shared_phone_number_count',
+            'shared_ip_count', 'linked_accounts',
+            'device_change_rate', 'multi_device_login_flag'
+        ]
+
+        # Combine all feature lists
+        all_feature_candidates = (
+            core_features + velocity_features + identity_features +
+            device_features + payment_features + risk_features +
+            delivery_features + linkage_features + ['vendor_risk_flag']
         )
 
-        # -- Merchant Risk Profiling --
-        # External risk intelligence integration point
-        high_risk_merchants = self.config.get('high_risk_merchants', ['QuickCash', 'GlobalDigital', 'FastMoneyX'])
-        df['merchant_risk'] = df['merchant'].isin(high_risk_merchants).astype(int)
+        # Select only features that exist in the dataframe
+        available_features = [f for f in all_feature_candidates if f in df.columns]
 
-        feature_cols = [
-            'amount', 'is_night', 'is_weekend', 'transaction_day', 'user_activity_24h',
-            'amount_to_avg_ratio', 'merchant_risk', 'merchant'
-        ]
+        # Fill any remaining NaN values
+        for col in available_features:
+            if df[col].isna().any():
+                if df[col].dtype in ['int64', 'int32', 'float64', 'float32']:
+                    df[col] = df[col].fillna(0)
+                else:
+                    df[col] = df[col].fillna(df[col].mode()[0] if len(df[col].mode()) > 0 else 0)
+
+        logger.info('Selected %d features from %d candidates', len(available_features), len(all_feature_candidates))
 
         # Schema validation guard
         if 'is_fraud' not in df.columns:
             raise ValueError('Missing target column "is_fraud"')
 
-    return df[feature_cols + ['is_fraud']]
+        # Return features + target
+        feature_df = df[available_features + ['is_fraud']].copy()
+
+        # Final validation
+        if feature_df.empty:
+            raise ValueError('Feature DataFrame is empty after feature engineering')
+
+        logger.info('Feature engineering complete. Final shape: %d rows, %d columns', 
+                   len(feature_df), len(feature_df.columns))
+
+        return feature_df
 
     def train_model(self):
         """
@@ -318,6 +500,14 @@ class FraudDetectionTraining:
             if y.sum() < 10:
                 logger.warning('Low positive samples: %d. Consider additional data augmentation', y.sum())
 
+            # Identify categorical columns (object/string types)
+            categorical_cols = X.select_dtypes(include=['object', 'string']).columns.tolist()
+            numeric_cols = X.select_dtypes(include=[np.number]).columns.tolist()
+            
+            logger.info('Feature types - Numeric: %d, Categorical: %d', len(numeric_cols), len(categorical_cols))
+            if categorical_cols:
+                logger.info('Categorical features: %s', categorical_cols)
+
             X_train, X_test, y_train, y_test = train_test_split(
                 X, y,
                 test_size=self.config['model'].get('test_size', 0.2),
@@ -332,15 +522,35 @@ class FraudDetectionTraining:
                     'train_samples': X_train.shape[0],
                     'positive_samples': int(y_train.sum()),
                     'class_ratio': float(y_train.mean()),
-                    'test_samples': X_test.shape[0]
+                    'test_samples': X_test.shape[0],
+                    'num_features': len(X_train.columns),
+                    'num_categorical': len(categorical_cols),
+                    'num_numeric': len(numeric_cols)
                 })
 
-                # Categorical feature preprocessing
-                preprocessor = ColumnTransformer([
-                    ('merchant_encoder', OrdinalEncoder(
-                        handle_unknown='use_encoded_value', unknown_value=-1, dtype=np.float32
-                    ), ['merchant'])
-                ], remainder='passthrough')
+                # Categorical feature preprocessing (only if categorical features exist)
+                transformers = []
+                if categorical_cols:
+                    # Limit to first few categorical columns to avoid too many encoders
+                    # Most features should already be numeric from Kafka data
+                    cat_cols_to_encode = categorical_cols[:5]  # Limit to 5 categorical features
+                    for col in cat_cols_to_encode:
+                        transformers.append((
+                            f'{col}_encoder',
+                            OrdinalEncoder(
+                                handle_unknown='use_encoded_value',
+                                unknown_value=-1,
+                                dtype=np.float32
+                            ),
+                            [col]
+                        ))
+                
+                if transformers:
+                    preprocessor = ColumnTransformer(transformers, remainder='passthrough')
+                else:
+                    # All features are numeric, no preprocessing needed
+                    from sklearn.preprocessing import FunctionTransformer
+                    preprocessor = FunctionTransformer(func=lambda x: x, validate=False)
 
                 # XGBoost configuration with efficiency optimizations
                 xgb = XGBClassifier(
@@ -389,6 +599,7 @@ class FraudDetectionTraining:
                 logger.info('Best hyperparameters: %s', best_params)
 
                 # Threshold optimization using training data
+                # The pipeline handles preprocessing internally, so we can use predict_proba directly
                 train_proba = best_model.predict_proba(X_train)[:, 1]
                 precision_arr, recall_arr, thresholds_arr = precision_recall_curve(y_train, train_proba)
                 f1_scores = [2 * (p * r) / (p + r) if (p + r) > 0 else 0 for p, r in
@@ -396,9 +607,8 @@ class FraudDetectionTraining:
                 best_threshold = thresholds_arr[np.argmax(f1_scores)]
                 logger.info('Optimal threshold determined: %.4f', best_threshold)
 
-                # Model evaluation
-                X_test_processed = best_model.named_steps['preprocessor'].transform(X_test)
-                test_proba = best_model.named_steps['classifier'].predict_proba(X_test_processed)[:, 1]
+                # Model evaluation - pipeline handles preprocessing
+                test_proba = best_model.predict_proba(X_test)[:, 1]
                 y_pred = (test_proba >= best_threshold).astype(int)
 
                 # Comprehensive metrics suite

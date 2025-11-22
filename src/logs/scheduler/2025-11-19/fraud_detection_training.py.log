@@ -1,0 +1,544 @@
+[2025-11-19T14:34:38.957+0000] {processor.py:186} INFO - Started process (PID=118) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:34:38.988+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:34:39.243+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:34:39.205+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:34:42.571+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:34:44.504+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 6.296 seconds
+[2025-11-19T14:35:16.084+0000] {processor.py:186} INFO - Started process (PID=127) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:35:16.088+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:35:16.121+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:35:16.111+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:35:16.243+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:35:16.556+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.543 seconds
+[2025-11-19T14:35:49.930+0000] {processor.py:186} INFO - Started process (PID=136) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:35:50.072+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:35:50.233+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:35:50.232+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:35:50.922+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:35:53.351+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 4.158 seconds
+[2025-11-19T14:36:26.520+0000] {processor.py:186} INFO - Started process (PID=146) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:36:26.528+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:36:26.607+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:36:26.597+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:36:26.937+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:36:27.547+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.776 seconds
+[2025-11-19T14:37:01.103+0000] {processor.py:186} INFO - Started process (PID=161) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:37:01.207+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:37:01.461+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:37:01.371+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:37:10.853+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:37:12.099+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 12.127 seconds
+[2025-11-19T14:37:43.934+0000] {processor.py:186} INFO - Started process (PID=170) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:37:44.889+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:37:48.233+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:37:48.231+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:37:48.437+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:37:48.857+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 5.582 seconds
+[2025-11-19T14:38:19.863+0000] {processor.py:186} INFO - Started process (PID=179) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:38:19.992+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:38:20.163+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:38:20.162+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:38:20.933+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:38:21.190+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.537 seconds
+[2025-11-19T14:38:57.287+0000] {processor.py:186} INFO - Started process (PID=187) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:38:57.326+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:38:57.431+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:38:57.406+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:39:02.998+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:39:06.560+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 9.761 seconds
+[2025-11-19T14:47:56.639+0000] {processor.py:186} INFO - Started process (PID=92) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:47:56.663+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:47:56.683+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:47:56.682+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:47:57.450+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:47:57.881+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.294 seconds
+[2025-11-19T14:48:28.576+0000] {processor.py:186} INFO - Started process (PID=100) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:48:28.584+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:48:28.597+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:48:28.597+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:48:28.716+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:48:28.796+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.342 seconds
+[2025-11-19T14:48:59.533+0000] {processor.py:186} INFO - Started process (PID=109) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:48:59.580+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:48:59.699+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:48:59.699+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:48:59.873+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:49:00.088+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.660 seconds
+[2025-11-19T14:49:33.775+0000] {processor.py:186} INFO - Started process (PID=117) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:49:33.818+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:49:33.898+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:49:33.887+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:49:34.589+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:49:35.874+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 2.431 seconds
+[2025-11-19T14:50:08.129+0000] {processor.py:186} INFO - Started process (PID=127) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:50:08.141+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:50:08.174+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:50:08.162+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:50:08.489+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:50:08.729+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.834 seconds
+[2025-11-19T14:50:44.357+0000] {processor.py:186} INFO - Started process (PID=135) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:50:44.437+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:50:44.811+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:50:44.793+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:50:46.657+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:50:46.975+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 3.744 seconds
+[2025-11-19T14:51:17.767+0000] {processor.py:186} INFO - Started process (PID=145) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:51:17.780+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:51:17.804+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:51:17.798+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:51:17.966+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:51:18.459+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.753 seconds
+[2025-11-19T14:51:51.640+0000] {processor.py:186} INFO - Started process (PID=154) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:51:51.652+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:51:51.716+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:51:51.715+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:51:52.037+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:51:52.227+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.810 seconds
+[2025-11-19T14:52:23.314+0000] {processor.py:186} INFO - Started process (PID=164) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:52:23.325+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:52:23.361+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:52:23.343+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:52:24.415+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:52:24.648+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.483 seconds
+[2025-11-19T14:52:57.966+0000] {processor.py:186} INFO - Started process (PID=178) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:52:58.015+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:52:58.077+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:52:58.075+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:52:59.192+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:53:00.235+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 2.777 seconds
+[2025-11-19T14:53:32.980+0000] {processor.py:186} INFO - Started process (PID=186) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:53:33.056+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:53:33.122+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:53:33.121+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:53:33.463+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:53:33.741+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.007 seconds
+[2025-11-19T14:54:04.663+0000] {processor.py:186} INFO - Started process (PID=195) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:54:04.744+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:54:04.824+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:54:04.808+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:54:05.936+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:54:06.171+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.633 seconds
+[2025-11-19T14:54:39.171+0000] {processor.py:186} INFO - Started process (PID=204) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:54:39.270+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:54:39.326+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:54:39.325+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:54:39.742+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:54:40.386+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.743 seconds
+[2025-11-19T14:55:11.787+0000] {processor.py:186} INFO - Started process (PID=213) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:55:11.802+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:55:11.831+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:55:11.830+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:55:11.999+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:55:12.256+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.585 seconds
+[2025-11-19T14:55:44.576+0000] {processor.py:186} INFO - Started process (PID=221) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:55:44.590+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:55:44.626+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:55:44.616+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:55:44.815+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:55:45.063+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.609 seconds
+[2025-11-19T14:56:16.027+0000] {processor.py:186} INFO - Started process (PID=231) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:56:16.039+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:56:16.073+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:56:16.072+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:56:16.191+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:56:16.253+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.387 seconds
+[2025-11-19T14:56:48.707+0000] {processor.py:186} INFO - Started process (PID=240) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:56:48.743+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:56:48.842+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:56:48.841+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:56:50.652+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:56:52.592+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 4.051 seconds
+[2025-11-19T14:57:46.655+0000] {processor.py:186} INFO - Started process (PID=249) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:57:46.742+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:57:46.940+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:57:46.892+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:57:47.758+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:57:48.048+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 2.043 seconds
+[2025-11-19T14:58:25.629+0000] {processor.py:186} INFO - Started process (PID=263) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:58:25.776+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:58:25.902+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:58:25.901+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:58:26.796+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:58:27.597+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 3.079 seconds
+[2025-11-19T14:59:01.499+0000] {processor.py:186} INFO - Started process (PID=273) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:59:01.739+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:59:02.467+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:59:02.463+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:59:03.396+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:59:04.701+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 3.471 seconds
+[2025-11-19T14:59:40.063+0000] {processor.py:186} INFO - Started process (PID=281) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:59:40.107+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T14:59:40.249+0000] {logging_mixin.py:190} INFO - [2025-11-19T14:59:40.221+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:59:41.158+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T14:59:44.517+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 5.394 seconds
+[2025-11-19T15:00:19.559+0000] {processor.py:186} INFO - Started process (PID=290) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:00:19.617+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:00:19.792+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:00:19.791+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:00:20.321+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:00:20.944+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 2.125 seconds
+[2025-11-19T15:00:57.535+0000] {processor.py:186} INFO - Started process (PID=299) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:00:58.448+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:00:59.315+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:00:59.285+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:01:02.082+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:01:02.432+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 6.903 seconds
+[2025-11-19T15:01:50.053+0000] {processor.py:186} INFO - Started process (PID=313) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:01:52.186+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:01:52.555+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:01:52.554+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:01:52.910+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:01:53.366+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 18.728 seconds
+[2025-11-19T15:02:24.015+0000] {processor.py:186} INFO - Started process (PID=322) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:02:24.020+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:02:24.045+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:02:24.038+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:02:24.166+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:02:34.450+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 10.488 seconds
+[2025-11-19T15:03:13.442+0000] {processor.py:186} INFO - Started process (PID=339) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:03:13.473+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:03:16.045+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:03:16.045+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:03:17.214+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:03:18.345+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 11.083 seconds
+[2025-11-19T15:03:52.978+0000] {processor.py:186} INFO - Started process (PID=348) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:03:53.056+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:03:53.197+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:03:53.128+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:03:56.511+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:03:57.544+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 5.136 seconds
+[2025-11-19T15:04:49.657+0000] {processor.py:186} INFO - Started process (PID=357) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:04:50.200+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:04:51.570+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:04:51.521+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:04:55.727+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:04:58.174+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 15.821 seconds
+[2025-11-19T15:05:30.283+0000] {processor.py:186} INFO - Started process (PID=372) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:05:30.319+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:05:30.336+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:05:30.329+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:05:30.455+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:05:30.515+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.480 seconds
+[2025-11-19T15:06:03.939+0000] {processor.py:186} INFO - Started process (PID=381) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:06:04.167+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:06:04.332+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:06:04.327+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:06:04.649+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:06:45.257+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 43.486 seconds
+[2025-11-19T15:07:33.377+0000] {processor.py:186} INFO - Started process (PID=397) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:07:33.394+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:07:33.460+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:07:33.458+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:07:34.243+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:07:34.979+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.745 seconds
+[2025-11-19T15:08:15.695+0000] {processor.py:186} INFO - Started process (PID=400) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:08:15.701+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:08:16.315+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:08:16.245+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:08:17.050+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:08:28.795+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 14.787 seconds
+[2025-11-19T15:09:03.558+0000] {processor.py:186} INFO - Started process (PID=413) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:09:03.654+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:09:04.301+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:09:04.286+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:09:06.045+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:09:06.334+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 3.312 seconds
+[2025-11-19T15:09:37.419+0000] {processor.py:186} INFO - Started process (PID=416) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:09:37.422+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:09:37.426+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:09:37.425+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:09:37.474+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:09:37.545+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.143 seconds
+[2025-11-19T15:20:11.786+0000] {processor.py:186} INFO - Started process (PID=93) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:20:11.816+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:20:11.831+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:20:11.830+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:20:12.040+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:20:16.056+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 4.144 seconds
+[2025-11-19T15:20:49.337+0000] {processor.py:186} INFO - Started process (PID=102) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:20:49.349+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:20:49.368+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:20:49.366+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:20:49.541+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:20:49.652+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.352 seconds
+[2025-11-19T15:21:21.770+0000] {processor.py:186} INFO - Started process (PID=111) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:21:21.797+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:21:21.840+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:21:21.839+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:21:22.045+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:21:22.143+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.762 seconds
+[2025-11-19T15:21:53.402+0000] {processor.py:186} INFO - Started process (PID=128) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:21:53.413+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:21:53.428+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:21:53.427+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:21:53.556+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:21:53.728+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.407 seconds
+[2025-11-19T15:22:25.430+0000] {processor.py:186} INFO - Started process (PID=137) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:22:25.443+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:22:25.453+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:22:25.452+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:22:25.496+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:22:25.788+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.400 seconds
+[2025-11-19T15:23:06.627+0000] {processor.py:186} INFO - Started process (PID=146) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:23:06.681+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:23:06.692+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:23:06.691+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:23:11.182+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:23:12.435+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 5.906 seconds
+[2025-11-19T15:24:13.546+0000] {processor.py:186} INFO - Started process (PID=154) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:24:14.459+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:24:26.180+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:24:26.179+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:24:56.152+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:25:39.918+0000] {processor.py:186} INFO - Started process (PID=173) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:25:40.230+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:25:40.665+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:25:40.664+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:25:44.366+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:25:56.522+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 17.784 seconds
+[2025-11-19T15:26:28.321+0000] {processor.py:186} INFO - Started process (PID=182) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:26:28.349+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:26:28.372+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:26:28.371+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:26:33.692+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:26:40.554+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 12.473 seconds
+[2025-11-19T15:27:17.091+0000] {processor.py:186} INFO - Started process (PID=191) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:27:17.305+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:27:17.405+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:27:17.366+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:27:22.515+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:27:24.937+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 10.375 seconds
+[2025-11-19T15:28:03.820+0000] {processor.py:186} INFO - Started process (PID=207) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:28:03.888+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:28:04.326+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:28:04.260+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:28:09.012+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:28:16.065+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 16.946 seconds
+[2025-11-19T15:29:02.508+0000] {processor.py:186} INFO - Started process (PID=215) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:29:02.685+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:29:03.101+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:29:03.081+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:29:14.477+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:29:20.527+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 31.772 seconds
+[2025-11-19T15:29:53.436+0000] {processor.py:186} INFO - Started process (PID=231) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:29:53.485+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:29:53.509+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:29:53.499+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:29:53.961+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:29:54.425+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.073 seconds
+[2025-11-19T15:30:48.914+0000] {processor.py:186} INFO - Started process (PID=238) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:30:49.118+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:30:49.520+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:30:49.385+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:30:51.448+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:30:54.342+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 6.034 seconds
+[2025-11-19T15:31:29.830+0000] {processor.py:186} INFO - Started process (PID=248) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:31:29.852+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:31:29.855+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:31:29.854+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:31:32.467+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:31:35.152+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 6.350 seconds
+[2025-11-19T15:32:07.352+0000] {processor.py:186} INFO - Started process (PID=258) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:32:07.403+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:32:07.435+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:32:07.434+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:32:08.113+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:32:08.809+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.725 seconds
+[2025-11-19T15:32:55.403+0000] {processor.py:186} INFO - Started process (PID=273) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:32:55.618+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:32:55.870+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:32:55.840+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:32:59.404+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:33:02.086+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 9.095 seconds
+[2025-11-19T15:33:39.780+0000] {processor.py:186} INFO - Started process (PID=281) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:33:40.039+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:33:41.063+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:33:40.939+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:33:46.888+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:33:51.038+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 14.138 seconds
+[2025-11-19T15:34:30.068+0000] {processor.py:186} INFO - Started process (PID=289) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:34:30.243+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:34:30.247+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:34:30.246+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:34:32.028+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:34:37.371+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 8.346 seconds
+[2025-11-19T15:35:14.051+0000] {processor.py:186} INFO - Started process (PID=304) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:35:14.675+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:35:14.766+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:35:14.764+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:35:15.630+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:35:16.408+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 2.668 seconds
+[2025-11-19T15:35:54.289+0000] {processor.py:186} INFO - Started process (PID=313) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:35:54.293+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:35:54.324+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:35:54.309+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:35:57.457+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:36:04.573+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 11.180 seconds
+[2025-11-19T15:36:36.640+0000] {processor.py:186} INFO - Started process (PID=321) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:36:36.693+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:36:37.112+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:36:37.016+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:36:40.220+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:36:43.224+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 7.009 seconds
+[2025-11-19T15:37:19.226+0000] {processor.py:186} INFO - Started process (PID=336) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:37:19.461+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:37:19.708+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:37:19.677+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:37:29.596+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:37:30.784+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 13.798 seconds
+[2025-11-19T15:38:04.051+0000] {processor.py:186} INFO - Started process (PID=343) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:38:04.083+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:38:04.141+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:38:04.140+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:38:06.653+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:38:10.430+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 7.237 seconds
+[2025-11-19T15:39:09.064+0000] {processor.py:186} INFO - Started process (PID=351) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:39:09.614+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:39:10.991+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:39:10.750+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:39:25.713+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:39:37.773+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 38.163 seconds
+[2025-11-19T15:40:22.541+0000] {processor.py:186} INFO - Started process (PID=361) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:40:22.599+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:40:22.852+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:40:22.848+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:40:24.014+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:42:10.302+0000] {processor.py:186} INFO - Started process (PID=375) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:42:10.309+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:42:10.318+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:42:10.317+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:42:10.540+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:42:10.843+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 0.692 seconds
+[2025-11-19T15:42:55.866+0000] {processor.py:186} INFO - Started process (PID=378) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:42:55.889+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:42:55.934+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:42:55.924+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:42:56.766+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:43:06.146+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 14.697 seconds
+[2025-11-19T15:43:41.750+0000] {processor.py:186} INFO - Started process (PID=387) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:43:41.788+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:43:41.826+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:43:41.824+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:43:42.697+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:43:53.045+0000] {processor.py:211} ERROR - Got an exception! Propagating...
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+           ^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 145, in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 143, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 690, in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: could not translate host name "postgres" to address: Temporary failure in name resolution
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 207, in _run_file_processor
+    _handle_dag_file_processing()
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 188, in _handle_dag_file_processing
+    result: tuple[int, int, int] = dag_file_processor.process_file(
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 928, in process_file
+    DagFileProcessor.update_import_errors(
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/api_internal/internal_api_call.py", line 166, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/dag_processing/processor.py", line 641, in update_import_errors
+    session.execute(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1716, in execute
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1555, in _connection_for_bind
+    return self._transaction._connection_for_bind(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 750, in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/future/engine.py", line 412, in connect
+    return super(Engine, self).connect()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3325, in connect
+    return self._connection_cls(self, close_with_result=close_with_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 96, in __init__
+    else engine.raw_connection()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3404, in raw_connection
+    return self._wrap_pool_connect(self.pool.connect, _connection)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3374, in _wrap_pool_connect
+    Connection._handle_dbapi_exception_noconnection(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2208, in _handle_dbapi_exception_noconnection
+    util.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+           ^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 145, in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/impl.py", line 143, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 690, in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate host name "postgres" to address: Temporary failure in name resolution
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+[2025-11-19T15:44:44.174+0000] {processor.py:186} INFO - Started process (PID=396) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:44:44.212+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:44:44.244+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:44:44.228+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:44:55.967+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:44:58.575+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 14.937 seconds
+[2025-11-19T15:46:14.694+0000] {processor.py:186} INFO - Started process (PID=406) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:46:16.470+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:46:16.841+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:46:16.644+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:46:19.343+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:46:51.870+0000] {processor.py:186} INFO - Started process (PID=421) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:46:51.877+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:46:51.894+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:46:51.882+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:46:52.129+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:46:52.868+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.131 seconds
+[2025-11-19T15:47:38.484+0000] {processor.py:186} INFO - Started process (PID=431) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:47:38.556+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:47:38.674+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:47:38.627+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:47:51.202+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:47:51.587+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 13.490 seconds
+[2025-11-19T15:48:28.476+0000] {processor.py:186} INFO - Started process (PID=440) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:48:28.550+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:48:28.632+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:48:28.610+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:48:29.335+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:48:29.975+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 2.195 seconds
+[2025-11-19T15:49:22.013+0000] {processor.py:186} INFO - Started process (PID=449) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:49:22.056+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:49:22.109+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:49:22.072+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:49:22.284+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:49:22.370+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 1.559 seconds
+[2025-11-19T15:49:59.235+0000] {processor.py:186} INFO - Started process (PID=458) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:49:59.277+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:49:59.902+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:49:59.296+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:50:08.580+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:50:08.818+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 10.098 seconds
+[2025-11-19T15:51:08.588+0000] {processor.py:186} INFO - Started process (PID=466) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:51:08.748+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:51:09.598+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:51:09.453+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:51:11.394+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:51:11.697+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 26.746 seconds
+[2025-11-19T15:51:44.589+0000] {processor.py:186} INFO - Started process (PID=475) to work on /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:51:48.565+0000] {processor.py:914} INFO - Processing file /opt/airflow/dags/fraud_detection_training.py for tasks to queue
+[2025-11-19T15:51:48.662+0000] {logging_mixin.py:190} INFO - [2025-11-19T15:51:48.657+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:51:52.729+0000] {processor.py:927} WARNING - No viable dags retrieved from /opt/airflow/dags/fraud_detection_training.py
+[2025-11-19T15:51:54.252+0000] {processor.py:208} INFO - Processing /opt/airflow/dags/fraud_detection_training.py took 12.253 seconds
